@@ -5,6 +5,7 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.widget.Toast;
 
 import com.snatik.storage.Storage;
 import com.snatik.storage.helpers.OrderType;
@@ -31,6 +32,7 @@ public class Explorer {
     private static final String[] IMAGE_PROJECTION =
             new String[] {
                     MediaStore.Images.ImageColumns._ID,
+                    MediaStore.Images.ImageColumns.DATA,
                     MediaStore.Images.ImageColumns.DATE_TAKEN,
                     MediaStore.Images.ImageColumns.DATE_MODIFIED,
                     MediaStore.Images.ImageColumns.MIME_TYPE,
@@ -71,7 +73,7 @@ public class Explorer {
     //  FUNCTIONS
     //==============================================================================================
 
-    public ArrayList<File> getFolders(String newPath) {
+    public ArrayList<File> getFolders() {
         List<File> files = mStorage.getFiles(mCurrentPath);
         ArrayList<File> folders = new ArrayList<>();
         for (File f : files) {
@@ -83,7 +85,7 @@ public class Explorer {
         return folders;
     }
 
-    public ArrayList<MediaStoreData> getImages(String newPath) {
+    public ArrayList<MediaStoreData> getImages() {
         Uri contentUri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
         Cursor cursor = mContext.getContentResolver().query(
                 contentUri, IMAGE_PROJECTION,
@@ -103,9 +105,9 @@ public class Explorer {
             final int orientationColNum = cursor.getColumnIndexOrThrow(MediaStore.Images.ImageColumns.ORIENTATION);
 
             while (cursor.moveToNext()) {
-                if (cursor.getString(pathColNum).contains(mCurrentPath)) {
+                String path = cursor.getString(pathColNum);
+                if (path.substring(0, path.lastIndexOf(File.separator)).equals(mCurrentPath)) {
                     long id = cursor.getLong(idColNum);
-                    String path = cursor.getString(pathColNum);
                     long dateTaken = cursor.getLong(dateTakenColNum);
                     String mimeType = cursor.getString(mimeTypeColNum);
                     long dateModified = cursor.getLong(dateModifiedColNum);
@@ -129,5 +131,20 @@ public class Explorer {
             return mCurrentPath;
         }
         return path.substring(0, lastIndexOf);
+    }
+
+    public void openFolder(File file) {
+        if (file.isDirectory()) {
+            mTreeSteps++;
+            mCurrentPath = file.getPath();
+        }
+    }
+
+    public void goBack() {
+        if (mTreeSteps > 0) {
+            mCurrentPath = getPreviousPath();
+            mTreeSteps--;
+            return;
+        }
     }
 }

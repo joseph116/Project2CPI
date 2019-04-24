@@ -24,15 +24,17 @@ public class FolderAdapter extends RecyclerView.Adapter<FolderAdapter.ViewHolder
 
     private Context mContext;
     private List<File> mFolders;
-    private OnFileItemListener mListener;
+    private FolderListener mListener;
 
-    public FolderAdapter(Context c, List<File> folders) {
-        this.mContext = c;
-        this.mFolders = folders;
+    public FolderAdapter(Context context, List<File> folders, FolderListener listener) {
+        mContext = context;
+        mFolders = folders;
+        mListener = listener;
     }
 
-    public void setFolders(List<File> folders) {
+    public void updateFolders(List<File> folders) {
         mFolders = folders;
+        notifyDataSetChanged();
     }
 
     @NonNull
@@ -100,9 +102,6 @@ public class FolderAdapter extends RecyclerView.Adapter<FolderAdapter.ViewHolder
         return mFolders != null ? mFolders.size()+1 : 1;
     }
 
-    public void setListener(OnFileItemListener listener) {
-        mListener = listener;
-    }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
 
@@ -112,12 +111,9 @@ public class FolderAdapter extends RecyclerView.Adapter<FolderAdapter.ViewHolder
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
-
             mFileName = itemView.findViewById(R.id.textView);
             mImage = itemView.findViewById(R.id.folderImageView);
             mLayout = itemView.findViewById(R.id.folder_item_parent);
-
-
         }
     }
 
@@ -127,7 +123,7 @@ public class FolderAdapter extends RecyclerView.Adapter<FolderAdapter.ViewHolder
         else return 2;
     }
 
-    public interface OnFileItemListener {
+    public interface FolderListener {
         void onClick(File file);
 
         void onLongClick(File file);
