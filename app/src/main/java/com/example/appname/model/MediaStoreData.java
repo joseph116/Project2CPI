@@ -20,15 +20,17 @@ public class MediaStoreData implements Parcelable {
     final int orientation;
     private final Type type;
     final long dateTaken;
+    private String path;
 
     //==============================================================================================
     //  CONSTRUCTORS
     //==============================================================================================
 
-    MediaStoreData(long rowId, Uri uri, String mimeType, long dateTaken, long dateModified,
+    MediaStoreData(long rowId, Uri uri, String path, String mimeType, long dateTaken, long dateModified,
                    int orientation, Type type) {
         this.rowId = rowId;
         this.uri = uri;
+        this.path = path;
         this.dateModified = dateModified;
         this.mimeType = mimeType;
         this.orientation = orientation;
@@ -39,6 +41,7 @@ public class MediaStoreData implements Parcelable {
     private MediaStoreData(Parcel in) {
         rowId = in.readLong();
         uri = Uri.parse(in.readString());
+        path = in.readString();
         mimeType = in.readString();
         dateTaken = in.readLong();
         dateModified = in.readLong();
@@ -83,6 +86,7 @@ public class MediaStoreData implements Parcelable {
     public void writeToParcel(Parcel parcel, int i) {
         parcel.writeLong(rowId);
         parcel.writeString(uri.toString());
+        parcel.writeString(path);
         parcel.writeString(mimeType);
         parcel.writeLong(dateTaken);
         parcel.writeLong(dateModified);
@@ -95,6 +99,7 @@ public class MediaStoreData implements Parcelable {
         return "MediaStoreData{"
                 + "rowId=" + rowId
                 + ", uri=" + uri
+                + ", path=" + path
                 + ", mimeType='" + mimeType + '\''
                 + ", dateModified=" + dateModified
                 + ", orientation=" + orientation

@@ -1,11 +1,16 @@
 package com.example.appname.controller.main;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
+import android.Manifest;
+import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
 
 import com.example.appname.R;
@@ -32,6 +37,13 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        //request for permissions
+        if (!canAccessExternalSd()){
+            Intent askForPerms = new Intent(MainActivity.this, RequestForPermissionActivity.class);
+            startActivity(askForPerms);
+        }
+
         setContentView(R.layout.activity_main);
         initNavigationBar();
     }
@@ -118,6 +130,18 @@ public class MainActivity extends AppCompatActivity {
         BottomNavigationBar.setTitleSize(24);
         BottomNavigationBar.setIconSizeFraction((float) 0.5);
 
+    }
+
+    //==============================================================================================
+    //  FOR PERMISSION
+    //==============================================================================================
+
+    public boolean canAccessExternalSd() {
+        return (hasPermission(android.Manifest.permission.WRITE_EXTERNAL_STORAGE));
+    }
+
+    private boolean hasPermission(String perm) {
+        return (PackageManager.PERMISSION_GRANTED == ContextCompat.checkSelfPermission(this, perm));
     }
 
 }

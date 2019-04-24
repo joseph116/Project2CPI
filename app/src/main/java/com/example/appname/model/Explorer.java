@@ -2,6 +2,7 @@ package com.example.appname.model;
 
 import android.content.Context;
 import android.database.Cursor;
+import android.net.Uri;
 import android.os.Environment;
 import android.provider.MediaStore;
 
@@ -83,8 +84,9 @@ public class Explorer {
     }
 
     public ArrayList<MediaStoreData> getImages(String newPath) {
+        Uri contentUri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
         Cursor cursor = mContext.getContentResolver().query(
-                MediaStore.Images.Media.EXTERNAL_CONTENT_URI, IMAGE_PROJECTION,
+                contentUri, IMAGE_PROJECTION,
                 null, null,
                 MediaStore.Images.Media.DEFAULT_SORT_ORDER);
         ArrayList<MediaStoreData> images = new ArrayList<>();
@@ -92,6 +94,30 @@ public class Explorer {
         if (cursor == null) return images;
 
         //else get the images
+        try {
+            final int idColNum = cursor.getColumnIndexOrThrow(MediaStore.Images.ImageColumns._ID);
+            final int pathColNum = cursor.getColumnIndexOrThrow(MediaStore.Images.ImageColumns.DATA);
+            final int dateTakenColNum = cursor.getColumnIndexOrThrow(MediaStore.Images.ImageColumns.DATE_TAKEN);
+            final int dateModifiedColNum = cursor.getColumnIndexOrThrow(MediaStore.Images.ImageColumns.DATE_MODIFIED);
+            final int mimeTypeColNum = cursor.getColumnIndex(MediaStore.Images.ImageColumns.MIME_TYPE);
+            final int orientationColNum = cursor.getColumnIndexOrThrow(MediaStore.Images.ImageColumns.ORIENTATION);
+
+            while (cursor.moveToNext()) {
+                if (cursor.getString(pathColNum).contains(mCurrentPath)) {
+                    long id = cursor.getLong(idColNum);
+                    String path = cursor.getString(pathColNum);
+                    long dateTaken = cursor.getLong(dateTakenColNum);
+                    String mimeType = cursor.getString(mimeTypeColNum);
+                    long dateModified = cursor.getLong(dateModifiedColNum);
+                    int orientation = cursor.getInt(orientationColNum);
+
+                    images.add(new MediaStoreData(id, Uri.withAppendedPath(contentUri, Long.toString(id)),
+                            path,mimeType, dateTaken, dateModified, orientation, MediaStoreData.Type.IMAGE));
+                }
+            }
+        } finally {
+            cursor.close();
+        }
 
         return images;
     }
