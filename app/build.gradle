@@ -35,4 +35,5 @@ dependencies {
     implementation 'com.snatik:storage:2.1.0'
     //Bottom Navigation Bar
     implementation 'devlight.io:navigationtabbar:1.2.5'
+    implementation 'androidx.viewpager:viewpager:1.0.0'
 }
