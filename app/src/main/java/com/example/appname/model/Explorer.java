@@ -49,21 +49,16 @@ public class Explorer {
         mRootPath = mStorage.getExternalStorageDirectory(Environment.DIRECTORY_PICTURES) + File.separator + "Sorted Pictures";
         mCurrentPath = mRootPath;
         mTreeSteps = 0;
-
     }
 
     //==============================================================================================
     //  GETTERS AND SETTERS
     //==============================================================================================
 
-    public Storage getStorage() {
-        return mStorage;
-    }
 
     public String getCurrentPath() {
         return mCurrentPath;
     }
-
 
     public String getRootPath() {
         return mRootPath;
@@ -81,7 +76,7 @@ public class Explorer {
                 folders.add(f);
             }
         }
-        Collections.sort(folders, OrderType.NAME.getComparator());
+        Collections.sort(folders, OrderType.DATE.getComparator());
         return folders;
     }
 
@@ -146,5 +141,31 @@ public class Explorer {
             mTreeSteps--;
             return;
         }
+    }
+
+    public void newFolder(String name) {
+        if (name.length() > 0) {
+            boolean created = mStorage.createDirectory(mCurrentPath + File.separator + name);
+            if (created) {
+                Toast.makeText(mContext, "New folder created: " + name, Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(mContext, "Failed create folder: " + name, Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
+    public void deleteFolder(String path) {
+        if (mStorage.getFile(path).isDirectory()) {
+            mStorage.deleteDirectory(path);
+            Toast.makeText(mContext, "Folder deleted", Toast.LENGTH_SHORT).show();
+        } else {
+            mStorage.deleteFile(path);
+            Toast.makeText(mContext, "Can't delete", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    public void renameFolder(String fromPath, String toPath) {
+        mStorage.rename(fromPath, toPath);
+        Toast.makeText(mContext, "Renamed", Toast.LENGTH_SHORT).show();
     }
 }

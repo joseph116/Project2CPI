@@ -16,6 +16,10 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.example.appname.R;
+import com.example.appname.controller.dialogs.ConfirmDeleteDialog;
+import com.example.appname.controller.dialogs.NewFolderDialog;
+import com.example.appname.controller.dialogs.RenameDialog;
+import com.example.appname.controller.dialogs.UpdateItemDialog;
 import com.example.appname.controller.main.MainActivity;
 import com.example.appname.model.Explorer;
 
@@ -24,7 +28,11 @@ import java.io.File;
 
 public class FoldersFragment extends Fragment implements FolderAdapter.FolderListener,
         ImageAdapter.ImageListener,
-        MainActivity.BackPressedListener {
+        MainActivity.BackPressedListener,
+        NewFolderDialog.DialogListener,
+        UpdateItemDialog.DialogListener,
+        ConfirmDeleteDialog.ConfirmListener,
+        RenameDialog.RenameListener {
 
     //==============================================================================================
     //  ATTRIBUTES
@@ -110,13 +118,14 @@ public class FoldersFragment extends Fragment implements FolderAdapter.FolderLis
     //long click on a folder
     @Override
     public void onLongClick(File file) {
-
+        UpdateItemDialog.newInstance(file.getAbsolutePath(), this).show(getFragmentManager(), "update_item");
     }
 
     //click on the add button
     @Override
     public void onClickAdd() {
-
+        NewFolderDialog dialog = new NewFolderDialog(this);
+        dialog.show(getFragmentManager(), "new folder dialog");
     }
 
     //long click on an image
@@ -137,5 +146,36 @@ public class FoldersFragment extends Fragment implements FolderAdapter.FolderLis
         mExplorer.goBack();
         mFolderAdapter.updateFolders(mExplorer.getFolders());
         mImageAdapter.updateImageList(mExplorer.getImages());
+    }
+
+    @Override
+    public void onNewFolder(String name) {
+        mExplorer.newFolder(name);
+        mFolderAdapter.addFolder(mExplorer.getCurrentPath() + File.separator + name);
+    }
+
+    //click on a folder option
+    @Override
+    public void onOptionClick(int which, String path) {
+        switch (which) {
+            case R.id.delete:
+                ConfirmDeleteDialog.newInstance(path, this).show(getFragmentManager(), "confirm_delete");
+                break;
+            case R.id.rename:
+                RenameDialog.newInstance(path, this).show(getFragmentManager(), "rename");
+                break;
+        }
+    }
+
+    @Override
+    public void onConfirmDelete(String path) {
+        mExplorer.deleteFolder(path);
+        mFolderAdapter.removeFolder(path);
+    }
+
+    @Override
+    public void onRename(String fromPath, String toPath) {
+        mExplorer.renameFolder(fromPath, toPath);
+        mFolderAdapter.renameFolder(fromPath, toPath);
     }
 }

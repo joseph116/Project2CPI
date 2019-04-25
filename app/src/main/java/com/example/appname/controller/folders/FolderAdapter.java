@@ -20,11 +20,17 @@ import java.util.List;
 
 public class FolderAdapter extends RecyclerView.Adapter<FolderAdapter.ViewHolder> {
 
-    private static final String TAG = "FileAdapter : class";
+    //==============================================================================================
+    //  ATTRIBUTES
+    //==============================================================================================
 
     private Context mContext;
     private List<File> mFolders;
     private FolderListener mListener;
+
+    //==============================================================================================
+    //  ADAPTER FUNCTIONS
+    //==============================================================================================
 
     public FolderAdapter(Context context, List<File> folders, FolderListener listener) {
         mContext = context;
@@ -32,10 +38,7 @@ public class FolderAdapter extends RecyclerView.Adapter<FolderAdapter.ViewHolder
         mListener = listener;
     }
 
-    public void updateFolders(List<File> folders) {
-        mFolders = folders;
-        notifyDataSetChanged();
-    }
+
 
     @NonNull
     @Override
@@ -49,7 +52,6 @@ public class FolderAdapter extends RecyclerView.Adapter<FolderAdapter.ViewHolder
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder viewHolder, final int i) {
-        Log.d(TAG, "onBindViewHolder: called");
 
         if (getItemViewType(i) == 1) {
             Glide.with(mContext)
@@ -80,8 +82,6 @@ public class FolderAdapter extends RecyclerView.Adapter<FolderAdapter.ViewHolder
             viewHolder.mLayout.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Log.d(TAG, "onClick: item clicked");
-
                     mListener.onClick(file);
                 }
 
@@ -102,6 +102,48 @@ public class FolderAdapter extends RecyclerView.Adapter<FolderAdapter.ViewHolder
         return mFolders != null ? mFolders.size()+1 : 1;
     }
 
+    @Override
+    public int getItemViewType(int position) {
+        if (position == 0) return 1;
+        else return 2;
+    }
+
+    //==============================================================================================
+    //  UPDATE FUNCTIONS
+    //==============================================================================================
+
+    public void updateFolders(List<File> folders) {
+        int oldSize = mFolders.size();
+        mFolders = folders;
+        notifyItemRangeRemoved(1, oldSize);
+        notifyItemRangeInserted(1, mFolders.size());
+    }
+
+    public void addFolder(String path) {
+        File folder = new File(path);
+        mFolders.add(0, folder);
+        notifyItemInserted(1);
+    }
+
+    public void removeFolder(String path) {
+        File folder = new File(path);
+        int position = mFolders.indexOf(folder);
+        mFolders.remove(position);
+        notifyItemRemoved(position + 1);
+    }
+
+    public void renameFolder(String fromPath, String toPath) {
+        File oldFolder = new File(fromPath);
+        File newFolder = new File(toPath);
+        int position = mFolders.indexOf(oldFolder);
+        mFolders.remove(position);
+        mFolders.add(position, newFolder);
+        notifyItemChanged(position + 1);
+    }
+
+    //==============================================================================================
+    //  VIEW HOLDER CLASS
+    //==============================================================================================
 
     public class ViewHolder extends RecyclerView.ViewHolder {
 
@@ -117,11 +159,9 @@ public class FolderAdapter extends RecyclerView.Adapter<FolderAdapter.ViewHolder
         }
     }
 
-    @Override
-    public int getItemViewType(int position) {
-        if (position == 0) return 1;
-        else return 2;
-    }
+    //==============================================================================================
+    //  INTERFACES
+    //==============================================================================================
 
     public interface FolderListener {
         void onClick(File file);
