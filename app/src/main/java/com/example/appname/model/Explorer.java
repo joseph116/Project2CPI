@@ -71,12 +71,15 @@ public class Explorer {
     public ArrayList<File> getFolders() {
         List<File> files = mStorage.getFiles(mCurrentPath);
         ArrayList<File> folders = new ArrayList<>();
-        for (File f : files) {
-            if (f.isDirectory()) {
-                folders.add(f);
+        if (files != null) {
+            for (File f : files) {
+                if (f.isDirectory()) {
+                    folders.add(f);
+                }
             }
+            Collections.sort(folders, OrderType.DATE.getComparator());
         }
-        Collections.sort(folders, OrderType.DATE.getComparator());
+
         return folders;
     }
 
