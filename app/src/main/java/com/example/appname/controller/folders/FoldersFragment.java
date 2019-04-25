@@ -1,5 +1,6 @@
 package com.example.appname.controller.folders;
 
+import android.app.Activity;
 import android.net.Uri;
 import android.os.Bundle;
 
@@ -12,15 +13,18 @@ import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.example.appname.R;
+import com.example.appname.controller.main.MainActivity;
 import com.example.appname.model.Explorer;
 
 import java.io.File;
 
 
 public class FoldersFragment extends Fragment implements FolderAdapter.FolderListener,
-        ImageAdapter.ImageListener {
+        ImageAdapter.ImageListener,
+        MainActivity.BackPressedListener {
 
     //==============================================================================================
     //  ATTRIBUTES
@@ -31,6 +35,7 @@ public class FoldersFragment extends Fragment implements FolderAdapter.FolderLis
     private RecyclerView mImageRecyclerView;
     private FolderAdapter mFolderAdapter;
     private ImageAdapter mImageAdapter;
+    private Activity mActivity;
 
 
     //==============================================================================================
@@ -63,7 +68,7 @@ public class FoldersFragment extends Fragment implements FolderAdapter.FolderLis
         super.onActivityCreated(savedInstanceState);
         mExplorer = new Explorer(getContext());
         initRecyclers();
-        initBackButton();
+        ((MainActivity)getActivity()).setBackListener(this);
     }
 
     //==============================================================================================
@@ -84,20 +89,6 @@ public class FoldersFragment extends Fragment implements FolderAdapter.FolderLis
         mImageRecyclerView.setLayoutManager(new GridLayoutManager(getContext(), spanCount));
     }
 
-    private void initBackButton() {
-        getView().setFocusableInTouchMode(true);
-        getView().requestFocus();
-        getView().setOnKeyListener(new View.OnKeyListener() {
-            @Override
-            public boolean onKey(View v, int keyCode, KeyEvent event) {
-                if (keyCode == KeyEvent.KEYCODE_BACK) {
-                    onBackClick();
-                    return true;
-                }
-                return false;
-            }
-        });
-    }
 
     //==============================================================================================
     //  FUNCTIONS
@@ -141,7 +132,8 @@ public class FoldersFragment extends Fragment implements FolderAdapter.FolderLis
     }
 
     //click back button
-    private void onBackClick() {
+    @Override
+    public void onBackPressed() {
         mExplorer.goBack();
         mFolderAdapter.updateFolders(mExplorer.getFolders());
         mImageAdapter.updateImageList(mExplorer.getImages());

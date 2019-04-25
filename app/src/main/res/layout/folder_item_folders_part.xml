@@ -17,7 +17,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/ic_folder" />
+        app:srcCompat="@drawable/ic_folder_open" />
 
     <TextView
         android:id="@+id/textView"
@@ -28,6 +28,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="@+id/folderImageView"
         app:layout_constraintStart_toStartOf="@+id/folderImageView"
-        app:layout_constraintTop_toBottomOf="@id/folderImageView" />
+        app:layout_constraintTop_toBottomOf="@id/folderImageView"
+        android:maxHeight="55dp"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

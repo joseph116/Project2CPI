@@ -12,6 +12,7 @@ import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
+import android.widget.Toast;
 
 import com.example.appname.R;
 import com.example.appname.controller.folders.FoldersFragment;
@@ -29,7 +30,9 @@ public class MainActivity extends AppCompatActivity {
     //  ATTRIBUTES
     //==============================================================================================
 
-
+    private ViewPager mViewPagerNavigation;
+    private Toast mToast = null;
+    private BackPressedListener mBackPressedListener;
 
     //==============================================================================================
     //  STATE FUNCTIONS
@@ -88,8 +91,8 @@ public class MainActivity extends AppCompatActivity {
                         .build()
         );
 
-        ViewPager viewPager = findViewById(R.id.viewpager_navigation);
-        viewPager.setAdapter(new FragmentPagerAdapter(getSupportFragmentManager()) {
+        mViewPagerNavigation = findViewById(R.id.viewpager_navigation);
+        mViewPagerNavigation.setAdapter(new FragmentPagerAdapter(getSupportFragmentManager()) {
             @Override
             public Fragment getItem(int position) {
                 switch (position)
@@ -111,7 +114,7 @@ public class MainActivity extends AppCompatActivity {
                 return 4;
             }
         });
-        BottomNavigationBar.setViewPager(viewPager);
+        BottomNavigationBar.setViewPager(mViewPagerNavigation);
 
         BottomNavigationBar.setModels(tabs);
         BottomNavigationBar.setTitleMode(NavigationTabBar.TitleMode.ACTIVE);
@@ -130,6 +133,49 @@ public class MainActivity extends AppCompatActivity {
         BottomNavigationBar.setTitleSize(24);
         BottomNavigationBar.setIconSizeFraction((float) 0.5);
 
+    }
+
+    //==============================================================================================
+    //  FUNCTIONS
+    //==============================================================================================
+
+    private void showToast(String message) {
+        if (mToast != null) mToast.cancel();
+        mToast = Toast.makeText(this, message, Toast.LENGTH_SHORT);
+        mToast.show();
+    }
+
+    //==============================================================================================
+    //  LISTENERS FUNCTIONS
+    //==============================================================================================
+
+
+    @Override
+    public void onBackPressed() {
+        int currentItem = mViewPagerNavigation.getCurrentItem();
+        switch (currentItem) {
+            case 0:
+                showToast("Backed in home page!");
+                break;
+            case 1:
+                mBackPressedListener.onBackPressed();
+                break;
+            case 2:
+                break;
+            case 3:
+                break;
+            default:
+                super.onBackPressed();
+                break;
+        }
+    }
+
+    public void setBackListener(BackPressedListener listener){
+        mBackPressedListener = listener;
+    }
+
+    public interface BackPressedListener{
+        void onBackPressed();
     }
 
     //==============================================================================================
