@@ -27,6 +27,7 @@ public class Explorer {
     private String mCurrentPath;
     private String mRootPath; // "ExternalStoragePath/Pictures/SortedPictures"
     private int mTreeSteps;
+    private Toast mToast;
 
     //for MediaStore query
     private static final String[] IMAGE_PROJECTION =
@@ -138,12 +139,14 @@ public class Explorer {
         }
     }
 
-    public void goBack() {
+    public boolean goBack() {
         if (mTreeSteps > 0) {
             mCurrentPath = getPreviousPath();
             mTreeSteps--;
-            return;
+            return true;
         }
+        showToast("Can't go anymore");
+        return false;
     }
 
     public void newFolder(String name) {
@@ -170,5 +173,11 @@ public class Explorer {
     public void renameFolder(String fromPath, String toPath) {
         mStorage.rename(fromPath, toPath);
         Toast.makeText(mContext, "Renamed", Toast.LENGTH_SHORT).show();
+    }
+
+    public void showToast(String message) {
+        if (mToast != null) mToast.cancel();
+        mToast = Toast.makeText(mContext, message, Toast.LENGTH_SHORT);
+        mToast.show();
     }
 }

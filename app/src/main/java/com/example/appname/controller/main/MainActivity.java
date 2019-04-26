@@ -161,6 +161,7 @@ public class MainActivity extends AppCompatActivity {
                 mBackPressedListener.onBackPressed();
                 break;
             case 2:
+                mBackPressedListener.onBackPressed();
                 break;
             case 3:
                 break;

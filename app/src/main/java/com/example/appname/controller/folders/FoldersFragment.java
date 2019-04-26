@@ -43,7 +43,6 @@ public class FoldersFragment extends Fragment implements FolderAdapter.FolderLis
     private RecyclerView mImageRecyclerView;
     private FolderAdapter mFolderAdapter;
     private ImageAdapter mImageAdapter;
-    private Activity mActivity;
 
 
     //==============================================================================================
@@ -96,7 +95,6 @@ public class FoldersFragment extends Fragment implements FolderAdapter.FolderLis
         mImageRecyclerView.setAdapter(mImageAdapter);
         mImageRecyclerView.setLayoutManager(new GridLayoutManager(getContext(), spanCount));
     }
-
 
     //==============================================================================================
     //  FUNCTIONS

@@ -1,49 +1,52 @@
 package com.example.appname.controller.sort;
 
-import android.net.Uri;
 import android.os.Bundle;
 
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.example.appname.R;
+import com.example.appname.controller.main.MainActivity;
+import com.example.appname.model.Explorer;
+
+import java.io.File;
 
 
-public class SortFragment extends Fragment {
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
+public class SortFragment extends Fragment implements FolderAdapter.OnFileItemListener,
+        MainActivity.BackPressedListener {
 
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
+    //==============================================================================================
+    //  ATTRIBUTES
+    //==============================================================================================
 
+    private RecyclerView mFolderRecyclerView;
+    private Explorer mExplorer;
+    private FolderAdapter mFolderAdapter;
+    private TextView mPathTextView;
 
+    //==============================================================================================
+    //  CONSTRUCTORS
+    //==============================================================================================
     public SortFragment() {
         // Required empty public constructor
     }
 
-    // TODO: Rename and change types and number of parameters
-    public static SortFragment newInstance(String param1, String param2) {
-        SortFragment fragment = new SortFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
 
+    //==============================================================================================
+    //  STATE FUNCTIONS
+    //==============================================================================================
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
+
     }
 
     @Override
@@ -53,5 +56,69 @@ public class SortFragment extends Fragment {
         return inflater.inflate(R.layout.fragment_sort, container, false);
     }
 
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        mExplorer = new Explorer(getContext());
+        initRecycler();
+        ((MainActivity)getActivity()).setBackListener(this);
+    }
+    //==============================================================================================
+    //  INIT FUNCTIONS
+    //==============================================================================================
+
+    private void initRecycler() {
+        mFolderRecyclerView = getView().findViewById(R.id.sortRecyclerView);
+        mFolderAdapter = new FolderAdapter(getContext(), mExplorer.getFolders(), this);
+        GridLayoutManager gridLayoutManager = new GridLayoutManager(getContext(), 1);
+        gridLayoutManager.setOrientation(GridLayoutManager.HORIZONTAL);
+        mFolderRecyclerView.setLayoutManager(gridLayoutManager);
+        mFolderRecyclerView.setAdapter(mFolderAdapter);
+
+        //init path TextView
+        mPathTextView = getView().findViewById(R.id.sortPathText);
+        String currentPath = mExplorer.getCurrentPath();
+        String rootPath = mExplorer.getRootPath();
+        mPathTextView.setText(currentPath.replace(rootPath, "Sorted Pictures"));
+    }
+
+    //==============================================================================================
+    //  FUNCTIONS
+    //==============================================================================================
+
+
+    //==============================================================================================
+    //  LISTENERS FUNCTIONS
+    //==============================================================================================
+
+    @Override
+    public void onClick(File file) {
+        mExplorer.openFolder(file);
+        mFolderAdapter.updateFolders(mExplorer.getFolders());
+        mPathTextView.setText(mExplorer.getCurrentPath().replace(mExplorer.getRootPath(), "Sorted Pictures"));
+    }
+
+    @Override
+    public void onLongClick(File file) {
 
     }
+
+    @Override
+    public void onClickAdd() {
+
+    }
+
+    @Override
+    public void onInsert(File file) {
+
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (mExplorer.goBack()) {
+            mFolderAdapter.updateFolders(mExplorer.getFolders());
+            mPathTextView.setText(mExplorer.getCurrentPath().replace(mExplorer.getRootPath(), "Sorted Pictures"));
+        }
+
+    }
+}
