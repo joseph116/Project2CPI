@@ -51,7 +51,7 @@ public class FolderAdapter extends RecyclerView.Adapter<FolderAdapter.ViewHolder
     public void onBindViewHolder(@NonNull ViewHolder viewHolder, final int i) {
 
         if (getItemViewType(i) == 1) {
-            viewHolder.getInsertButton().setImageResource(R.drawable.ic_plus_white);
+            viewHolder.getInsertButton().setImageResource(R.drawable.ic_plus);
             viewHolder.getTextView().setText("Add Folder");
             viewHolder.getInsertButton().setOnClickListener(new View.OnClickListener() {
                 @Override
