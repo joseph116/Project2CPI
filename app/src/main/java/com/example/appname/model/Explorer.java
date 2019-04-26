@@ -145,7 +145,6 @@ public class Explorer {
             mTreeSteps--;
             return true;
         }
-        showToast("Can't go anymore");
         return false;
     }
 
@@ -153,7 +152,7 @@ public class Explorer {
         if (name.length() > 0) {
             boolean created = mStorage.createDirectory(mCurrentPath + File.separator + name);
             if (created) {
-                Toast.makeText(mContext, "New folder created: " + name, Toast.LENGTH_SHORT).show();
+                //Toast.makeText(mContext, "New folder created: " + name, Toast.LENGTH_SHORT).show();
             } else {
                 Toast.makeText(mContext, "Failed create folder: " + name, Toast.LENGTH_SHORT).show();
             }

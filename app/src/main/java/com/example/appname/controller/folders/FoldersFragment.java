@@ -78,6 +78,8 @@ public class FoldersFragment extends Fragment implements FolderAdapter.FolderLis
         ((MainActivity)getActivity()).setBackListener(this);
     }
 
+
+
     //==============================================================================================
     //  INIT FUNCTIONS
     //==============================================================================================
@@ -141,9 +143,10 @@ public class FoldersFragment extends Fragment implements FolderAdapter.FolderLis
     //click back button
     @Override
     public void onBackPressed() {
-        mExplorer.goBack();
-        mFolderAdapter.updateFolders(mExplorer.getFolders());
-        mImageAdapter.updateImageList(mExplorer.getImages());
+        if (mExplorer.goBack()) {
+            mFolderAdapter.updateFolders(mExplorer.getFolders());
+            mImageAdapter.updateImageList(mExplorer.getImages());
+        }
     }
 
     @Override

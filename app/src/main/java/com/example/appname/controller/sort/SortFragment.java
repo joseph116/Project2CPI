@@ -14,6 +14,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.example.appname.R;
+import com.example.appname.controller.dialogs.NewFolderDialog;
 import com.example.appname.controller.main.MainActivity;
 import com.example.appname.model.Explorer;
 
@@ -21,7 +22,8 @@ import java.io.File;
 
 
 public class SortFragment extends Fragment implements FolderAdapter.OnFileItemListener,
-        MainActivity.BackPressedListener {
+        MainActivity.BackPressedListener,
+        NewFolderDialog.DialogListener {
 
     //==============================================================================================
     //  ATTRIBUTES
@@ -63,6 +65,9 @@ public class SortFragment extends Fragment implements FolderAdapter.OnFileItemLi
         initRecycler();
         ((MainActivity)getActivity()).setBackListener(this);
     }
+
+
+
     //==============================================================================================
     //  INIT FUNCTIONS
     //==============================================================================================
@@ -105,7 +110,8 @@ public class SortFragment extends Fragment implements FolderAdapter.OnFileItemLi
 
     @Override
     public void onClickAdd() {
-
+        NewFolderDialog dialog = new NewFolderDialog(this);
+        dialog.show(getFragmentManager(), "new folder dialog");
     }
 
     @Override
@@ -120,5 +126,11 @@ public class SortFragment extends Fragment implements FolderAdapter.OnFileItemLi
             mPathTextView.setText(mExplorer.getCurrentPath().replace(mExplorer.getRootPath(), "Sorted Pictures"));
         }
 
+    }
+
+    @Override
+    public void onNewFolder(String name) {
+        mExplorer.newFolder(name);
+        mFolderAdapter.addFolder(mExplorer.getCurrentPath() + File.separator + name);
     }
 }
