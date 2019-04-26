@@ -4,32 +4,30 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
-import androidx.viewpager.widget.ViewPager;
-
+import androidx.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.widget.Toast;
-
 import com.example.appname.R;
 import com.example.appname.View.folders.FoldersFragment;
 import com.example.appname.View.home.HomeFragment;
 import com.example.appname.View.settings.SettingsFragment;
 import com.example.appname.View.sort.SortFragment;
+import com.example.appname.ViewModel.ImageViewModel;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
-
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity{
 
     //==============================================================================================
     //  ATTRIBUTES
     //==============================================================================================
 
-    private ViewPager mViewPagerNavigation;
     private Toast mToast = null;
     private BackPressedListener mBackPressedListener;
     private BottomNavigationView mBottomNavBar;
+    private ImageViewModel mImageViewModel;
 
     //==============================================================================================
     //  STATE FUNCTIONS
@@ -48,6 +46,12 @@ public class MainActivity extends AppCompatActivity {
         initNavBar();
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        loadUnsortedImages();
+    }
+
     //==============================================================================================
     //  INIT FUNCTIONS
     //==============================================================================================
@@ -60,30 +64,34 @@ public class MainActivity extends AppCompatActivity {
         mBottomNavBar.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                Fragment selectedFragmennt = null;
+                Fragment selectedFragment = null;
 
                 switch (item.getItemId()) {
                     case R.id.nav_home:
-                        selectedFragmennt = new HomeFragment();
+                        selectedFragment = new HomeFragment();
                         break;
                     case R.id.nav_folders:
-                        selectedFragmennt = new FoldersFragment();
+                        selectedFragment = new FoldersFragment();
                         break;
                     case R.id.nav_sort:
-                        selectedFragmennt = new SortFragment();
+                        selectedFragment = SortFragment.newInstance(mImageViewModel.getUnsortedImages());
                         break;
                     case R.id.nav_settings:
-                        selectedFragmennt = new SettingsFragment();
+                        selectedFragment = new SettingsFragment();
                         break;
                 }
 
                 getSupportFragmentManager().beginTransaction().replace(R.id.frame_container,
-                        selectedFragmennt).commit();
+                        selectedFragment).commit();
                 return true;
             }
         });
     }
 
+    private void loadUnsortedImages() {
+        mImageViewModel = ViewModelProviders.of(this).get(ImageViewModel.class);
+        mImageViewModel.startLoading();
+    }
     //==============================================================================================
     //  FUNCTIONS
     //==============================================================================================

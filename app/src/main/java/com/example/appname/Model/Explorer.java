@@ -6,10 +6,8 @@ import android.net.Uri;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.widget.Toast;
-
 import com.snatik.storage.Storage;
 import com.snatik.storage.helpers.OrderType;
-
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;

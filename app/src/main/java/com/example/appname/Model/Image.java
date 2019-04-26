@@ -13,19 +13,19 @@ public class Image implements Parcelable {
     //  ATTRIBUTES
     //==============================================================================================
 
-    final long rowId;
-    final Uri uri;
-    final String mimeType;
-    final long dateModified;
-    final int orientation;
-    final long dateTaken;
+    private final long rowId;
+    private final Uri uri;
+    private final String mimeType;
+    private final long dateModified;
+    private final int orientation;
+    private final long dateTaken;
     private String path;
 
     //==============================================================================================
     //  CONSTRUCTORS
     //==============================================================================================
 
-    Image(long rowId, Uri uri, String path, String mimeType, long dateTaken, long dateModified,
+    public Image(long rowId, Uri uri, String path, String mimeType, long dateTaken, long dateModified,
           int orientation) {
         this.rowId = rowId;
         this.uri = uri;
