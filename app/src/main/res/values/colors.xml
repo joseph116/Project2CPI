@@ -1,7 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#FFFFFF</color>
-    <color name="colorPrimaryDark">#000000</color>
-    <color name="colorAccent">#3F51B5</color>
-    <color name="lightGrey">#E6E6E6</color>
+    <!-- Theme 1 -->
+    <color name="colorPrimary">#546e7a</color>
+    <color name="colorPrimaryDark">#29434e</color>
+    <color name="colorAccent">#819ca9</color>
+    <!-- Theme 2 -->
+    <color name="colorPrimary2">#eeeeee</color>
+    <color name="colorPrimaryDark2">#bcbcbc</color>
+    <color name="colorAccent2">#ffffff</color>
+    <!-- Theme 3 -->
+    <color name="colorPrimary3">#212121</color>
+    <color name="colorPrimaryDark3">#000000</color>
+    <color name="colorAccent3">#484848</color>
+
+    <color name="textOnDark">#ffffff</color>
+    <color name="textOnLight">#000000</color>
 </resources>

@@ -1,4 +1,4 @@
-package com.example.appname.controller.main;
+package com.example.appname.View.main;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;

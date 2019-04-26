@@ -1,4 +1,4 @@
-package com.example.appname.controller.dialogs;
+package com.example.appname.View.dialogs;
 
 import android.app.Dialog;
 import android.content.DialogInterface;

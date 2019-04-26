@@ -1,4 +1,4 @@
-package com.example.appname.model;
+package com.example.appname.Model;
 
 import android.net.Uri;
 import android.os.Parcel;
@@ -7,7 +7,7 @@ import android.os.Parcelable;
 /**
  * THIS IS THE DATA UNIT CLASS
  */
-public class MediaStoreData implements Parcelable {
+public class Image implements Parcelable {
 
     //==============================================================================================
     //  ATTRIBUTES
@@ -18,7 +18,6 @@ public class MediaStoreData implements Parcelable {
     final String mimeType;
     final long dateModified;
     final int orientation;
-    private final Type type;
     final long dateTaken;
     private String path;
 
@@ -26,19 +25,18 @@ public class MediaStoreData implements Parcelable {
     //  CONSTRUCTORS
     //==============================================================================================
 
-    MediaStoreData(long rowId, Uri uri, String path, String mimeType, long dateTaken, long dateModified,
-                   int orientation, Type type) {
+    Image(long rowId, Uri uri, String path, String mimeType, long dateTaken, long dateModified,
+          int orientation) {
         this.rowId = rowId;
         this.uri = uri;
         this.path = path;
         this.dateModified = dateModified;
         this.mimeType = mimeType;
         this.orientation = orientation;
-        this.type = type;
         this.dateTaken = dateTaken;
     }
 
-    private MediaStoreData(Parcel in) {
+    private Image(Parcel in) {
         rowId = in.readLong();
         uri = Uri.parse(in.readString());
         path = in.readString();
@@ -46,7 +44,6 @@ public class MediaStoreData implements Parcelable {
         dateTaken = in.readLong();
         dateModified = in.readLong();
         orientation = in.readInt();
-        type = Type.valueOf(in.readString());
     }
 
     //==============================================================================================
@@ -65,15 +62,15 @@ public class MediaStoreData implements Parcelable {
     //  FOR PARCELABLE
     //==============================================================================================
 
-    public static final Creator<MediaStoreData> CREATOR = new Creator<MediaStoreData>() {
+    public static final Creator<Image> CREATOR = new Creator<Image>() {
         @Override
-        public MediaStoreData createFromParcel(Parcel parcel) {
-            return new MediaStoreData(parcel);
+        public Image createFromParcel(Parcel parcel) {
+            return new Image(parcel);
         }
 
         @Override
-        public MediaStoreData[] newArray(int i) {
-            return new MediaStoreData[i];
+        public Image[] newArray(int i) {
+            return new Image[i];
         }
     };
 
@@ -91,28 +88,19 @@ public class MediaStoreData implements Parcelable {
         parcel.writeLong(dateTaken);
         parcel.writeLong(dateModified);
         parcel.writeInt(orientation);
-        parcel.writeString(type.name());
     }
 
     @Override
     public String toString() {
-        return "MediaStoreData{"
+        return "Image{"
                 + "rowId=" + rowId
                 + ", uri=" + uri
                 + ", path=" + path
                 + ", mimeType='" + mimeType + '\''
                 + ", dateModified=" + dateModified
                 + ", orientation=" + orientation
-                + ", type=" + type
                 + ", dateTaken=" + dateTaken
                 + '}';
     }
 
-    /**
-     * The type of data.
-     */
-    public enum Type {
-        VIDEO,
-        IMAGE,
-    }
 }

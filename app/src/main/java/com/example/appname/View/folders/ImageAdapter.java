@@ -1,4 +1,4 @@
-package com.example.appname.controller.folders;
+package com.example.appname.View.folders;
 
 import android.content.Context;
 import android.net.Uri;
@@ -14,8 +14,8 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.example.appname.Model.Image;
 import com.example.appname.R;
-import com.example.appname.model.MediaStoreData;
 
 import java.util.ArrayList;
 
@@ -24,13 +24,13 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ImageHolder>
     private static final String TAG = "ImageAdapter";
 
     Context mContext;
-    private ArrayList<MediaStoreData> mImageList;
+    private ArrayList<Image> mImageList;
     private ImageListener mListener;
     private boolean mSelectionMode = false;
     private boolean mAllChecked = false;
     private int mFirstItemSelected;
 
-    public ImageAdapter(Context context, ArrayList<MediaStoreData> images, ImageListener listener) {
+    public ImageAdapter(Context context, ArrayList<Image> images, ImageListener listener) {
         mContext = context;
         mImageList = images;
         mListener = listener;
@@ -60,7 +60,7 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ImageHolder>
         notifyDataSetChanged();
     }
 
-    public void updateImageList(ArrayList<MediaStoreData> imageList) {
+    public void updateImageList(ArrayList<Image> imageList) {
         mImageList = imageList;
         notifyDataSetChanged();
     }

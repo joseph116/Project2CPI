@@ -4,50 +4,28 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorPrimary"
-    tools:context=".controller.main.MainActivity">
+    tools:context=".View.main.MainActivity">
 
-    <androidx.viewpager.widget.ViewPager
-        android:id="@+id/viewpager_navigation"
-        android:layout_width="0dp"
+    <FrameLayout
+        android:id="@+id/frame_container"
+        android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_marginBottom="8dp"
-        app:layout_constraintBottom_toTopOf="@+id/BottomNavigationBar"
+        app:layout_constraintBottom_toTopOf="@+id/bottomNavBar"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"></FrameLayout>
 
-    <devlight.io.library.ntb.NavigationTabBar
-        android:id="@+id/BottomNavigationBar"
-        android:layout_width="0dp"
-        android:layout_height="50dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginEnd="8dp"
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/bottomNavBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:ntb_active_color="@color/colorPrimary"
-        app:ntb_animation_duration="400"
-        app:ntb_badge_bg_color="#ffff0000"
-        app:ntb_badge_gravity="top"
-        app:ntb_badge_position="right"
-        app:ntb_badge_size="10sp"
-        app:ntb_badge_title_color="#ffffffff"
-        app:ntb_badge_use_typeface="true"
-        app:ntb_badged="true"
-        app:ntb_bg_color="@color/colorPrimary"
-        app:ntb_corners_radius="10dp"
-        app:ntb_icon_size_fraction="0.5"
-        app:ntb_inactive_color="@color/colorPrimaryDark"
-        app:ntb_preview_colors="@color/colorPrimary"
-        app:ntb_scaled="true"
-        app:ntb_swiped="true"
-        app:ntb_tinted="true"
-        app:ntb_title_mode="all"
-        app:ntb_title_size="10sp"
-        app:ntb_titled="true"
-        app:ntb_typeface="fonts/custom_typeface.ttf" />
+        app:menu="@menu/buttom_nav_menu"
+        android:background="?android:attr/windowBackground">
 
+    </com.google.android.material.bottomnavigation.BottomNavigationView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
 

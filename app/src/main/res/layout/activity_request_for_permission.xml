@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".controller.main.RequestForPermissionActivity">
+    tools:context=".View.main.RequestForPermissionActivity">
 
     <ImageView
         android:id="@+id/imageView"
@@ -25,7 +25,7 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="69dp"
         android:background="@color/colorAccent"
-        android:textColor="@color/colorPrimary"
+        android:textColor="@color/textOnDark"
         android:text="Allow permissions"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/guideline2"

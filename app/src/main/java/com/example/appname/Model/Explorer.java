@@ -1,4 +1,4 @@
-package com.example.appname.model;
+package com.example.appname.Model;
 
 import android.content.Context;
 import android.database.Cursor;
@@ -84,13 +84,13 @@ public class Explorer {
         return folders;
     }
 
-    public ArrayList<MediaStoreData> getImages() {
+    public ArrayList<Image> getImages() {
         Uri contentUri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
         Cursor cursor = mContext.getContentResolver().query(
                 contentUri, IMAGE_PROJECTION,
                 null, null,
                 MediaStore.Images.Media.DEFAULT_SORT_ORDER);
-        ArrayList<MediaStoreData> images = new ArrayList<>();
+        ArrayList<Image> images = new ArrayList<>();
         //if there is no image
         if (cursor == null) return images;
 
@@ -112,8 +112,8 @@ public class Explorer {
                     long dateModified = cursor.getLong(dateModifiedColNum);
                     int orientation = cursor.getInt(orientationColNum);
 
-                    images.add(new MediaStoreData(id, Uri.withAppendedPath(contentUri, Long.toString(id)),
-                            path,mimeType, dateTaken, dateModified, orientation, MediaStoreData.Type.IMAGE));
+                    images.add(new Image(id, Uri.withAppendedPath(contentUri, Long.toString(id)),
+                            path,mimeType, dateTaken, dateModified, orientation));
                 }
             }
         } finally {

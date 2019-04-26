@@ -1,4 +1,4 @@
-package com.example.appname.controller.settings;
+package com.example.appname.View.settings;
 
 import android.net.Uri;
 import android.os.Bundle;

@@ -1,4 +1,4 @@
-package com.example.appname.controller.home;
+package com.example.appname.View.home;
 
 import android.net.Uri;
 import android.os.Bundle;

@@ -1,24 +1,18 @@
-package com.example.appname.controller.folders;
+package com.example.appname.View.sort;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
+import android.widget.ImageButton;
 import android.widget.TextView;
-
 import androidx.annotation.NonNull;
-import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
-
-import com.bumptech.glide.Glide;
 import com.example.appname.R;
-
 import java.io.File;
 import java.util.List;
 
-public class FolderAdapter extends RecyclerView.Adapter<FolderAdapter.ViewHolder> {
+public class FolderAdapter extends RecyclerView.Adapter<FolderAdapter.ViewHolder>{
 
     //==============================================================================================
     //  ATTRIBUTES
@@ -26,16 +20,17 @@ public class FolderAdapter extends RecyclerView.Adapter<FolderAdapter.ViewHolder
 
     private Context mContext;
     private List<File> mFolders;
-    private FolderListener mListener;
+    private OnFileItemListener mListener;
+    private boolean mEnableInsert = true;
 
     //==============================================================================================
     //  CONSTRUCTORS
     //==============================================================================================
 
-    public FolderAdapter(Context context, List<File> folders, FolderListener listener) {
-        mContext = context;
-        mFolders = folders;
+    public FolderAdapter(Context c, List<File> folders, OnFileItemListener listener) {
+        mContext = c;
         mListener = listener;
+        mFolders = folders;
     }
 
     //==============================================================================================
@@ -46,7 +41,7 @@ public class FolderAdapter extends RecyclerView.Adapter<FolderAdapter.ViewHolder
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
 
-        View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.folder_item_folders_part, viewGroup, false);
+        View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.folder_item_sort_part, viewGroup, false);
         ViewHolder holder = new ViewHolder(view);
         return holder;
 
@@ -56,11 +51,9 @@ public class FolderAdapter extends RecyclerView.Adapter<FolderAdapter.ViewHolder
     public void onBindViewHolder(@NonNull ViewHolder viewHolder, final int i) {
 
         if (getItemViewType(i) == 1) {
-            Glide.with(mContext)
-                    .load(R.drawable.ic_plus)
-                    .into(viewHolder.mImage);
-            viewHolder.mFileName.setText("Add folder");
-            viewHolder.mLayout.setOnClickListener(new View.OnClickListener() {
+            viewHolder.getInsertButton().setImageResource(R.drawable.ic_plus_white);
+            viewHolder.getTextView().setText("Add Folder");
+            viewHolder.getInsertButton().setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     //add button click
@@ -72,31 +65,32 @@ public class FolderAdapter extends RecyclerView.Adapter<FolderAdapter.ViewHolder
         } else {
             final File file = mFolders.get(i-1);
 
-            if (file.isDirectory()) {
-                Glide.with(mContext)
-                        .load(R.drawable.ic_folder_open)
-                        .override(300, 300)
-                        .into(viewHolder.mImage);
-            }
+            viewHolder.getTextView().setText(mFolders.get(i-1).getName());
 
-            viewHolder.mFileName.setText(mFolders.get(i-1).getName());
-
-            viewHolder.mLayout.setOnClickListener(new View.OnClickListener() {
+            viewHolder.getTextView().setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     mListener.onClick(file);
                 }
 
             });
-            viewHolder.mLayout.setOnLongClickListener(new View.OnLongClickListener() {
+            viewHolder.getTextView().setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
                 public boolean onLongClick(View v) {
                     mListener.onLongClick(file);
                     return false;
                 }
             });
-        }
+            viewHolder.getInsertButton().setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    mListener.onInsert(file);
+                }
+            });
 
+            if (!mEnableInsert) viewHolder.getInsertButton().setEnabled(false);
+
+        }
     }
 
     @Override
@@ -108,6 +102,10 @@ public class FolderAdapter extends RecyclerView.Adapter<FolderAdapter.ViewHolder
     public int getItemViewType(int position) {
         if (position == 0) return 1;
         else return 2;
+    }
+
+    public void setEnableInsert(boolean enableInsert) {
+        mEnableInsert = enableInsert;
     }
 
     //==============================================================================================
@@ -134,43 +132,44 @@ public class FolderAdapter extends RecyclerView.Adapter<FolderAdapter.ViewHolder
         notifyItemRemoved(position + 1);
     }
 
-    public void renameFolder(String fromPath, String toPath) {
-        File oldFolder = new File(fromPath);
-        File newFolder = new File(toPath);
-        int position = mFolders.indexOf(oldFolder);
-        mFolders.remove(position);
-        mFolders.add(position, newFolder);
-        notifyItemChanged(position + 1);
-    }
-
     //==============================================================================================
     //  VIEW HOLDER CLASS
     //==============================================================================================
 
     public class ViewHolder extends RecyclerView.ViewHolder {
 
-        TextView mFileName;
-        ImageView mImage;
-        ConstraintLayout mLayout;
+
+        private ImageButton mInsertButton;
+        private TextView mTextView;
+
+        public ImageButton getInsertButton() {
+            return mInsertButton;
+        }
+
+        public TextView getTextView() {
+            return mTextView;
+        }
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
-            mFileName = itemView.findViewById(R.id.textView);
-            mImage = itemView.findViewById(R.id.folderImageView);
-            mLayout = itemView.findViewById(R.id.folder_item_parent);
+            mInsertButton = itemView.findViewById(R.id.insert_button);
+            mTextView = itemView.findViewById(R.id.folder_name_sort_part);
+
         }
     }
+
 
     //==============================================================================================
     //  INTERFACES
     //==============================================================================================
 
-    public interface FolderListener {
+    public interface OnFileItemListener {
         void onClick(File file);
 
         void onLongClick(File file);
 
         void onClickAdd();
-    }
 
+        void onInsert(File file);
+    }
 }

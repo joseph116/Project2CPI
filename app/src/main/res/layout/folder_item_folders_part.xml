@@ -26,6 +26,7 @@
         android:layout_marginTop="4dp"
         android:maxHeight="55dp"
         android:text="TextView"
+        android:textColor="@color/textOnDark"
         android:textAlignment="center"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="@+id/folderImageView"

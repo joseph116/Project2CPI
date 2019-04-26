@@ -19,6 +19,9 @@ android {
 }
 
 dependencies {
+    def lifecycle_version = "2.0.0"
+
+
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation 'androidx.appcompat:appcompat:1.0.2'
     implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
@@ -33,7 +36,11 @@ dependencies {
     annotationProcessor 'com.github.bumptech.glide:compiler:4.9.0'
     //Storage
     implementation 'com.snatik:storage:2.1.0'
-    //Bottom Navigation Bar
-    implementation 'devlight.io:navigationtabbar:1.2.5'
+    //Pager View
     implementation 'androidx.viewpager:viewpager:1.0.0'
+    // ViewModel Architecture
+    implementation "androidx.lifecycle:lifecycle-extensions:$lifecycle_version"
+    annotationProcessor "androidx.lifecycle:lifecycle-compiler:$lifecycle_version"
+    // Design (Material Arts)
+    implementation "com.google.android.material:material:1.1.0-alpha05"
 }
