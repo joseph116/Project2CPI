@@ -29,6 +29,7 @@ public class MainActivity extends AppCompatActivity {
     private ViewPager mViewPagerNavigation;
     private Toast mToast = null;
     private BackPressedListener mBackPressedListener;
+    private BottomNavigationView mBottomNavBar;
 
     //==============================================================================================
     //  STATE FUNCTIONS
@@ -53,10 +54,10 @@ public class MainActivity extends AppCompatActivity {
 
 
     private void initNavBar() {
-        BottomNavigationView bottomNavBar = findViewById(R.id.bottomNavBar);
+        mBottomNavBar = findViewById(R.id.bottomNavBar);
         getSupportFragmentManager().beginTransaction().replace(R.id.frame_container,
                 new HomeFragment()).commit();
-        bottomNavBar.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
+        mBottomNavBar.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 Fragment selectedFragmennt = null;
@@ -100,18 +101,18 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        int currentItem = mViewPagerNavigation.getCurrentItem();
-        switch (currentItem) {
-            case 0:
+        int currentItemId = mBottomNavBar.getSelectedItemId();
+        switch (currentItemId) {
+            case R.id.nav_home:
                 showToast("Backed in home page!");
                 break;
-            case 1:
+            case R.id.nav_folders:
                 mBackPressedListener.onBackPressed();
                 break;
-            case 2:
+            case R.id.nav_sort:
                 mBackPressedListener.onBackPressed();
                 break;
-            case 3:
+            case R.id.nav_settings:
                 break;
             default:
                 super.onBackPressed();
