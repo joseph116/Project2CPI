@@ -7,6 +7,7 @@ import android.os.Parcelable;
 /**
  * THIS IS THE DATA UNIT CLASS
  */
+
 public class Image implements Parcelable {
 
     //==============================================================================================
