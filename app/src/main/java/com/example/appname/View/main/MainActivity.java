@@ -28,6 +28,7 @@ public class MainActivity extends AppCompatActivity{
     private BackPressedListener mBackPressedListener;
     private BottomNavigationView mBottomNavBar;
     private ImageViewModel mImageViewModel;
+    private Fragment mSelectedFragment;
 
     //==============================================================================================
     //  STATE FUNCTIONS
@@ -64,25 +65,32 @@ public class MainActivity extends AppCompatActivity{
         mBottomNavBar.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                Fragment selectedFragment = null;
 
                 switch (item.getItemId()) {
                     case R.id.nav_home:
-                        selectedFragment = new HomeFragment();
+                        if (!(mSelectedFragment instanceof HomeFragment)){
+                            mSelectedFragment = new HomeFragment();
+                        }
                         break;
                     case R.id.nav_folders:
-                        selectedFragment = new FoldersFragment();
+                        if (!(mSelectedFragment instanceof FoldersFragment)){
+                            mSelectedFragment = new FoldersFragment();
+                        }
                         break;
                     case R.id.nav_sort:
-                        selectedFragment = SortFragment.newInstance(mImageViewModel.getUnsortedImages());
+                        if (!(mSelectedFragment instanceof SortFragment)){
+                            mSelectedFragment = SortFragment.newInstance(mImageViewModel.getUnsortedImages());
+                        }
                         break;
                     case R.id.nav_settings:
-                        selectedFragment = new SettingsFragment();
+                        if (!(mSelectedFragment instanceof SettingsFragment)){
+                            mSelectedFragment = new SettingsFragment();
+                        }
                         break;
                 }
 
                 getSupportFragmentManager().beginTransaction().replace(R.id.frame_container,
-                        selectedFragment).commit();
+                        mSelectedFragment).commit();
                 return true;
             }
         });
@@ -90,7 +98,6 @@ public class MainActivity extends AppCompatActivity{
 
     private void loadUnsortedImages() {
         mImageViewModel = ViewModelProviders.of(this).get(ImageViewModel.class);
-        mImageViewModel.startLoading();
     }
     //==============================================================================================
     //  FUNCTIONS

@@ -3,6 +3,7 @@ package com.example.appname.View.sort;
 import android.os.Bundle;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager.widget.ViewPager;
@@ -11,11 +12,16 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
+
 import com.example.appname.Model.Image;
+import com.example.appname.Model.LoadUnsortedImagesTask;
 import com.example.appname.R;
 import com.example.appname.View.dialogs.NewFolderDialog;
 import com.example.appname.View.main.MainActivity;
 import com.example.appname.Model.Explorer;
+import com.example.appname.ViewModel.ImageViewModel;
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
@@ -23,7 +29,8 @@ import java.util.List;
 
 public class SortFragment extends Fragment implements FolderAdapter.OnFileItemListener,
         MainActivity.BackPressedListener,
-        NewFolderDialog.DialogListener {
+        NewFolderDialog.DialogListener,
+        LoadUnsortedImagesTask.OnLoadCompleteListener {
 
     //==============================================================================================
     //  ATTRIBUTES
@@ -31,6 +38,7 @@ public class SortFragment extends Fragment implements FolderAdapter.OnFileItemLi
 
     private static final String ARG_UNSORTED_LIST = "unsorted list";
 
+    private ImageViewModel mImageViewModel;
     private RecyclerView mFolderRecyclerView;
     private ViewPager mViewPager;
     private ImagePagerAdapter mImagePagerAdapter;
@@ -85,6 +93,7 @@ public class SortFragment extends Fragment implements FolderAdapter.OnFileItemLi
         initRecycler();
         initViewPager();
         ((MainActivity)getActivity()).setBackListener(this);
+
     }
 
 
@@ -190,5 +199,11 @@ public class SortFragment extends Fragment implements FolderAdapter.OnFileItemLi
     public void onNewFolder(String name) {
         mExplorer.newFolder(name);
         mFolderAdapter.addFolder(mExplorer.getCurrentPath() + File.separator + name);
+    }
+
+    @Override
+    public void loadFinished(ArrayList<Image> images) {
+        mUnsortedImages = images;
+        mImagePagerAdapter.updateImages(images);
     }
 }

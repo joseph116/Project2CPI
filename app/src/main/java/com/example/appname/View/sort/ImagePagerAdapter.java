@@ -13,6 +13,7 @@ import androidx.viewpager.widget.PagerAdapter;
 import com.bumptech.glide.Glide;
 import com.example.appname.Model.Image;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class ImagePagerAdapter extends PagerAdapter {
@@ -59,5 +60,11 @@ public class ImagePagerAdapter extends PagerAdapter {
     @Override
     public void destroyItem(@NonNull ViewGroup container, int position, @NonNull Object object) {
         container.removeView((ImageView) object);
+    }
+
+    public void updateImages(ArrayList<Image> images) {
+        mImages = images;
+        notifyAll();
+        //notifyDataSetChanged();
     }
 }

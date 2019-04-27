@@ -17,6 +17,8 @@ public class ImageViewModel extends AndroidViewModel implements LoadUnsortedImag
 
     public ImageViewModel(@NonNull Application application) {
         super(application);
+        Toast.makeText(getApplication(), "ViewModel created!", Toast.LENGTH_SHORT).show();
+        new LoadUnsortedImagesTask(getApplication(), this);
     }
 
     public ArrayList<Image> getUnsortedImages() {
@@ -33,4 +35,5 @@ public class ImageViewModel extends AndroidViewModel implements LoadUnsortedImag
         Toast.makeText(getApplication(), "Load complete! " + images.size()
                 + " unsorted pics found", Toast.LENGTH_LONG).show();
     }
+
 }
