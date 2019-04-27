@@ -5,21 +5,51 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
+import androidx.lifecycle.LiveData;
 
 import com.example.appname.Model.Image;
+import com.example.appname.Model.ImageRepository;
 import com.example.appname.Model.LoadUnsortedImagesTask;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class ImageViewModel extends AndroidViewModel implements LoadUnsortedImagesTask.OnLoadCompleteListener {
 
+    private ImageRepository mRepository;
+    private LiveData<List<Image>> mSortedImages;
     private ArrayList<Image> mUnsortedImages;
 
     public ImageViewModel(@NonNull Application application) {
         super(application);
-        Toast.makeText(getApplication(), "ViewModel created!", Toast.LENGTH_SHORT).show();
-        new LoadUnsortedImagesTask(getApplication(), this);
+        mRepository = new ImageRepository(application);
+        mSortedImages = mRepository.getAllImages();
     }
+
+
+    //==============================================================================================
+    // SORTED FUNCTIONS
+    //==============================================================================================
+
+    public void add(Image image){
+        mRepository.add(image);
+    }
+
+    public void update(Image image){
+        mRepository.update(image);
+    }
+
+    public void remove(Image image){
+        mRepository.remove(image);
+    }
+
+    public LiveData<List<Image>> getSortedImages() {
+        return mSortedImages;
+    }
+
+    //==============================================================================================
+    //  UNSORTED FUNCTIONS
+    //==============================================================================================
 
     public ArrayList<Image> getUnsortedImages() {
         return mUnsortedImages;

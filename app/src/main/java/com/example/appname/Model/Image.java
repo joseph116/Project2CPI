@@ -4,27 +4,36 @@ import android.net.Uri;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import androidx.room.Entity;
+import androidx.room.Ignore;
+import androidx.room.PrimaryKey;
+import androidx.room.TypeConverter;
+
 /**
  * THIS IS THE DATA UNIT CLASS
  */
-
+@Entity(tableName = "image_table")
 public class Image implements Parcelable {
 
     //==============================================================================================
     //  ATTRIBUTES
     //==============================================================================================
-
-    private final long rowId;
-    private final Uri uri;
-    private final String mimeType;
-    private final long dateModified;
-    private final int orientation;
-    private final long dateTaken;
+    @PrimaryKey
+    private long rowId;
+    @Ignore
+    private Uri uri;
+    private String mimeType;
+    private long dateModified;
+    private int orientation;
+    private long dateTaken;
     private String path;
 
     //==============================================================================================
     //  CONSTRUCTORS
     //==============================================================================================
+
+    public Image(){
+    }
 
     public Image(long rowId, Uri uri, String path, String mimeType, long dateTaken, long dateModified,
           int orientation) {
@@ -59,10 +68,59 @@ public class Image implements Parcelable {
         return dateTaken;
     }
 
+    public long getRowId() {
+        return rowId;
+    }
+
+    public String getMimeType() {
+        return mimeType;
+    }
+
+    public long getDateModified() {
+        return dateModified;
+    }
+
+    public int getOrientation() {
+        return orientation;
+    }
+
+    public String getPath() {
+        return path;
+    }
+
+    public void setRowId(long rowId) {
+        this.rowId = rowId;
+    }
+
+    public void setUri(Uri uri) {
+        this.uri = uri;
+    }
+
+    public void setMimeType(String mimeType) {
+        this.mimeType = mimeType;
+    }
+
+    public void setDateModified(long dateModified) {
+        this.dateModified = dateModified;
+    }
+
+    public void setOrientation(int orientation) {
+        this.orientation = orientation;
+    }
+
+    public void setDateTaken(long dateTaken) {
+        this.dateTaken = dateTaken;
+    }
+
+    public void setPath(String path) {
+        this.path = path;
+    }
+
     //==============================================================================================
     //  FOR PARCELABLE
     //==============================================================================================
 
+    @Ignore
     public static final Creator<Image> CREATOR = new Creator<Image>() {
         @Override
         public Image createFromParcel(Parcel parcel) {

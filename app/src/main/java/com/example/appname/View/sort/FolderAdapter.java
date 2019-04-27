@@ -21,7 +21,6 @@ public class FolderAdapter extends RecyclerView.Adapter<FolderAdapter.ViewHolder
     private Context mContext;
     private List<File> mFolders;
     private OnFileItemListener mListener;
-    private boolean mEnableInsert = true;
 
     //==============================================================================================
     //  CONSTRUCTORS
@@ -88,8 +87,6 @@ public class FolderAdapter extends RecyclerView.Adapter<FolderAdapter.ViewHolder
                 }
             });
 
-            if (!mEnableInsert) viewHolder.getInsertButton().setEnabled(false);
-
         }
     }
 
@@ -102,10 +99,6 @@ public class FolderAdapter extends RecyclerView.Adapter<FolderAdapter.ViewHolder
     public int getItemViewType(int position) {
         if (position == 0) return 1;
         else return 2;
-    }
-
-    public void setEnableInsert(boolean enableInsert) {
-        mEnableInsert = enableInsert;
     }
 
     //==============================================================================================

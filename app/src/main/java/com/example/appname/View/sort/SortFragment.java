@@ -3,7 +3,6 @@ package com.example.appname.View.sort;
 import android.os.Bundle;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager.widget.ViewPager;
@@ -12,10 +11,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.appname.Model.Image;
-import com.example.appname.Model.LoadUnsortedImagesTask;
 import com.example.appname.R;
 import com.example.appname.View.dialogs.NewFolderDialog;
 import com.example.appname.View.main.MainActivity;
@@ -29,8 +26,7 @@ import java.util.List;
 
 public class SortFragment extends Fragment implements FolderAdapter.OnFileItemListener,
         MainActivity.BackPressedListener,
-        NewFolderDialog.DialogListener,
-        LoadUnsortedImagesTask.OnLoadCompleteListener {
+        NewFolderDialog.DialogListener{
 
     //==============================================================================================
     //  ATTRIBUTES
@@ -90,8 +86,7 @@ public class SortFragment extends Fragment implements FolderAdapter.OnFileItemLi
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         mExplorer = new Explorer(getContext());
-        initRecycler();
-        initViewPager();
+        initViews();
         ((MainActivity)getActivity()).setBackListener(this);
 
     }
@@ -101,7 +96,7 @@ public class SortFragment extends Fragment implements FolderAdapter.OnFileItemLi
     //  INIT FUNCTIONS
     //==============================================================================================
 
-    private void initRecycler() {
+    private void initViews() {
         //Recycler View
         mFolderRecyclerView = getView().findViewById(R.id.sortRecyclerView);
         mFolderAdapter = new FolderAdapter(getContext(), mExplorer.getFolders(), this);
@@ -140,10 +135,6 @@ public class SortFragment extends Fragment implements FolderAdapter.OnFileItemLi
         });
     }
 
-    private void initViewPager() {
-
-    }
-
     //==============================================================================================
     //  FUNCTIONS
     //==============================================================================================
@@ -173,7 +164,12 @@ public class SortFragment extends Fragment implements FolderAdapter.OnFileItemLi
 
     @Override
     public void onInsert(File file) {
-
+        int position = mViewPager.getCurrentItem();
+        String oldPath = mUnsortedImages.get(position).getPath();
+        String newPath = file.getPath() + oldPath.substring(oldPath.lastIndexOf(File.separator));
+        mExplorer.move(oldPath, newPath);
+        mUnsortedImages.remove(position);
+        mImagePagerAdapter.notifyDataSetChanged();
     }
 
     @Override
@@ -201,9 +197,5 @@ public class SortFragment extends Fragment implements FolderAdapter.OnFileItemLi
         mFolderAdapter.addFolder(mExplorer.getCurrentPath() + File.separator + name);
     }
 
-    @Override
-    public void loadFinished(ArrayList<Image> images) {
-        mUnsortedImages = images;
-        mImagePagerAdapter.updateImages(images);
-    }
+
 }

@@ -1,5 +1,6 @@
 package com.example.appname.Model;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
@@ -184,5 +185,15 @@ public class Explorer {
             return true;
         }
         return false;
+    }
+
+    public void move(String oldPath, String newPath) {
+        if (mStorage.move(oldPath, newPath)) {
+            ContentValues values = new ContentValues();
+            values.put(MediaStore.MediaColumns.DATA, newPath);
+            boolean successMediaStore = mContext.getContentResolver().update(
+                    MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values,
+                    MediaStore.MediaColumns.DATA + "='" + oldPath + "'", null) == 1;
+        }
     }
 }

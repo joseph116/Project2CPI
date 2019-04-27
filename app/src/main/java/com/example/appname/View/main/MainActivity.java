@@ -30,6 +30,7 @@ public class MainActivity extends AppCompatActivity{
     private ImageViewModel mImageViewModel;
     private Fragment mSelectedFragment;
 
+
     //==============================================================================================
     //  STATE FUNCTIONS
     //==============================================================================================
@@ -44,8 +45,11 @@ public class MainActivity extends AppCompatActivity{
         }
 
         setContentView(R.layout.activity_main);
+
+        //inits
         initNavBar();
     }
+
 
     @Override
     protected void onResume() {
@@ -90,7 +94,7 @@ public class MainActivity extends AppCompatActivity{
                 }
 
                 getSupportFragmentManager().beginTransaction().replace(R.id.frame_container,
-                        mSelectedFragment).commit();
+                        mSelectedFragment).addToBackStack("back stack").commit();
                 return true;
             }
         });
@@ -98,7 +102,10 @@ public class MainActivity extends AppCompatActivity{
 
     private void loadUnsortedImages() {
         mImageViewModel = ViewModelProviders.of(this).get(ImageViewModel.class);
+        mImageViewModel.startLoading();
     }
+
+
     //==============================================================================================
     //  FUNCTIONS
     //==============================================================================================

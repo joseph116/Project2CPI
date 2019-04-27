@@ -1,6 +1,7 @@
 package com.example.appname.View.sort;
 
 import android.content.Context;
+import android.database.DataSetObserver;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -9,6 +10,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.viewpager.widget.PagerAdapter;
+import androidx.viewpager.widget.ViewPager;
 
 import com.bumptech.glide.Glide;
 import com.example.appname.Model.Image;
@@ -20,8 +22,6 @@ public class ImagePagerAdapter extends PagerAdapter {
 
     private Context mContext;
     private List<Image> mImages;
-    private TextView mEmptyMessage;
-    private Button mReturnButton;
 
     public ImagePagerAdapter(Context context, List<Image> images) {
         mContext = context;
@@ -62,9 +62,14 @@ public class ImagePagerAdapter extends PagerAdapter {
         container.removeView((ImageView) object);
     }
 
-    public void updateImages(ArrayList<Image> images) {
-        mImages = images;
-        notifyAll();
-        //notifyDataSetChanged();
+
+    public void removeImage(int position) {
+        mImages.remove(position);
+        notifyDataSetChanged();
+    }
+
+    @Override
+    public int getItemPosition(@NonNull Object object) {
+        return POSITION_NONE;
     }
 }
