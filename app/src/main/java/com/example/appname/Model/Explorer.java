@@ -177,4 +177,12 @@ public class Explorer {
         mToast = Toast.makeText(mContext, message, Toast.LENGTH_SHORT);
         mToast.show();
     }
+
+    public boolean backToRoot() {
+        if (!mCurrentPath.equals(mRootPath)) {
+            mCurrentPath = mRootPath;
+            return true;
+        }
+        return false;
+    }
 }
