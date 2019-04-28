@@ -3,6 +3,7 @@ package com.example.appname.View.sort;
 import android.os.Bundle;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager.widget.ViewPager;
@@ -34,7 +35,7 @@ public class SortFragment extends Fragment implements FolderAdapter.OnFileItemLi
 
     private static final String ARG_UNSORTED_LIST = "unsorted list";
 
-    private ImageViewModel mImageViewModel;
+    private ImageViewModel mViewModel;
     private RecyclerView mFolderRecyclerView;
     private ViewPager mViewPager;
     private ImagePagerAdapter mImagePagerAdapter;
@@ -73,6 +74,7 @@ public class SortFragment extends Fragment implements FolderAdapter.OnFileItemLi
         if (getArguments() != null) {
             mUnsortedImages = getArguments().getParcelableArrayList(ARG_UNSORTED_LIST);
         }
+        mViewModel = ViewModelProviders.of(this).get(ImageViewModel.class);
     }
 
     @Override
@@ -168,8 +170,11 @@ public class SortFragment extends Fragment implements FolderAdapter.OnFileItemLi
         String oldPath = mUnsortedImages.get(position).getPath();
         String newPath = file.getPath() + oldPath.substring(oldPath.lastIndexOf(File.separator));
         mExplorer.move(oldPath, newPath);
+        mUnsortedImages.get(position).setPath(newPath);
+        mViewModel.add(mUnsortedImages.get(position));
         mUnsortedImages.remove(position);
         mImagePagerAdapter.notifyDataSetChanged();
+
     }
 
     @Override

@@ -43,9 +43,7 @@ public class MainActivity extends AppCompatActivity{
             Intent askForPerms = new Intent(MainActivity.this, RequestForPermissionActivity.class);
             startActivity(askForPerms);
         }
-
         setContentView(R.layout.activity_main);
-
         //inits
         initNavBar();
     }
@@ -54,7 +52,9 @@ public class MainActivity extends AppCompatActivity{
     @Override
     protected void onResume() {
         super.onResume();
-        loadUnsortedImages();
+        if (canAccessExternalSd()) {
+            loadUnsortedImages();
+        }
     }
 
     //==============================================================================================

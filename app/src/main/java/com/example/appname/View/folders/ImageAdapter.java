@@ -18,24 +18,33 @@ import com.example.appname.Model.Image;
 import com.example.appname.R;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ImageHolder>{
 
     private static final String TAG = "ImageAdapter";
 
-    Context mContext;
-    private ArrayList<Image> mImageList;
+    private Context mContext;
+    private List<Image> mImageList = new ArrayList<>();
     private ImageListener mListener;
     private boolean mSelectionMode = false;
     private boolean mAllChecked = false;
     private int mFirstItemSelected;
 
-    public ImageAdapter(Context context, ArrayList<Image> images, ImageListener listener) {
+    public ImageAdapter(Context context) {
+        mContext = context;
+    }
+
+    public ImageAdapter(Context context, List<Image> images, ImageListener listener) {
         mContext = context;
         mImageList = images;
         mListener = listener;
     }
 
+    public void setImageList(List<Image> imageList) {
+        mImageList = imageList;
+        notifyDataSetChanged();
+    }
 
     public boolean isSelectionMode() {
         return mSelectionMode;
@@ -80,7 +89,7 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ImageHolder>
         //final File file = new File(mImageList.getPath());
         Glide
                 .with(mContext)
-                .load(mImageList.get(i).getUri())
+                .load(mImageList.get(i).getPath())
                 .override(340,340)
                 .centerCrop()
                 .into(imageHolder.image);
