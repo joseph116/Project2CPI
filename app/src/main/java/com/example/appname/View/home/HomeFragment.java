@@ -1,6 +1,5 @@
 package com.example.appname.View.home;
 
-import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.annotation.Nullable;
@@ -69,12 +68,12 @@ public class HomeFragment extends Fragment implements ImageAdapter.ImageListener
     }
 
     @Override
-    public boolean onLongClickImage(Uri image) {
+    public boolean onLongClickImage(Image image) {
         return false;
     }
 
     @Override
-    public void onChecked(Uri image, boolean isChecked) {
+    public void onChecked(Image image, boolean isChecked) {
 
     }
 }

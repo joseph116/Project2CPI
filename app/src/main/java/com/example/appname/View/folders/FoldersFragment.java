@@ -4,14 +4,19 @@ import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.view.ActionMode;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.example.appname.Model.Image;
 import com.example.appname.R;
 import com.example.appname.View.dialogs.ConfirmDeleteDialog;
 import com.example.appname.View.dialogs.NewFolderDialog;
@@ -21,6 +26,8 @@ import com.example.appname.View.main.MainActivity;
 import com.example.appname.Model.Explorer;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
 
 public class FoldersFragment extends Fragment implements FolderAdapter.FolderListener,
@@ -40,6 +47,8 @@ public class FoldersFragment extends Fragment implements FolderAdapter.FolderLis
     private RecyclerView mImageRecyclerView;
     private FolderAdapter mFolderAdapter;
     private ImageAdapter mImageAdapter;
+    private List<Image> mSelectedImages;
+    private ActionMode mActionMode;
 
 
     //==============================================================================================
@@ -71,6 +80,7 @@ public class FoldersFragment extends Fragment implements FolderAdapter.FolderLis
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         mExplorer = new Explorer(getContext());
+        mSelectedImages = new ArrayList<>();
         initRecyclers();
         ((MainActivity)getActivity()).setBackListener(this);
     }
@@ -127,14 +137,29 @@ public class FoldersFragment extends Fragment implements FolderAdapter.FolderLis
 
     //long click on an image
     @Override
-    public boolean onLongClickImage(Uri image) {
-        return false;
+    public boolean onLongClickImage(Image image) {
+        if (mImageAdapter.isSelectionMode()) {
+            mImageAdapter.setSelectionMode(false);
+            mActionMode.finish();
+        } else {
+            mSelectedImages.clear();
+            mImageAdapter.setSelectionMode(true);
+            mActionMode = ((AppCompatActivity) getActivity()).startSupportActionMode(mCallback);
+        }
+        return true;
     }
 
     //select an image in multiple selection mode
     @Override
-    public void onChecked(Uri image, boolean isChecked) {
-
+    public void onChecked(Image image, boolean isChecked) {
+        if (isChecked) {
+            if (!mSelectedImages.contains(image)){
+                mSelectedImages.add(image);
+            }
+        } else {
+            mSelectedImages.remove(image);
+        }
+        mActionMode.setTitle(mSelectedImages.size() + "/" + mImageAdapter.getItemCount() + " selected");
     }
 
     //click back button
@@ -176,4 +201,50 @@ public class FoldersFragment extends Fragment implements FolderAdapter.FolderLis
         mExplorer.renameFolder(fromPath, toPath);
         mFolderAdapter.renameFolder(fromPath, toPath);
     }
+
+    //==============================================================================================
+    //  ACTION MODE
+    //==============================================================================================
+
+    private ActionMode.Callback mCallback = new ActionMode.Callback() {
+        @Override
+        public boolean onCreateActionMode(ActionMode actionMode, Menu menu) {
+            actionMode.getMenuInflater().inflate(R.menu.menu_multiple_image_selection, menu);
+            actionMode.setTitle(mSelectedImages.size() + "/" + mImageAdapter.getItemCount() + " selected");
+            return true;
+        }
+
+        @Override
+        public boolean onPrepareActionMode(ActionMode actionMode, Menu menu) {
+            return false;
+        }
+
+        @Override
+        public boolean onActionItemClicked(ActionMode actionMode, MenuItem menuItem) {
+            switch (menuItem.getItemId()) {
+                case R.id.move_option:
+                    actionMode.finish();
+                    break;
+                case R.id.delete_option:
+                    //Delete Selection
+                    actionMode.finish();
+                    break;
+                case R.id.select_all_option:
+                    mImageAdapter.setAllChecked(true);
+                    break;
+                default:
+                    actionMode.finish();
+                    break;
+            }
+
+            return true;
+        }
+
+        @Override
+        public void onDestroyActionMode(ActionMode actionMode) {
+            mImageAdapter.setSelectionMode(false);
+            mImageAdapter.setAllChecked(false);
+            mActionMode = null;
+        }
+    };
 }

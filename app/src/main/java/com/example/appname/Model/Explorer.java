@@ -182,6 +182,7 @@ public class Explorer {
     public boolean backToRoot() {
         if (!mCurrentPath.equals(mRootPath)) {
             mCurrentPath = mRootPath;
+            mTreeSteps = 0;
             return true;
         }
         return false;

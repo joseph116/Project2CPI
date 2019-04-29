@@ -97,7 +97,7 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ImageHolder>
             @Override
             public boolean onLongClick(View v) {
                 mFirstItemSelected = i;
-                return mListener.onLongClickImage(mImageList.get(i).getUri());
+                return mListener.onLongClickImage(mImageList.get(i));
             }
         });
         imageHolder.image.setOnClickListener(new View.OnClickListener() {
@@ -122,7 +122,7 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ImageHolder>
             imageHolder.selection.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                 @Override
                 public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                    mListener.onChecked(mImageList.get(i).getUri(), isChecked);
+                    mListener.onChecked(mImageList.get(i), isChecked);
                 }
             });
             imageHolder.selection.setChecked((i == mFirstItemSelected) || (mAllChecked));
@@ -152,9 +152,9 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ImageHolder>
     }
 
     public interface ImageListener {
-        boolean onLongClickImage(Uri image);
+        boolean onLongClickImage(Image image);
 
-        void onChecked(Uri image, boolean isChecked);
+        void onChecked(Image image, boolean isChecked);
     }
 
 }
