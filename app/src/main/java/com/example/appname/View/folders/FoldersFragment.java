@@ -1,6 +1,6 @@
 package com.example.appname.View.folders;
 
-import android.net.Uri;
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.Nullable;
@@ -22,6 +22,7 @@ import com.example.appname.View.dialogs.ConfirmDeleteDialog;
 import com.example.appname.View.dialogs.NewFolderDialog;
 import com.example.appname.View.dialogs.RenameDialog;
 import com.example.appname.View.dialogs.UpdateItemDialog;
+import com.example.appname.View.fullscreen.DisplayImageActivity;
 import com.example.appname.View.main.MainActivity;
 import com.example.appname.Model.Explorer;
 
@@ -41,6 +42,9 @@ public class FoldersFragment extends Fragment implements FolderAdapter.FolderLis
     //==============================================================================================
     //  ATTRIBUTES
     //==============================================================================================
+
+    public static final String ARGS_CURRENT_IMAGES = "ARGS_CURRENT_IMAGES";
+    public static final String ARGS_IMAGE_POSITION = "ARGS_IMAGE_POSITION";
 
     private Explorer mExplorer;
     private RecyclerView mFolderRecyclerView;
@@ -133,6 +137,14 @@ public class FoldersFragment extends Fragment implements FolderAdapter.FolderLis
     public void onClickAdd() {
         NewFolderDialog dialog = new NewFolderDialog(this);
         dialog.show(getFragmentManager(), "new folder dialog");
+    }
+
+    @Override
+    public void onClickImage(int position) {
+        Intent intent = new Intent(getActivity(), DisplayImageActivity.class);
+        intent.putParcelableArrayListExtra(ARGS_CURRENT_IMAGES, mExplorer.getImages());
+        intent.putExtra(ARGS_IMAGE_POSITION, position);
+        startActivity(intent);
     }
 
     //long click on an image

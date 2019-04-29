@@ -1,7 +1,6 @@
 package com.example.appname.View.folders;
 
 import android.content.Context;
-import android.net.Uri;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -31,8 +30,9 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ImageHolder>
     private boolean mAllChecked = false;
     private int mFirstItemSelected;
 
-    public ImageAdapter(Context context) {
+    public ImageAdapter(Context context, ImageListener listener) {
         mContext = context;
+        mListener = listener;
     }
 
     public ImageAdapter(Context context, List<Image> images, ImageListener listener) {
@@ -104,11 +104,7 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ImageHolder>
             @Override
             public void onClick(View v) {
                 if (!mSelectionMode) {
-                    // TODO: uncomment when create image display activity
-                    //Intent intent = new Intent(mContext, DisplayImageActivity.class);
-                    //intent.putExtra("path", file.getParent());
-                    //intent.putExtra("position", i);
-                    //mContext.startActivity(intent);
+                    mListener.onClickImage(i);
                 } else {
                     imageHolder.selection.setChecked(!imageHolder.selection.isChecked());
                 }
@@ -152,6 +148,9 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ImageHolder>
     }
 
     public interface ImageListener {
+
+        void onClickImage(int position);
+
         boolean onLongClickImage(Image image);
 
         void onChecked(Image image, boolean isChecked);

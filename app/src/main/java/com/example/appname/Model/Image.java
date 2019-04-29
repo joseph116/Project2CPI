@@ -50,7 +50,7 @@ public class Image implements Parcelable, Comparable<Image> {
 
     private Image(Parcel in) {
         rowId = in.readLong();
-        uri = Uri.parse(in.readString());
+        //uri = Uri.parse(in.readString());
         path = in.readString();
         mimeType = in.readString();
         dateTaken = in.readLong();
@@ -143,7 +143,7 @@ public class Image implements Parcelable, Comparable<Image> {
     @Override
     public void writeToParcel(Parcel parcel, int i) {
         parcel.writeLong(rowId);
-        parcel.writeString(uri.toString());
+        //parcel.writeString(uri.toString());
         parcel.writeString(path);
         parcel.writeString(mimeType);
         parcel.writeLong(dateTaken);
