@@ -83,7 +83,7 @@ public class MainActivity extends AppCompatActivity{
                         break;
                     case R.id.nav_sort:
                         if (!(mSelectedFragment instanceof SortFragment)){
-                            mSelectedFragment = SortFragment.newInstance(mImageViewModel.getUnsortedImages());
+                            mSelectedFragment = new SortFragment();
                         }
                         break;
                     case R.id.nav_settings:

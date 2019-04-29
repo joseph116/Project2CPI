@@ -9,11 +9,13 @@ import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 import androidx.room.TypeConverter;
 
+import java.util.Comparator;
+
 /**
  * THIS IS THE DATA UNIT CLASS
  */
 @Entity(tableName = "image_table")
-public class Image implements Parcelable {
+public class Image implements Parcelable, Comparable<Image> {
 
     //==============================================================================================
     //  ATTRIBUTES
@@ -162,4 +164,18 @@ public class Image implements Parcelable {
                 + '}';
     }
 
+    //==============================================================================================
+    //  FOR COMPARE
+    //==============================================================================================
+
+    @Override
+    public int compareTo(Image o) {
+        return 0;
+    }
+
+    public static class Comparators {
+
+        //public static Comparator<Image>
+
+    }
 }

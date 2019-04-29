@@ -39,7 +39,7 @@ public class HomeFragment extends Fragment implements ImageAdapter.ImageListener
         super.onCreate(savedInstanceState);
 
         mViewModel = ViewModelProviders.of(this).get(ImageViewModel.class);
-        mViewModel.getSortedImages().observe(this, new Observer<List<Image>>() {
+        mViewModel.getSortedImages().observe(getActivity(), new Observer<List<Image>>() {
             @Override
             public void onChanged(List<Image> images) {
                 mImageAdapter.setImageList(images);

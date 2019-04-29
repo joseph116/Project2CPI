@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.appname.Model.Image;
 import com.example.appname.R;
@@ -74,7 +75,7 @@ public class SortFragment extends Fragment implements FolderAdapter.OnFileItemLi
         if (getArguments() != null) {
             mUnsortedImages = getArguments().getParcelableArrayList(ARG_UNSORTED_LIST);
         }
-        mViewModel = ViewModelProviders.of(this).get(ImageViewModel.class);
+        mViewModel = ViewModelProviders.of(getActivity()).get(ImageViewModel.class);
     }
 
     @Override
@@ -93,6 +94,12 @@ public class SortFragment extends Fragment implements FolderAdapter.OnFileItemLi
 
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        Toast.makeText(getActivity(), "Resumed", Toast.LENGTH_SHORT).show();
+        mImagePagerAdapter.setImages(mViewModel.getUnsortedImages());
+    }
 
     //==============================================================================================
     //  INIT FUNCTIONS
@@ -109,7 +116,7 @@ public class SortFragment extends Fragment implements FolderAdapter.OnFileItemLi
 
         //Pager View
         mViewPager = getView().findViewById(R.id.sortViewPager);
-        mImagePagerAdapter = new ImagePagerAdapter(getContext(), mUnsortedImages);
+        mImagePagerAdapter = new ImagePagerAdapter(getContext(), mViewModel.getUnsortedImages());
         mViewPager.setAdapter(mImagePagerAdapter);
 
         //Path TextView
@@ -167,14 +174,15 @@ public class SortFragment extends Fragment implements FolderAdapter.OnFileItemLi
     @Override
     public void onInsert(File file) {
         int position = mViewPager.getCurrentItem();
-        String oldPath = mUnsortedImages.get(position).getPath();
+        Image image = mViewModel.getUnsortedImages().get(position);
+        String oldPath = image.getPath();
         String newPath = file.getPath() + oldPath.substring(oldPath.lastIndexOf(File.separator));
-        mExplorer.move(oldPath, newPath);
-        mUnsortedImages.get(position).setPath(newPath);
-        mViewModel.add(mUnsortedImages.get(position));
-        mUnsortedImages.remove(position);
-        mImagePagerAdapter.notifyDataSetChanged();
-
+        if (mExplorer.move(oldPath, newPath)) {
+            image.setPath(newPath);
+            mViewModel.add(image);
+            mViewModel.getUnsortedImages().remove(image);
+            mImagePagerAdapter.removeImage(image);
+        }
     }
 
     @Override

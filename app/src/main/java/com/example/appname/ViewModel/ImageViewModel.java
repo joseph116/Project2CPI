@@ -12,6 +12,8 @@ import com.example.appname.Model.ImageRepository;
 import com.example.appname.Model.LoadUnsortedImagesTask;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 public class ImageViewModel extends AndroidViewModel implements LoadUnsortedImagesTask.OnLoadCompleteListener {
@@ -54,6 +56,7 @@ public class ImageViewModel extends AndroidViewModel implements LoadUnsortedImag
     public ArrayList<Image> getUnsortedImages() {
         return mUnsortedImages;
     }
+
 
     public void startLoading() {
         new LoadUnsortedImagesTask(getApplication(), this).execute();

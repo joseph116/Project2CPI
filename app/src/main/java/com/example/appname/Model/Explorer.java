@@ -187,13 +187,15 @@ public class Explorer {
         return false;
     }
 
-    public void move(String oldPath, String newPath) {
+    public boolean move(String oldPath, String newPath) {
         if (mStorage.move(oldPath, newPath)) {
             ContentValues values = new ContentValues();
             values.put(MediaStore.MediaColumns.DATA, newPath);
             boolean successMediaStore = mContext.getContentResolver().update(
                     MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values,
                     MediaStore.MediaColumns.DATA + "='" + oldPath + "'", null) == 1;
+            return true;
         }
+        return false;
     }
 }

@@ -36,7 +36,7 @@ public class LoadUnsortedImagesTask extends AsyncTask<Void, Void, ArrayList<Imag
         Cursor cursor = mContext.getContentResolver().query(
                 contentUri, IMAGE_PROJECTION,
                 null, null,
-                MediaStore.Images.Media.DEFAULT_SORT_ORDER);
+                MediaStore.Images.ImageColumns.DATE_MODIFIED + " DESC");
         ArrayList<Image> images = new ArrayList<>();
         //if there is no image
         if (cursor == null) return images;

@@ -28,8 +28,9 @@ public class ImagePagerAdapter extends PagerAdapter {
         mImages = images;
     }
 
-    public List<Image> getImages() {
-        return mImages;
+    public void setImages(List<Image> images) {
+        mImages = images;
+        notifyDataSetChanged();
     }
 
     @Override
@@ -63,8 +64,8 @@ public class ImagePagerAdapter extends PagerAdapter {
     }
 
 
-    public void removeImage(int position) {
-        mImages.remove(position);
+    public void removeImage(Image image) {
+        mImages.remove(image);
         notifyDataSetChanged();
     }
 
