@@ -2,6 +2,7 @@ package com.example.appname.View.main;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProviders;
@@ -9,6 +10,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.view.Window;
 import android.widget.Toast;
 import com.example.appname.R;
 import com.example.appname.View.folders.FoldersFragment;
@@ -18,12 +20,15 @@ import com.example.appname.View.sort.SortFragment;
 import com.example.appname.ViewModel.ImageViewModel;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
+import java.io.File;
+
 public class MainActivity extends AppCompatActivity{
 
     //==============================================================================================
     //  ATTRIBUTES
     //==============================================================================================
 
+    private Toolbar mToolbar;
     private Toast mToast = null;
     private BackPressedListener mBackPressedListener;
     private BottomNavigationView mBottomNavBar;
@@ -37,17 +42,18 @@ public class MainActivity extends AppCompatActivity{
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         //request for permissions
         if (!canAccessExternalSd()){
             Intent askForPerms = new Intent(MainActivity.this, RequestForPermissionActivity.class);
             startActivity(askForPerms);
         }
-        setContentView(R.layout.activity_main);
+
         //inits
+        requestWindowFeature(Window.FEATURE_NO_TITLE);
+        setContentView(R.layout.activity_main);
+        initToolBar();
         initNavBar();
     }
-
 
     @Override
     protected void onResume() {
@@ -104,6 +110,10 @@ public class MainActivity extends AppCompatActivity{
         mImageViewModel.startLoading();
     }
 
+    private void initToolBar() {
+        mToolbar = findViewById(R.id.app_bar);
+        setSupportActionBar(mToolbar);
+    }
 
     //==============================================================================================
     //  FUNCTIONS
