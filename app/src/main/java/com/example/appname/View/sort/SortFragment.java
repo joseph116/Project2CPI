@@ -1,12 +1,14 @@
 package com.example.appname.View.sort;
 
 import android.os.Bundle;
+
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager.widget.ViewPager;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,7 +30,8 @@ import java.util.List;
 
 public class SortFragment extends Fragment implements FolderAdapter.OnFileItemListener,
         MainActivity.BackPressedListener,
-        NewFolderDialog.DialogListener{
+        NewFolderDialog.DialogListener,
+        ImagePagerAdapter.PagerViewListener {
 
     //==============================================================================================
     //  ATTRIBUTES
@@ -90,16 +93,9 @@ public class SortFragment extends Fragment implements FolderAdapter.OnFileItemLi
         super.onActivityCreated(savedInstanceState);
         mExplorer = new Explorer(getContext());
         initViews();
-        ((MainActivity)getActivity()).setBackListener(this);
-
+        ((MainActivity) getActivity()).setBackListener(this);
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        Toast.makeText(getActivity(), "Resumed", Toast.LENGTH_SHORT).show();
-        mImagePagerAdapter.setImages(mViewModel.getUnsortedImages());
-    }
 
     //==============================================================================================
     //  INIT FUNCTIONS
@@ -108,7 +104,7 @@ public class SortFragment extends Fragment implements FolderAdapter.OnFileItemLi
     private void initViews() {
         //Recycler View
         mFolderRecyclerView = getView().findViewById(R.id.sortRecyclerView);
-        mFolderAdapter = new FolderAdapter(getContext(), mExplorer.getFolders(), this);
+        mFolderAdapter = new FolderAdapter(getActivity(), mExplorer.getFolders(), this);
         GridLayoutManager gridLayoutManager = new GridLayoutManager(getContext(), 1);
         gridLayoutManager.setOrientation(GridLayoutManager.HORIZONTAL);
         mFolderRecyclerView.setLayoutManager(gridLayoutManager);
@@ -116,8 +112,28 @@ public class SortFragment extends Fragment implements FolderAdapter.OnFileItemLi
 
         //Pager View
         mViewPager = getView().findViewById(R.id.sortViewPager);
-        mImagePagerAdapter = new ImagePagerAdapter(getContext(), mViewModel.getUnsortedImages());
+        mImagePagerAdapter = new ImagePagerAdapter(getContext(), mViewModel.getUnsortedImages(), this);
         mViewPager.setAdapter(mImagePagerAdapter);
+        mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                if (position == mViewModel.getUnsortedImages().size()) {
+                    mFolderAdapter.hideInsertButton(true);
+                } else {
+                    mFolderAdapter.hideInsertButton(false);
+                }
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
 
         //Path TextView
         mPathTextView = getView().findViewById(R.id.sortPathText);
@@ -173,15 +189,18 @@ public class SortFragment extends Fragment implements FolderAdapter.OnFileItemLi
 
     @Override
     public void onInsert(File file) {
-        int position = mViewPager.getCurrentItem();
-        Image image = mViewModel.getUnsortedImages().get(position);
-        String oldPath = image.getPath();
-        String newPath = file.getPath() + oldPath.substring(oldPath.lastIndexOf(File.separator));
-        if (mExplorer.move(oldPath, newPath)) {
-            image.setPath(newPath);
-            mViewModel.add(image);
-            mViewModel.getUnsortedImages().remove(image);
-            mImagePagerAdapter.removeImage(image);
+        if (!mViewModel.getUnsortedImages().isEmpty()) {
+            int position = mViewPager.getCurrentItem();
+            Image image = mViewModel.getUnsortedImages().get(position);
+            String oldPath = image.getPath();
+            String newPath = file.getPath() + oldPath.substring(oldPath.lastIndexOf(File.separator));
+            if (mExplorer.move(oldPath, newPath)) {
+                image.setPath(newPath);
+                mViewModel.add(image);
+                mViewModel.getUnsortedImages().remove(image);
+                mImagePagerAdapter.removeImage(image);
+                mFolderAdapter.notifyDataSetChanged();
+            }
         }
     }
 
@@ -211,4 +230,14 @@ public class SortFragment extends Fragment implements FolderAdapter.OnFileItemLi
     }
 
 
+    @Override
+    public void onClickSortButton() {
+        mViewPager.setCurrentItem(0, true);
+    }
+
+
+    @Override
+    public void onClickImage(Image image) {
+
+    }
 }

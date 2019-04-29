@@ -170,12 +170,44 @@ public class Image implements Parcelable, Comparable<Image> {
 
     @Override
     public int compareTo(Image o) {
-        return 0;
+        return Comparators.ID.compare(this, o);
     }
 
     public static class Comparators {
 
-        //public static Comparator<Image>
+        public static Comparator<Image> ID = new Comparator<Image>() {
+            @Override
+            public int compare(Image o1, Image o2) {
+                if ((o1.getRowId() - o2.getRowId()) > 0) {
+                    return 1;
+                } else if ((o1.getRowId() - o2.getRowId()) < 0) {
+                    return -1;
+                } else
+                    return 0;
+            }
+        };
+        public static Comparator<Image> DATE_MODIFIED = new Comparator<Image>() {
+            @Override
+            public int compare(Image o1, Image o2) {
+                if ((o1.getDateModified() - o2.getDateModified()) > 0) {
+                    return 1;
+                } else if ((o1.getDateModified() - o2.getDateModified()) < 0) {
+                    return -1;
+                } else
+                    return 0;
+            }
+        };
+        public static Comparator<Image> DATE_TAKEN = new Comparator<Image>() {
+            @Override
+            public int compare(Image o1, Image o2) {
+                if ((o1.getDateTaken() - o2.getDateTaken()) > 0) {
+                    return 1;
+                } else if ((o1.getDateTaken() - o2.getDateTaken()) < 0) {
+                    return -1;
+                } else
+                    return 0;
+            }
+        };
 
     }
 }

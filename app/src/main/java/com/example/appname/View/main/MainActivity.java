@@ -92,7 +92,6 @@ public class MainActivity extends AppCompatActivity{
                         }
                         break;
                 }
-
                 getSupportFragmentManager().beginTransaction().replace(R.id.frame_container,
                         mSelectedFragment).addToBackStack("back stack").commit();
                 return true;

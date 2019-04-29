@@ -1,35 +1,46 @@
 package com.example.appname.View.sort;
 
+import android.app.Activity;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.TextView;
+
 import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
+import androidx.lifecycle.ViewModel;
+import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.RecyclerView;
+
 import com.example.appname.R;
+import com.example.appname.ViewModel.ImageViewModel;
+
 import java.io.File;
 import java.util.List;
 
-public class FolderAdapter extends RecyclerView.Adapter<FolderAdapter.ViewHolder>{
+public class FolderAdapter extends RecyclerView.Adapter<FolderAdapter.ViewHolder> {
 
     //==============================================================================================
     //  ATTRIBUTES
     //==============================================================================================
 
-    private Context mContext;
+    private FragmentActivity mFragmentActivity;
+    private ImageViewModel mViewModel;
     private List<File> mFolders;
     private OnFileItemListener mListener;
+    private boolean mHideInsert;
 
     //==============================================================================================
     //  CONSTRUCTORS
     //==============================================================================================
 
-    public FolderAdapter(Context c, List<File> folders, OnFileItemListener listener) {
-        mContext = c;
+    public FolderAdapter(FragmentActivity fragmentActivity, List<File> folders, OnFileItemListener listener) {
         mListener = listener;
         mFolders = folders;
+        mViewModel = ViewModelProviders.of(fragmentActivity).get(ImageViewModel.class);
     }
 
     //==============================================================================================
@@ -62,9 +73,9 @@ public class FolderAdapter extends RecyclerView.Adapter<FolderAdapter.ViewHolder
             });
 
         } else {
-            final File file = mFolders.get(i-1);
+            final File file = mFolders.get(i - 1);
 
-            viewHolder.getTextView().setText(mFolders.get(i-1).getName());
+            viewHolder.getTextView().setText(mFolders.get(i - 1).getName());
 
             viewHolder.getTextView().setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -80,19 +91,26 @@ public class FolderAdapter extends RecyclerView.Adapter<FolderAdapter.ViewHolder
                     return false;
                 }
             });
-            viewHolder.getInsertButton().setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    mListener.onInsert(file);
-                }
-            });
+
+            if (!mHideInsert) {
+                viewHolder.mInsertButton.setVisibility(View.VISIBLE);
+                viewHolder.getInsertButton().setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        mListener.onInsert(file);
+                    }
+                });
+            } else {
+                viewHolder.mInsertButton.setVisibility(View.INVISIBLE);
+            }
+
 
         }
     }
 
     @Override
     public int getItemCount() {
-        return mFolders != null ? mFolders.size()+1 : 1;
+        return mFolders != null ? mFolders.size() + 1 : 1;
     }
 
     @Override
@@ -118,11 +136,9 @@ public class FolderAdapter extends RecyclerView.Adapter<FolderAdapter.ViewHolder
         notifyItemInserted(1);
     }
 
-    public void removeFolder(String path) {
-        File folder = new File(path);
-        int position = mFolders.indexOf(folder);
-        mFolders.remove(position);
-        notifyItemRemoved(position + 1);
+    public void hideInsertButton(boolean hide) {
+        mHideInsert = hide;
+        notifyDataSetChanged();
     }
 
     //==============================================================================================

@@ -12,11 +12,11 @@
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
+        android:backgroundTint="@color/colorAccent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        android:backgroundTint="@color/colorAccent"
-        app:srcCompat="@drawable/ic_insert"/>
+        app:srcCompat="@drawable/ic_insert" />
 
     <TextView
         android:id="@+id/folder_name_sort_part"
