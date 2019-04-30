@@ -62,7 +62,7 @@ public class ImagePagerAdapter extends PagerAdapter {
                     }
                 });
             }
-            container.addView(view, mImages.size());
+            container.addView(view, 0);
             return view;
         }
         ImageView imageView = new ImageView(mContext);
