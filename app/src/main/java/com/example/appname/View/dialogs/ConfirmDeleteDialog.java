@@ -30,14 +30,16 @@ public class ConfirmDeleteDialog extends DialogFragment {
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 
-        String msg;
+        String msg = "";
         final String path = getArguments().getString(PATH);
         Storage storage = new Storage(getActivity());
-        File file = storage.getFile(path);
-        if (file.isDirectory()) {
-            msg = "You are about to delete the folder with all it's content for real.";
+        if (path != null) {
+            File file = storage.getFile(path);
+            if (file.isDirectory()) {
+                msg = "You are about to delete the folder with all it's content for real.";
+            }
         } else {
-            msg = "You are about to delete the file";
+            msg = "You are about to delete the images";
         }
         builder.setMessage(msg);
         builder.setPositiveButton("Delete", new DialogInterface.OnClickListener() {

@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.example.appname.Model.Image;
 import com.example.appname.R;
@@ -33,6 +34,7 @@ public class HomeFragment extends Fragment implements ImageAdapter.ImageListener
     private ImageAdapter mImageAdapter;
     private ImageViewModel mViewModel;
     private List<Image> mSortedImages;
+    private TextView mNumberElements;
 
     public HomeFragment() {
         // Required empty public constructor
@@ -43,15 +45,6 @@ public class HomeFragment extends Fragment implements ImageAdapter.ImageListener
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        mViewModel = ViewModelProviders.of(this).get(ImageViewModel.class);
-        mViewModel.getSortedImages().observe(getActivity(), new Observer<List<Image>>() {
-            @Override
-            public void onChanged(List<Image> images) {
-                mSortedImages = images;
-                mImageAdapter.setImageList(images);
-            }
-        });
     }
 
     @Override
@@ -65,7 +58,18 @@ public class HomeFragment extends Fragment implements ImageAdapter.ImageListener
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        mNumberElements = getView().findViewById(R.id.number_element_database);
+        mViewModel = ViewModelProviders.of(getActivity()).get(ImageViewModel.class);
         initViews();
+        mViewModel.getSortedImages().observe(getActivity(), new Observer<List<Image>>() {
+            @Override
+            public void onChanged(List<Image> images) {
+                mNumberElements.setText("(" + images.size() + ")");
+                mSortedImages = images;
+                mImageAdapter.setImageList(images);
+            }
+        });
+
     }
 
     private void initViews() {

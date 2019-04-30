@@ -132,6 +132,10 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ImageHolder>
         return (mImageList == null) ? 0 : mImageList.size();
     }
 
+    public void removeImage(Image image) {
+        notifyItemRemoved(mImageList.indexOf(image));
+        mImageList.remove(image);
+    }
 
 
     public class ImageHolder extends RecyclerView.ViewHolder {

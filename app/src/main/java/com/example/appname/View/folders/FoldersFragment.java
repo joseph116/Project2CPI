@@ -1,20 +1,25 @@
 package com.example.appname.View.folders;
 
+import android.content.ContentUris;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.view.ActionMode;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.provider.MediaStore;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.example.appname.Model.Image;
 import com.example.appname.R;
@@ -25,6 +30,7 @@ import com.example.appname.View.dialogs.UpdateItemDialog;
 import com.example.appname.View.fullscreen.DisplayImageActivity;
 import com.example.appname.View.main.MainActivity;
 import com.example.appname.Model.Explorer;
+import com.example.appname.ViewModel.ImageViewModel;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -53,6 +59,7 @@ public class FoldersFragment extends Fragment implements FolderAdapter.FolderLis
     private ImageAdapter mImageAdapter;
     private List<Image> mSelectedImages;
     private ActionMode mActionMode;
+    private ImageViewModel mViewModel;
 
 
     //==============================================================================================
@@ -84,6 +91,7 @@ public class FoldersFragment extends Fragment implements FolderAdapter.FolderLis
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         mExplorer = new Explorer(getContext());
+        mViewModel = ViewModelProviders.of(getActivity()).get(ImageViewModel.class);
         mSelectedImages = new ArrayList<>();
         initRecyclers();
         ((MainActivity)getActivity()).setBackListener(this);
@@ -113,6 +121,16 @@ public class FoldersFragment extends Fragment implements FolderAdapter.FolderLis
     //  FUNCTIONS
     //==============================================================================================
 
+    private void removeImagesFromFolder(String path) {
+        for (Image image : mExplorer.getImages(path)) {
+            mViewModel.remove(image);
+            if (!mExplorer.getFolders(path).isEmpty()) {
+                for (File file : mExplorer.getFolders(path)) {
+                    removeImagesFromFolder(file.getPath());
+                }
+            }
+        }
+    }
 
     //==============================================================================================
     //  LISTENERS FUNCTIONS
@@ -204,6 +222,7 @@ public class FoldersFragment extends Fragment implements FolderAdapter.FolderLis
 
     @Override
     public void onConfirmDelete(String path) {
+        removeImagesFromFolder(path);
         mExplorer.deleteFolder(path);
         mFolderAdapter.removeFolder(path);
     }
@@ -213,6 +232,22 @@ public class FoldersFragment extends Fragment implements FolderAdapter.FolderLis
         mExplorer.renameFolder(fromPath, toPath);
         mFolderAdapter.renameFolder(fromPath, toPath);
     }
+
+    private ConfirmDeleteDialog.ConfirmListener confirmDeleteImages = new ConfirmDeleteDialog.ConfirmListener() {
+        @Override
+        public void onConfirmDelete(String path) {
+            for (Image image : mSelectedImages) {
+                mViewModel.remove(image);
+                mExplorer.deleteImage(image);
+                mImageAdapter.removeImage(image);
+                getContext().getContentResolver().delete(
+                        MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+                        MediaStore.MediaColumns.DATA + "='" + image.getPath() + "'", null
+                );
+            }
+            Toast.makeText(getContext(), "Deleted", Toast.LENGTH_SHORT).show();
+        }
+    };
 
     //==============================================================================================
     //  ACTION MODE
@@ -239,6 +274,7 @@ public class FoldersFragment extends Fragment implements FolderAdapter.FolderLis
                     break;
                 case R.id.delete_option:
                     //Delete Selection
+                    ConfirmDeleteDialog.newInstance(null, confirmDeleteImages).show(getFragmentManager(), "confirm_delete");
                     actionMode.finish();
                     break;
                 case R.id.select_all_option:

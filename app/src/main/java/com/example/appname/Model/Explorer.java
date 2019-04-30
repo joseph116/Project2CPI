@@ -7,6 +7,10 @@ import android.net.Uri;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.widget.Toast;
+
+import androidx.lifecycle.ViewModelProviders;
+
+import com.example.appname.ViewModel.ImageViewModel;
 import com.snatik.storage.Storage;
 import com.snatik.storage.helpers.OrderType;
 import java.io.File;
@@ -83,6 +87,21 @@ public class Explorer {
         return folders;
     }
 
+    public ArrayList<File> getFolders(String ofPath) {
+        List<File> files = mStorage.getFiles(ofPath);
+        ArrayList<File> folders = new ArrayList<>();
+        if (files != null) {
+            for (File f : files) {
+                if (f.isDirectory()) {
+                    folders.add(f);
+                }
+            }
+            Collections.sort(folders, OrderType.DATE.getComparator());
+        }
+
+        return folders;
+    }
+
     public ArrayList<Image> getImages() {
         Uri contentUri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
         Cursor cursor = mContext.getContentResolver().query(
@@ -105,6 +124,45 @@ public class Explorer {
             while (cursor.moveToNext()) {
                 String path = cursor.getString(pathColNum);
                 if (path.substring(0, path.lastIndexOf(File.separator)).equals(mCurrentPath)) {
+                    long id = cursor.getLong(idColNum);
+                    long dateTaken = cursor.getLong(dateTakenColNum);
+                    String mimeType = cursor.getString(mimeTypeColNum);
+                    long dateModified = cursor.getLong(dateModifiedColNum);
+                    int orientation = cursor.getInt(orientationColNum);
+
+                    images.add(new Image(id, Uri.withAppendedPath(contentUri, Long.toString(id)),
+                            path,mimeType, dateTaken, dateModified, orientation));
+                }
+            }
+        } finally {
+            cursor.close();
+        }
+
+        return images;
+    }
+
+    public ArrayList<Image> getImages(String ofPath) {
+        Uri contentUri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
+        Cursor cursor = mContext.getContentResolver().query(
+                contentUri, IMAGE_PROJECTION,
+                null, null,
+                MediaStore.Images.Media.DEFAULT_SORT_ORDER);
+        ArrayList<Image> images = new ArrayList<>();
+        //if there is no image
+        if (cursor == null) return images;
+
+        //else get the images
+        try {
+            final int idColNum = cursor.getColumnIndexOrThrow(MediaStore.Images.ImageColumns._ID);
+            final int pathColNum = cursor.getColumnIndexOrThrow(MediaStore.Images.ImageColumns.DATA);
+            final int dateTakenColNum = cursor.getColumnIndexOrThrow(MediaStore.Images.ImageColumns.DATE_TAKEN);
+            final int dateModifiedColNum = cursor.getColumnIndexOrThrow(MediaStore.Images.ImageColumns.DATE_MODIFIED);
+            final int mimeTypeColNum = cursor.getColumnIndex(MediaStore.Images.ImageColumns.MIME_TYPE);
+            final int orientationColNum = cursor.getColumnIndexOrThrow(MediaStore.Images.ImageColumns.ORIENTATION);
+
+            while (cursor.moveToNext()) {
+                String path = cursor.getString(pathColNum);
+                if (path.substring(0, path.lastIndexOf(File.separator)).equals(ofPath)) {
                     long id = cursor.getLong(idColNum);
                     long dateTaken = cursor.getLong(dateTakenColNum);
                     String mimeType = cursor.getString(mimeTypeColNum);
@@ -160,6 +218,10 @@ public class Explorer {
 
     public void deleteFolder(String path) {
         if (mStorage.getFile(path).isDirectory()) {
+            mCurrentPath = path;
+            for (Image image : getImages()){
+
+            }
             mStorage.deleteDirectory(path);
             Toast.makeText(mContext, "Folder deleted", Toast.LENGTH_SHORT).show();
         } else {
@@ -198,5 +260,9 @@ public class Explorer {
             return true;
         }
         return false;
+    }
+
+    public void deleteImage(Image image) {
+        mStorage.deleteFile(image.getPath());
     }
 }
