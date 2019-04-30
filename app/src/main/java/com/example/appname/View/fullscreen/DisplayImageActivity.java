@@ -8,6 +8,7 @@ import android.os.Bundle;
 
 import com.example.appname.Model.Image;
 import com.example.appname.R;
+import com.google.android.material.bottomappbar.BottomAppBar;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,7 +21,6 @@ public class DisplayImageActivity extends AppCompatActivity implements ImageAdap
     private ImageAdapter mAdapter;
     private Toolbar mTopBar;
     private Toolbar mBottomBar;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,7 +44,6 @@ public class DisplayImageActivity extends AppCompatActivity implements ImageAdap
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         setTheme(R.style.DisplayImageTheme);
 
-        mBottomBar.inflateMenu(R.menu.bottom_tool_bar_display_activity_menu);
     }
 
     @Override

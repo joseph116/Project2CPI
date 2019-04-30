@@ -20,7 +20,6 @@ import com.example.appname.View.sort.SortFragment;
 import com.example.appname.ViewModel.ImageViewModel;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
-import java.io.File;
 
 public class MainActivity extends AppCompatActivity{
 
@@ -112,7 +111,6 @@ public class MainActivity extends AppCompatActivity{
 
     private void initToolBar() {
         mToolbar = findViewById(R.id.app_bar);
-        setSupportActionBar(mToolbar);
     }
 
     //==============================================================================================
