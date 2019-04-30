@@ -25,7 +25,6 @@ public class DisplayImageActivity extends AppCompatActivity implements ImageAdap
         setContentView(R.layout.activity_display_image);
         mImages = getIntent().getParcelableArrayListExtra("ARGS_CURRENT_IMAGES");
         mFirstPosition = getIntent().getIntExtra("ARGS_IMAGE_POSITION", 0);
-        setTheme(R.style.DisplayImageTheme);
         initViews();
     }
 

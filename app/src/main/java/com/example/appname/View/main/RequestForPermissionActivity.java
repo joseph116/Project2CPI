@@ -20,7 +20,6 @@ public class RequestForPermissionActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_request_for_permission);
-        getSupportActionBar().hide();
         mAllowButton = findViewById(R.id.allow_button);
         mAllowButton.setOnClickListener(new View.OnClickListener() {
             @Override
