@@ -6,20 +6,22 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.viewpager.widget.PagerAdapter;
 
 import com.bumptech.glide.Glide;
 import com.example.appname.Model.Image;
 
+import java.io.File;
 import java.util.List;
 
 public class ImageAdapter extends PagerAdapter {
 
-    private Context mContext;
+    private AppCompatActivity mContext;
     private List<Image> mImages;
     private ImageListener mListener;
 
-    public ImageAdapter(Context context, List<Image> images, ImageListener listener) {
+    public ImageAdapter(AppCompatActivity context, List<Image> images, ImageListener listener) {
         mContext = context;
         mImages = images;
         mListener = listener;
@@ -43,7 +45,8 @@ public class ImageAdapter extends PagerAdapter {
     @NonNull
     @Override
     public Object instantiateItem(@NonNull ViewGroup container, int position) {
-
+        String path = mImages.get(position).getPath();
+        mContext.setTitle(path.substring(path.lastIndexOf(File.separator) + 1));
         ImageView imageView = new ImageView(mContext);
         imageView.setScaleType(ImageView.ScaleType.FIT_CENTER);
         Glide

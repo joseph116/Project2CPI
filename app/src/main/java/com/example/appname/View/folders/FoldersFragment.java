@@ -13,6 +13,7 @@ import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.os.Environment;
 import android.provider.MediaStore;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -124,6 +125,7 @@ public class FoldersFragment extends Fragment implements FolderAdapter.FolderLis
     private void removeImagesFromFolder(String path) {
         for (Image image : mExplorer.getImages(path)) {
             mViewModel.remove(image);
+            mExplorer.deleteImage(image);
             if (!mExplorer.getFolders(path).isEmpty()) {
                 for (File file : mExplorer.getFolders(path)) {
                     removeImagesFromFolder(file.getPath());
@@ -240,10 +242,6 @@ public class FoldersFragment extends Fragment implements FolderAdapter.FolderLis
                 mViewModel.remove(image);
                 mExplorer.deleteImage(image);
                 mImageAdapter.removeImage(image);
-                getContext().getContentResolver().delete(
-                        MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
-                        MediaStore.MediaColumns.DATA + "='" + image.getPath() + "'", null
-                );
             }
             Toast.makeText(getContext(), "Deleted", Toast.LENGTH_SHORT).show();
         }

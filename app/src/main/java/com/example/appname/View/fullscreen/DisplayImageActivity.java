@@ -1,6 +1,7 @@
 package com.example.appname.View.fullscreen;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.viewpager.widget.ViewPager;
 
 import android.os.Bundle;
@@ -17,6 +18,8 @@ public class DisplayImageActivity extends AppCompatActivity implements ImageAdap
     private int mFirstPosition;
     private ViewPager mViewPager;
     private ImageAdapter mAdapter;
+    private Toolbar mTopBar;
+    private Toolbar mBottomBar;
 
 
     @Override
@@ -33,6 +36,15 @@ public class DisplayImageActivity extends AppCompatActivity implements ImageAdap
         mAdapter = new ImageAdapter(this, mImages, this);
         mViewPager.setAdapter(mAdapter);
         mViewPager.setCurrentItem(mFirstPosition);
+
+        mTopBar = findViewById(R.id.top_bar);
+        mBottomBar = findViewById(R.id.bottom_bar);
+
+        setSupportActionBar(mTopBar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        setTheme(R.style.DisplayImageTheme);
+
+        mBottomBar.inflateMenu(R.menu.bottom_tool_bar_display_activity_menu);
     }
 
     @Override

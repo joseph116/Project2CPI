@@ -218,14 +218,9 @@ public class Explorer {
 
     public void deleteFolder(String path) {
         if (mStorage.getFile(path).isDirectory()) {
-            mCurrentPath = path;
-            for (Image image : getImages()){
-
-            }
             mStorage.deleteDirectory(path);
             Toast.makeText(mContext, "Folder deleted", Toast.LENGTH_SHORT).show();
         } else {
-            mStorage.deleteFile(path);
             Toast.makeText(mContext, "Can't delete", Toast.LENGTH_SHORT).show();
         }
     }
@@ -264,5 +259,9 @@ public class Explorer {
 
     public void deleteImage(Image image) {
         mStorage.deleteFile(image.getPath());
+        mContext.getContentResolver().delete(
+                MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+                MediaStore.MediaColumns.DATA + "='" + image.getPath() + "'", null
+        );
     }
 }
