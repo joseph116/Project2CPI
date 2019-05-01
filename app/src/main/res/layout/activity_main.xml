@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/ic_gradient_background"
     tools:context=".View.main.MainActivity">
 
     <androidx.appcompat.widget.Toolbar
@@ -35,7 +36,10 @@
         android:id="@+id/bottomNavBar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="?android:attr/windowBackground"
+        android:background="#02FFFFFF"
+        android:theme="@style/NavTheme"
+        app:itemRippleColor="#FEFEFE"
+        app:itemIconTint="#efeeef"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

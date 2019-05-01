@@ -1,13 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- Theme 1 -->
-    <color name="colorPrimary">#2962ff</color>
-    <color name="colorPrimaryDark">#0039cb</color>
+    <color name="colorPrimary">#FEFEFE</color>
+    <color name="colorPrimaryDark">#587CDF</color>
     <color name="colorAccent">#768fff</color>
+    <color name="white">#FEFEFE</color>
+    <color name="transparent">#00000000</color>
     <!-- Theme 2 -->
     <color name="colorPrimary2">#eeeeee</color>
     <color name="colorPrimaryDark2">#bcbcbc</color>
-    <color name="colorAccent2">#ffffff</color>
+    <color name="colorAccent2">#FFFFFF</color>
     <!-- Theme 3 -->
     <color name="colorPrimary3">#212121</color>
     <color name="colorPrimaryDark3">#000000</color>
