@@ -36,7 +36,9 @@
         android:id="@+id/sortViewPager"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        app:layout_constraintBottom_toTopOf="@+id/sortBackButton"
+        android:layout_marginTop="4dp"
+        android:layout_marginBottom="230dp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -46,10 +48,13 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
         android:background="@android:color/transparent"
         app:layout_constraintBottom_toTopOf="@+id/sortRecyclerView"
         app:layout_constraintStart_toStartOf="parent"
-        app:srcCompat="@drawable/ic_arrow" />
+        app:layout_constraintTop_toBottomOf="@+id/sortViewPager"
+        app:srcCompat="@drawable/ic_new_arrow" />
 
     <TextView
         android:id="@+id/sortPathText"
@@ -58,6 +63,8 @@
         android:layout_marginStart="8dp"
         android:layout_marginEnd="8dp"
         android:text="Current Path"
+        android:textColor="#FEFEFE"
+        android:textSize="18sp"
         app:layout_constraintBottom_toBottomOf="@+id/sortBackButton"
         app:layout_constraintEnd_toStartOf="@+id/sortBackToRoot"
         app:layout_constraintHorizontal_bias="0.0"
@@ -68,6 +75,8 @@
         android:id="@+id/sortRecyclerView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginStart="4dp"
+        android:layout_marginEnd="4dp"
         android:layout_marginBottom="8dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -78,11 +87,35 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
-        android:src="@drawable/ic_home"
         android:background="@android:color/transparent"
+        android:src="@drawable/ic_new_home"
         app:layout_constraintBottom_toBottomOf="@+id/sortBackButton"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@+id/sortBackButton" />
+
+    <View
+        android:id="@+id/divider4"
+        android:layout_width="395dp"
+        android:layout_height="1dp"
+        android:layout_marginStart="4dp"
+        android:layout_marginEnd="4dp"
+        android:background="#FFFFFF"
+        app:layout_constraintBottom_toTopOf="@+id/sortPathText"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/sortViewPager" />
+
+    <View
+        android:id="@+id/divider5"
+        android:layout_width="395dp"
+        android:layout_height="1dp"
+        android:layout_marginStart="4dp"
+        android:layout_marginEnd="4dp"
+        android:background="#FFFFFF"
+        app:layout_constraintBottom_toTopOf="@+id/sortRecyclerView"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/sortPathText" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

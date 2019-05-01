@@ -93,6 +93,7 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ImageHolder>
                 .override(340,340)
                 .centerCrop()
                 .into(imageHolder.image);
+
         imageHolder.image.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
