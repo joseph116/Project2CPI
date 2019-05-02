@@ -9,6 +9,7 @@
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
         <item name="backgroundColor">@drawable/ic_gradient_background</item>
+        <item name="buttonStyle">@drawable/button_style</item>
     </style>
 
     <style name="MainThemeOld" parent="Theme.AppCompat.NoActionBar">
@@ -20,6 +21,7 @@
         <item name="colorPrimaryDark">@color/colorPrimaryDarkOld</item>
         <item name="colorAccent">@color/colorAccentOld</item>
         <item name="backgroundColor">@color/textOnDark</item>
+        <item name="buttonStyle">@drawable/button_style</item>
     </style>
 
     <style name="NavTheme" parent="Theme.AppCompat.Light.NoActionBar">

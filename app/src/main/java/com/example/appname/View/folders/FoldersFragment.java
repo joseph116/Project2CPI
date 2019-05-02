@@ -1,7 +1,13 @@
 package com.example.appname.View.folders;
 
+import android.annotation.SuppressLint;
+import android.app.Dialog;
 import android.content.ContentUris;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 
@@ -11,6 +17,7 @@ import androidx.appcompat.view.ActionMode;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Environment;
@@ -20,8 +27,10 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.Toast;
 
+import com.example.appname.Model.FileClickListener;
 import com.example.appname.Model.Image;
 import com.example.appname.R;
 import com.example.appname.View.dialogs.ConfirmDeleteDialog;
@@ -32,10 +41,13 @@ import com.example.appname.View.fullscreen.DisplayImageActivity;
 import com.example.appname.View.main.MainActivity;
 import com.example.appname.Model.Explorer;
 import com.example.appname.ViewModel.ImageViewModel;
+import com.google.android.material.textfield.TextInputLayout;
+import com.snatik.storage.Storage;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 
 public class FoldersFragment extends Fragment implements FolderAdapter.FolderListener,
@@ -61,6 +73,11 @@ public class FoldersFragment extends Fragment implements FolderAdapter.FolderLis
     private List<Image> mSelectedImages;
     private ActionMode mActionMode;
     private ImageViewModel mViewModel;
+    private static Dialog mDialog;
+    private static String selectedPath;
+    private static List<String> PathList = new ArrayList<>();
+    private static List<File> FilesList = new ArrayList<>();
+    private static FileAdapter files;
 
 
     //==============================================================================================
@@ -86,6 +103,8 @@ public class FoldersFragment extends Fragment implements FolderAdapter.FolderLis
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mDialog = new Dialog(Objects.requireNonNull(getContext()));
+        mDialog.setContentView(R.layout.dialog_layout);
     }
 
     @Override
@@ -268,6 +287,7 @@ public class FoldersFragment extends Fragment implements FolderAdapter.FolderLis
         public boolean onActionItemClicked(ActionMode actionMode, MenuItem menuItem) {
             switch (menuItem.getItemId()) {
                 case R.id.move_option:
+                    CallDialog(getContext());
                     actionMode.finish();
                     break;
                 case R.id.delete_option:
@@ -293,4 +313,115 @@ public class FoldersFragment extends Fragment implements FolderAdapter.FolderLis
             mActionMode = null;
         }
     };
+
+
+    //==============================================================================================
+    //to show dialog
+    //==============================================================================================
+
+    public void CallDialog(final Context context){
+
+        //the elements of the dialog box here=======================================================
+        Objects.requireNonNull(mDialog.getWindow()).setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        final TextInputLayout inputName = mDialog.findViewById(R.id.input_name);
+        final RecyclerView PopRecycler = mDialog.findViewById(R.id.pop_recycler);
+        final Storage storage = new Storage(context);
+        Button SelectToMoveButton = mDialog.findViewById(R.id.close_pop);
+        Button GoParent = mDialog.findViewById(R.id.go_parent);
+        Button newFolder = mDialog.findViewById(R.id.new_folder);
+        RecyclerView.LayoutManager layoutManagerMini = new LinearLayoutManager(context, RecyclerView.VERTICAL, false);
+
+        // To populate the recycler with a list of items============================================
+        selectedPath = Environment.getExternalStorageDirectory().getPath() +  "/Pictures/Sorted Pictures";
+        FilesList = storage.getFiles(selectedPath);
+        for(int i = 0; i < FilesList.size() ; i++){
+            PathList.add(FilesList.get(i).getPath());
+        }
+
+        //the click listener for every item of the recycler=========================================
+        FileClickListener fileListener = new FileClickListener() {
+            @Override
+            public void onClick(View v, int position) {
+                selectedPath = FilesList.get(position).getPath();
+                Storage storage = new Storage(context);
+                if(FilesList.get(position).isDirectory()){
+                    ShowFiles(selectedPath , storage , PopRecycler);
+                } }
+        };
+
+        //Binds the view for the adapter ===========================================================
+        files = new FileAdapter(context , PathList , fileListener);
+        PopRecycler.setHasFixedSize(false);
+        PopRecycler.setLayoutManager(layoutManagerMini);
+        PopRecycler.setAdapter(files);
+
+        //The move button action
+        SelectToMoveButton.setOnClickListener(new View.OnClickListener() {
+            @SuppressLint("ResourceAsColor")
+            @Override
+            public void onClick(View v) {
+                //DO the operation of move here ====================================================
+
+
+                //==================================================================================
+
+                //what happens after the operation is finished
+                mDialog.dismiss();
+
+            }
+        });
+
+        //the Go to parent action
+        GoParent.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(!selectedPath.equals(Environment.getExternalStorageDirectory().getPath() + "/Pictures/Sorted Pictures")){
+                    selectedPath = selectedPath.substring(0 , selectedPath.lastIndexOf("/"));
+                    ShowFiles(selectedPath , new Storage(context) , PopRecycler);
+                }else{
+                    Toast.makeText(context , "Can not go to system directory for safety reasons" , Toast.LENGTH_LONG).show();
+                }
+            }
+        });
+
+        //the new folder action
+        newFolder.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                storage.createDirectory(selectedPath + "/" +  inputName.getEditText().getText().toString());
+                ShowFiles(selectedPath , storage , PopRecycler);
+                inputName.clearFocus();
+                mFolderAdapter.updateFolders(mExplorer.getFolders());
+                Toast.makeText(context , "Folder created" , Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        //after everything is set we finally can show the dialog box "a long road until here XD"
+        mDialog.show();
+
+        //what happens when the dialog is dismissed
+        mDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+            @Override
+            public void onDismiss(DialogInterface dialog) {
+                //i need you to refresh your folders recycler here
+                PathList.clear();
+                FilesList = null;
+            }
+        });
+
+    }
+
+
+    //method that shows the files inside the dialog box ============================================
+    public static void ShowFiles(String path, Storage storage, RecyclerView popRecycle){
+        FilesList =null;
+        FilesList = storage.getFiles(path);
+        PathList.clear();
+        for(int i = 0; i < FilesList.size() ; i++){
+            PathList.add(FilesList.get(i).getPath());
+        }
+        popRecycle.swapAdapter(files , true);
+    }
+
+
 }
