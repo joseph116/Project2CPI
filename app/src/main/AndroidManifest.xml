@@ -2,7 +2,12 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.appname">
     <!-- PERMISSIONS -->
+    <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.Camera"></uses-permission>
+
+    <!-- FEATURES -->
+    <uses-feature android:name="android.hardware.camera2"></uses-feature>
 
     <application
         android:allowBackup="true"
@@ -11,9 +16,11 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/MainTheme">
-        <activity android:name=".View.fullscreen.DisplayImageActivity"
-            android:parentActivityName=".View.main.MainActivity"></activity>
-        <activity android:name=".View.main.RequestForPermissionActivity"/>
+        <activity android:name=".View.main.CameraActivity"></activity>
+        <activity
+            android:name=".View.fullscreen.DisplayImageActivity"
+            android:parentActivityName=".View.main.MainActivity" />
+        <activity android:name=".View.main.RequestForPermissionActivity" />
         <activity android:name=".View.main.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
