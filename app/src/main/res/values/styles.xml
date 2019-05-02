@@ -1,14 +1,26 @@
 <resources>
 
-    <style name="MainTheme" parent="Theme.AppCompat.Light.NoActionBar">
+    <style name="MainTheme" parent="Theme.AppCompat.NoActionBar">
         <!-- Customize your theme here. -->
         <item name="windowNoTitle">true</item>
+        <item name="windowActionBarOverlay"></item>
         <item name="android:windowFullscreen">true</item>
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
+        <item name="backgroundColor">@drawable/ic_gradient_background</item>
     </style>
 
+    <style name="MainThemeOld" parent="Theme.AppCompat.NoActionBar">
+        <!-- Customize your theme here. -->
+        <item name="windowNoTitle">true</item>
+        <item name="windowActionBarOverlay"></item>
+        <item name="android:windowFullscreen">true</item>
+        <item name="colorPrimary">@color/colorPrimaryOld</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDarkOld</item>
+        <item name="colorAccent">@color/colorAccentOld</item>
+        <item name="backgroundColor">@color/textOnDark</item>
+    </style>
 
     <style name="NavTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Customize your theme here. -->

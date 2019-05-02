@@ -23,4 +23,7 @@ public interface ImageDao {
 
     @Query("SELECT * FROM image_table ORDER BY dateModified DESC")
     LiveData<List<Image>> getAllImages();
+
+    @Query("SELECT * FROM note_table WHERE imageId = :imageId")
+    LiveData<List<Note>> getNotes(long imageId);
 }

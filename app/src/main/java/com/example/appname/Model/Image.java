@@ -9,7 +9,9 @@ import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 import androidx.room.TypeConverter;
 
+import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.List;
 
 /**
  * THIS IS THE DATA UNIT CLASS
@@ -20,6 +22,7 @@ public class Image implements Parcelable, Comparable<Image> {
     //==============================================================================================
     //  ATTRIBUTES
     //==============================================================================================
+
     @PrimaryKey
     private long rowId;
     @Ignore

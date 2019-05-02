@@ -14,6 +14,10 @@
     <color name="colorPrimary3">#212121</color>
     <color name="colorPrimaryDark3">#000000</color>
     <color name="colorAccent3">#484848</color>
+    <!-- Old Theme -->
+    <color name="colorPrimaryOld">#2962ff</color>
+    <color name="colorPrimaryDarkOld">#0039cb</color>
+    <color name="colorAccentOld">#768fff</color>
 
     <color name="textOnDark">#ffffff</color>
     <color name="textOnLight">#000000</color>

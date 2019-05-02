@@ -10,6 +10,7 @@ import androidx.lifecycle.LiveData;
 import com.example.appname.Model.Image;
 import com.example.appname.Model.ImageRepository;
 import com.example.appname.Model.LoadUnsortedImagesTask;
+import com.example.appname.Model.Note;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -47,6 +48,10 @@ public class ImageViewModel extends AndroidViewModel implements LoadUnsortedImag
 
     public LiveData<List<Image>> getSortedImages() {
         return mSortedImages;
+    }
+
+    public LiveData<List<Note>> getNotes(long imageId) {
+        return mRepository.getNotes(imageId);
     }
 
     //==============================================================================================

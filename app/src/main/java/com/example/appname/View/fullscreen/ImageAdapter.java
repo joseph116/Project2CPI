@@ -1,6 +1,7 @@
 package com.example.appname.View.fullscreen;
 
 import android.content.Context;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -15,7 +16,7 @@ import com.example.appname.Model.Image;
 import java.io.File;
 import java.util.List;
 
-public class ImageAdapter extends PagerAdapter {
+public class ImageAdapter extends PagerAdapter implements View.OnTouchListener {
 
     private AppCompatActivity mContext;
     private List<Image> mImages;
@@ -44,10 +45,16 @@ public class ImageAdapter extends PagerAdapter {
 
     @NonNull
     @Override
-    public Object instantiateItem(@NonNull ViewGroup container, int position) {
+    public Object instantiateItem(@NonNull ViewGroup container, final int position) {
         String path = mImages.get(position).getPath();
         mContext.setTitle(path.substring(path.lastIndexOf(File.separator) + 1));
         ImageView imageView = new ImageView(mContext);
+        imageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mListener.onClickImage(mImages.get(position));
+            }
+        });
         imageView.setScaleType(ImageView.ScaleType.FIT_CENTER);
         Glide
                 .with(mContext)
@@ -72,6 +79,11 @@ public class ImageAdapter extends PagerAdapter {
     @Override
     public int getItemPosition(@NonNull Object object) {
         return POSITION_NONE;
+    }
+
+    @Override
+    public boolean onTouch(View v, MotionEvent event) {
+        return false;
     }
 
     public interface ImageListener {

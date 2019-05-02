@@ -6,7 +6,10 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProviders;
+import androidx.preference.PreferenceManager;
+
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.view.MenuItem;
@@ -40,6 +43,7 @@ public class MainActivity extends AppCompatActivity{
     //==============================================================================================
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        loadPreferences();
         super.onCreate(savedInstanceState);
         //request for permissions
         if (!canAccessExternalSd()){
@@ -47,13 +51,13 @@ public class MainActivity extends AppCompatActivity{
             startActivity(askForPerms);
         }
 
-
         //inits
-        requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_main);
         initToolBar();
         initNavBar();
     }
+
+
 
     @Override
     protected void onResume() {
@@ -112,6 +116,22 @@ public class MainActivity extends AppCompatActivity{
 
     private void initToolBar() {
         mToolbar = findViewById(R.id.app_bar);
+    }
+
+    private void loadPreferences() {
+        SharedPreferences sharedPreferences =
+                PreferenceManager.getDefaultSharedPreferences(this);
+        String theme = sharedPreferences.getString("theme", "1");
+        showToast("theme: " + theme );
+        switch (theme) {
+            case "1":
+                setTheme(R.style.MainTheme);
+                break;
+            case "2":
+                setTheme(R.style.MainThemeOld);
+            default:
+                break;
+        }
     }
 
     //==============================================================================================

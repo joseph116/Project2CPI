@@ -41,6 +41,10 @@ public class ImageRepository {
         return mAllImages;
     }
 
+    public LiveData<List<Note>> getNotes(long imageId) {
+        return mImageDao.getNotes(imageId);
+    }
+
     private static class AddImageAsyncTask extends AsyncTask<Image, Void, Void>{
 
         private ImageDao mImageDao;
