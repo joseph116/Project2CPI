@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <attr name="backgroundColor" format="color" />
-    <attr name="textColorInDark" format="color" />
-    <attr name="textColorInLight" format="color" />
+    <attr name="basicColor" format="color" />
+    <attr name="basicColorInverse" format="color" />
     <attr name="textSize" format="dimension" />
 </resources>

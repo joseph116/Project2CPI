@@ -73,6 +73,7 @@ public class FoldersFragment extends Fragment implements FolderAdapter.FolderLis
     private List<Image> mSelectedImages;
     private ActionMode mActionMode;
     private ImageViewModel mViewModel;
+
     private static Dialog mDialog;
     private static String selectedPath;
     private static List<String> PathList = new ArrayList<>();

@@ -58,7 +58,6 @@ public class DisplayImageActivity extends AppCompatActivity implements ImageAdap
 
         setSupportActionBar(mTopBar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        setTheme(R.style.DisplayImageTheme);
 
     }
 

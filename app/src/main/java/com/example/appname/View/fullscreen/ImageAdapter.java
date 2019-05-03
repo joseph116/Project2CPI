@@ -49,12 +49,7 @@ public class ImageAdapter extends PagerAdapter implements View.OnTouchListener {
         String path = mImages.get(position).getPath();
         mContext.setTitle(path.substring(path.lastIndexOf(File.separator) + 1));
         ImageView imageView = new ImageView(mContext);
-        imageView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mListener.onClickImage(mImages.get(position));
-            }
-        });
+        imageView.setOnTouchListener(this);
         imageView.setScaleType(ImageView.ScaleType.FIT_CENTER);
         Glide
                 .with(mContext)
@@ -81,10 +76,18 @@ public class ImageAdapter extends PagerAdapter implements View.OnTouchListener {
         return POSITION_NONE;
     }
 
+    //==============================================================================================
+    //  LISTENERS FUNCTIONS
+    //==============================================================================================
+
     @Override
     public boolean onTouch(View v, MotionEvent event) {
         return false;
     }
+
+    //==============================================================================================
+    //  INIT FUNCTIONS
+    //==============================================================================================
 
     public interface ImageListener {
 
