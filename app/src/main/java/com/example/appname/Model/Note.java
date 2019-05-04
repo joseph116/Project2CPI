@@ -1,5 +1,6 @@
 package com.example.appname.Model;
 
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.room.Entity;
 import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
