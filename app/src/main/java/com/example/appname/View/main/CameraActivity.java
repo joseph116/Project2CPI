@@ -33,6 +33,7 @@ import android.util.Size;
 import android.util.SparseIntArray;
 import android.view.Surface;
 import android.view.TextureView;
+import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
@@ -89,6 +90,19 @@ public class CameraActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_camera);
+        mTextureView = (TextureView) findViewById(R.id.texture_view);
+
+        assert mTextureView != null;
+        mTextureView.setSurfaceTextureListener(textureListener);
+        mTakePictureButton = (Button) findViewById(R.id.capture_image_btn);
+        assert mTakePictureButton != null;
+        mTakePictureButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                takePicture();
+            }
+        });
+        mCameraManager = (CameraManager) getSystemService(Context.CAMERA_SERVICE);
     }
 
     TextureView.SurfaceTextureListener textureListener = new TextureView.SurfaceTextureListener() {
