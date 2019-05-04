@@ -63,6 +63,10 @@ public class ImageViewModel extends AndroidViewModel implements LoadUnsortedImag
         mRepository.deleteNote(note);
     }
 
+    public LiveData<List<Note>> getAllNotes() {
+        return mRepository.getAllNotes();
+    }
+
     //==============================================================================================
     //  UNSORTED FUNCTIONS
     //==============================================================================================

@@ -32,6 +32,9 @@ public interface ImageDao {
     @Delete
     void deleteNote(Note note);
 
+    @Query("SELECT * FROM note_table")
+    LiveData<List<Note>> getAllNotes();
+
     @Query("SELECT * FROM note_table WHERE imageId = :imageId")
     LiveData<List<Note>> getNotes(long imageId);
 }

@@ -41,6 +41,10 @@ public class ImageRepository {
         return mAllImages;
     }
 
+    public LiveData<List<Note>> getAllNotes() {
+        return mImageDao.getAllNotes();
+    }
+
     public LiveData<List<Note>> getNotes(long imageId) {
         return mImageDao.getNotes(imageId);
     }
