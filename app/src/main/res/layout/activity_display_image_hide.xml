@@ -22,7 +22,7 @@
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/top_bar"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
         android:background="?attr/colorPrimary"
         android:backgroundTint="#900039cb"
         android:minHeight="?attr/actionBarSize"
@@ -34,7 +34,7 @@
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/bottom_bar"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
         android:background="?attr/colorPrimary"
         android:backgroundTint="#AA000000"
         android:minHeight="?attr/actionBarSize"

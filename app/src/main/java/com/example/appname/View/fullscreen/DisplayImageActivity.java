@@ -1,40 +1,58 @@
 package com.example.appname.View.fullscreen;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.view.ActionMode;
 import androidx.appcompat.widget.Toolbar;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.constraintlayout.widget.ConstraintSet;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProviders;
 import androidx.viewpager.widget.ViewPager;
 
 import android.os.Bundle;
 import android.transition.TransitionManager;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.appname.Model.Image;
+import com.example.appname.Model.Note;
 import com.example.appname.R;
+import com.example.appname.View.dialogs.AddNoteDialog;
+import com.example.appname.ViewModel.ImageViewModel;
 
+import java.util.ArrayList;
 import java.util.List;
 
-public class DisplayImageActivity extends AppCompatActivity implements ImageAdapter.ImageListener {
+public class DisplayImageActivity extends AppCompatActivity
+        implements ImageAdapter.ImageListener,
+        AddNoteDialog.AddNoteListener {
 
+    private ImageViewModel mViewModel;
     private List<Image> mImages;
+    private List<Note> mCurrentNotes;
     private int mFirstPosition;
     private ViewPager mViewPager;
     private ImageAdapter mAdapter;
     private Toolbar mTopBar;
     private Toolbar mBottomBar;
+    private ActionMode mActionMode;
+    private ConstraintLayout mLayout;
+    private ConstraintSet showBars = new ConstraintSet();
+    private ConstraintSet hideBars = new ConstraintSet();
+    private boolean mBarsVisible = true;
 
     //for notes
-    private ConstraintLayout parent;
-    private ConstraintLayout noteLayout;
+    private ImageView mAddNoteButton;
     private ImageView bubble;
     private TextView noteTexte;
     private ConstraintSet hide_all = new ConstraintSet();
     private ConstraintSet show_all = new ConstraintSet();
     private ConstraintSet show_bubble_only = new ConstraintSet();
-    private boolean isBubblesVisible = false;
     private boolean isNoteVisible = false;
 
     @Override
@@ -43,62 +61,204 @@ public class DisplayImageActivity extends AppCompatActivity implements ImageAdap
         setContentView(R.layout.activity_display_image);
         mImages = getIntent().getParcelableArrayListExtra("ARGS_CURRENT_IMAGES");
         mFirstPosition = getIntent().getIntExtra("ARGS_IMAGE_POSITION", 0);
+        mViewModel = ViewModelProviders.of(this).get(ImageViewModel.class);
         initViews();
-        initNotes();
     }
 
     private void initViews() {
+        mLayout = findViewById(R.id.display_parent);
+        showBars.clone(mLayout);
+        hideBars.clone(this, R.layout.activity_display_image_hide);
+
         mViewPager = findViewById(R.id.display_image_view_pager);
         mAdapter = new ImageAdapter(this, mImages, this);
         mViewPager.setAdapter(mAdapter);
         mViewPager.setCurrentItem(mFirstPosition);
+        mCurrentNotes = new ArrayList<>();
+        mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                mViewModel.getNotes(mImages.get(position).getRowId()).observe(DisplayImageActivity.this, new Observer<List<Note>>() {
+                    @Override
+                    public void onChanged(List<Note> notes) {
+                        for (Note note : mCurrentNotes) {
+                            removeNoteView(note);
+                        }
+                        mCurrentNotes = notes;
+                        for (Note note : mCurrentNotes) {
+                            addNoteView(note);
+                        }
+                    }
+                });
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+            }
+        });
 
         mTopBar = findViewById(R.id.top_bar);
         mBottomBar = findViewById(R.id.bottom_bar);
+        mBottomBar.inflateMenu(R.menu.display_menu);
+        mBottomBar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                switch (item.getItemId()) {
+                    case R.id.add_note_option:
+                        AddNoteDialog dialog = new AddNoteDialog(DisplayImageActivity.this);
+                        dialog.show(getSupportFragmentManager(), "add note");
+                        break;
+                    case R.id.delete_display_option:
+                        break;
+                }
+                return true;
+            }
+        });
 
         setSupportActionBar(mTopBar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
+        mViewModel.getNotes(mImages.get(mViewPager.getCurrentItem()).getRowId()).observe(DisplayImageActivity.this, new Observer<List<Note>>() {
+            @Override
+            public void onChanged(List<Note> notes) {
+                mCurrentNotes = notes;
+                for (Note note : mCurrentNotes) {
+                    addNoteView(note);
+                }
+            }
+        });
     }
 
     private void initNotes() {
-        parent = findViewById(R.id.display_parent);
-        View note = getLayoutInflater().inflate(R.layout.note_view_0, null);
-        bubble = note.findViewById(R.id.bubble);
-        noteTexte = note.findViewById(R.id.noteText);
-        noteLayout = note.findViewById(R.id.note_layout_0);
+        //View note = getLayoutInflater().inflate(R.layout.note_view_0, null);
+        //bubble = note.findViewById(R.id.bubble);
+        //noteTexte = note.findViewById(R.id.noteText);
+        //noteLayout = note.findViewById(R.id.note_layout_0);
+        //hide_all.clone(noteLayout);
+        //show_bubble_only.clone(this, R.layout.note_view_1);
+        //show_all.clone(this, R.layout.note_view_2);
+        //bubble.setOnClickListener(new View.OnClickListener() {
+        //    @Override
+        //    public void onClick(View v) {
+        //        TransitionManager.beginDelayedTransition(noteLayout);
+        //        if (!isNoteVisible) {
+        //            show_all.applyTo(noteLayout);
+        //            isNoteVisible = true;
+        //        } else {
+        //            show_bubble_only.applyTo(noteLayout);
+        //            isNoteVisible = false;
+        //        }
+        //    }
+        //});
+        //note.setX(100);
+        //note.setY(200);
+        //mLayout.addView(note);
+    }
+
+    @Override
+    public void onClickImage() {
+        TransitionManager.beginDelayedTransition(mLayout);
+        if (mBarsVisible) {
+            hideBars.applyTo(mLayout);
+            mBarsVisible = false;
+        } else {
+            showBars.applyTo(mLayout);
+            mBarsVisible = true;
+        }
+    }
+
+    @Override
+    public void onDoubleClick() {
+        if (!mCurrentNotes.isEmpty()) {
+            TransitionManager.beginDelayedTransition(mLayout);
+            if (!isNoteVisible) {
+                for (Note note : mCurrentNotes) {
+                    ConstraintLayout noteLayout = mLayout.findViewById(note.getLayoutId());
+                    show_bubble_only.applyTo(noteLayout);
+                }
+                isNoteVisible = true;
+            } else {
+                for (Note note : mCurrentNotes) {
+                    ConstraintLayout noteLayout = mLayout.findViewById(note.getLayoutId());
+                    hide_all.applyTo(noteLayout);
+                }
+                isNoteVisible = false;
+            }
+        }
+    }
+
+    @Override
+    public void onLongClickImage(MotionEvent event) {
+        AddNoteDialog.newInstance(event.getX(), event.getY(), this).show(getSupportFragmentManager(), "add note");
+    }
+
+    @Override
+    public void onAddNote(String text, float x, float y) {
+        int position = mViewPager.getCurrentItem();
+        Note note = new Note(mImages.get(position).getRowId(), text, x, y);
+        mViewModel.insertNote(note);
+        //show notes
+        addNoteView(note);
+    }
+
+
+    private ActionMode.Callback mCallback = new ActionMode.Callback() {
+        @Override
+        public boolean onCreateActionMode(ActionMode mode, Menu menu) {
+            mode.setTitle("Tap where to add the note");
+            return true;
+        }
+
+        @Override
+        public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
+            return false;
+        }
+
+        @Override
+        public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
+            return false;
+        }
+
+        @Override
+        public void onDestroyActionMode(ActionMode mode) {
+            mActionMode = null;
+        }
+    };
+
+    private void addNoteView(final Note note) {
+        View viewNote = getLayoutInflater().inflate(R.layout.note_view_0, null);
+        ImageView bubble = viewNote.findViewById(R.id.bubble);
+        TextView noteTexte = viewNote.findViewById(R.id.noteText);
+        noteTexte.setText(note.getText());
+        final ConstraintLayout noteLayout = viewNote.findViewById(R.id.note_layout_0);
         hide_all.clone(noteLayout);
-        show_bubble_only.clone(this, R.layout.note_view_1);
-        show_all.clone(this, R.layout.note_view_2);
+        show_all.clone(DisplayImageActivity.this, R.layout.note_view_1);
+        show_bubble_only.clone(DisplayImageActivity.this, R.layout.note_view_2);
         bubble.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 TransitionManager.beginDelayedTransition(noteLayout);
-                if (!isNoteVisible) {
+                if (!note.isTextVisible()) {
                     show_all.applyTo(noteLayout);
-                    isNoteVisible = true;
+                    note.setTextVisible(true);
                 } else {
                     show_bubble_only.applyTo(noteLayout);
-                    isNoteVisible = false;
+                    note.setTextVisible(false);
                 }
             }
         });
-        note.setX(100);
-        note.setY(200);
-        parent.addView(note);
+        viewNote.setX(note.getX());
+        viewNote.setY(note.getY());
+        note.setLayoutId(noteLayout.getId());
+        mLayout.addView(viewNote);
     }
 
-    @Override
-    public void onClickImage(Image image) {
-        TransitionManager.beginDelayedTransition(noteLayout);
-        if (!isBubblesVisible) {
-            show_bubble_only.applyTo(noteLayout);
-            isBubblesVisible = true;
-        } else {
-            hide_all.applyTo(noteLayout);
-            isBubblesVisible = false;
-            isNoteVisible = false;
-        }
+    private void removeNoteView(Note note) {
+        ConstraintLayout noteLayout = mLayout.findViewById(note.getLayoutId());
+        mLayout.removeView(noteLayout);
     }
-
 }

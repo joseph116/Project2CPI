@@ -45,6 +45,14 @@ public class ImageRepository {
         return mImageDao.getNotes(imageId);
     }
 
+    public void insertNote(Note note) {
+        new InsertNoteAsyncTask(mImageDao).execute(note);
+    }
+
+    public void deleteNote(Note note) {
+        new DeleteNoteAsyncTask(mImageDao).execute(note);
+    }
+
     private static class AddImageAsyncTask extends AsyncTask<Image, Void, Void>{
 
         private ImageDao mImageDao;
@@ -86,6 +94,36 @@ public class ImageRepository {
         @Override
         protected Void doInBackground(Image... images) {
             mImageDao.remove(images[0]);
+            return null;
+        }
+    }
+
+    private static class InsertNoteAsyncTask extends AsyncTask<Note, Void, Void>{
+
+        private ImageDao mImageDao;
+
+        private InsertNoteAsyncTask(ImageDao imageDao){
+            mImageDao = imageDao;
+        }
+
+        @Override
+        protected Void doInBackground(Note... notes) {
+            mImageDao.insertNote(notes[0]);
+            return null;
+        }
+    }
+
+    private static class DeleteNoteAsyncTask extends AsyncTask<Note, Void, Void>{
+
+        private ImageDao mImageDao;
+
+        private DeleteNoteAsyncTask(ImageDao imageDao){
+            mImageDao = imageDao;
+        }
+
+        @Override
+        protected Void doInBackground(Note... notes) {
+            mImageDao.deleteNote(notes[0]);
             return null;
         }
     }

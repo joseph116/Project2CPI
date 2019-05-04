@@ -11,9 +11,6 @@
         android:id="@+id/app_bar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
         android:background="@android:color/transparent"
         android:minHeight="?attr/actionBarSize"
         app:layout_constraintEnd_toEndOf="parent"
@@ -36,9 +33,11 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/transparent"
+        app:itemTextAppearanceActive="@style/ThemeOverlay.AppCompat.Light"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
+        app:labelVisibilityMode="selected"
         app:menu="@menu/buttom_nav_menu">
 
     </com.google.android.material.bottomnavigation.BottomNavigationView>

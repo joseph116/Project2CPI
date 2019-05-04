@@ -19,6 +19,7 @@ import java.util.List;
 
 public class ImageViewModel extends AndroidViewModel implements LoadUnsortedImagesTask.OnLoadCompleteListener {
 
+
     private ImageRepository mRepository;
     private LiveData<List<Image>> mSortedImages;
     private ArrayList<Image> mUnsortedImages;
@@ -54,6 +55,14 @@ public class ImageViewModel extends AndroidViewModel implements LoadUnsortedImag
         return mRepository.getNotes(imageId);
     }
 
+    public void insertNote(Note note) {
+        mRepository.insertNote(note);
+    }
+
+    public void deleteNote(Note note) {
+        mRepository.deleteNote(note);
+    }
+
     //==============================================================================================
     //  UNSORTED FUNCTIONS
     //==============================================================================================
@@ -70,8 +79,5 @@ public class ImageViewModel extends AndroidViewModel implements LoadUnsortedImag
     @Override
     public void loadFinished(ArrayList<Image> images) {
         mUnsortedImages = images;
-        Toast.makeText(getApplication(), "Load complete! " + images.size()
-                + " unsorted pics found", Toast.LENGTH_LONG).show();
     }
-
 }
