@@ -9,6 +9,7 @@
         <item name="colorAccent">@color/colorAccent</item>
         <item name="backgroundColor">@drawable/ic_gradient_background</item>
         <item name="buttonStyle">@drawable/button_style</item>
+        <item name="fontFamily">@font/opensans</item>
     </style>
 
     <style name="Theme2" parent="Theme.AppCompat.Light.NoActionBar">
@@ -20,6 +21,7 @@
         <item name="colorAccent">@color/colorAccentOld</item>
         <item name="backgroundColor">@color/textOnDark</item>
         <item name="buttonStyle">@drawable/button_style</item>
+        <item name="fontFamily">@font/opensans</item>
     </style>
 
 
@@ -31,6 +33,7 @@
         <item name="android:background">@drawable/rounded_corner_background</item>
         <item name="android:padding">5dp</item>
         <item name="android:textSize">18sp</item>
+        <item name="fontFamily">@font/opensans</item>
     </style>
 
 </resources>
