@@ -1,6 +1,5 @@
 package com.example.appname.View.fullscreen;
 
-import android.content.Context;
 import android.transition.TransitionManager;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
@@ -8,12 +7,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.constraintlayout.widget.ConstraintSet;
+import androidx.core.view.GestureDetectorCompat;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.viewpager.widget.PagerAdapter;
@@ -32,12 +31,11 @@ public class ImageAdapter extends PagerAdapter
         implements View.OnTouchListener,
         GestureDetector.OnGestureListener {
 
-    private static final long DOUBLE_CLICK_TIME_DELTA = 300;//milliseconds
-
     private AppCompatActivity mContext;
     private List<Image> mImages;
     private ImageListener mListener;
     private GestureDetector mGestureDetector;
+
     private ConstraintLayout mLayout;
     private ImageViewModel mViewModel;
     private List<Note> mNotes;
@@ -46,13 +44,13 @@ public class ImageAdapter extends PagerAdapter
     private ConstraintSet showText = new ConstraintSet();
     private ConstraintSet hideText = new ConstraintSet();
     private ConstraintSet showBubbles = new ConstraintSet();
-    private boolean mBubblesVisible = false;
 
     public ImageAdapter(AppCompatActivity context, List<Image> images, ImageListener listener) {
         mContext = context;
         mImages = images;
         mListener = listener;
         mGestureDetector = new GestureDetector(mContext, this);
+
         mLayout = context.findViewById(R.id.display_parent);
         mNotes = new ArrayList<>();
         mViewModel = ViewModelProviders.of(mContext).get(ImageViewModel.class);
@@ -90,51 +88,6 @@ public class ImageAdapter extends PagerAdapter
                 mNotes = notes;
             }
         });
-        if (!mNotes.isEmpty()) {
-            int noteIndice = 1;
-            for (final Note note : mNotes) {
-                View viewNote = mContext.getLayoutInflater().inflate(R.layout.note_view_0, null);
-                ImageView bubble = viewNote.findViewById(R.id.bubble);
-                TextView noteTexte = viewNote.findViewById(R.id.noteText);
-                noteTexte.setText(note.getText());
-                mNoteLayout = viewNote.findViewById(R.id.note_layout_0);
-                final ConstraintLayout noteLayout = viewNote.findViewById(R.id.note_layout_0);
-                hideText.clone(noteLayout);
-                showText.clone(mContext, R.layout.note_view_1);
-                showBubbles.clone(mContext, R.layout.note_view_2);
-                bubble.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        TransitionManager.beginDelayedTransition(noteLayout);
-                        if (!note.isTextVisible()) {
-                            showText.applyTo(noteLayout);
-                            note.setTextVisible(true);
-                        } else {
-                            hideText.applyTo(noteLayout);
-                            note.setTextVisible(false);
-                        }
-                    }
-                });
-                imageView.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Toast.makeText(mContext, "show notes", Toast.LENGTH_SHORT).show();
-                        TransitionManager.beginDelayedTransition(noteLayout);
-                        if (!mBubblesVisible) {
-                            showBubbles.applyTo(noteLayout);
-                            mBubblesVisible = true;
-                        } else {
-                            hideText.applyTo(noteLayout);
-                            mBubblesVisible = false;
-                        }
-                    }
-                });
-                viewNote.setX(note.getX());
-                viewNote.setY(note.getY());
-                mLayout.addView(viewNote);
-                noteIndice++;
-            }
-        }
         imageView.setOnTouchListener(this);
         container.addView(imageView, 0);
         return imageView;
@@ -207,14 +160,6 @@ public class ImageAdapter extends PagerAdapter
 
         @Override
         public boolean onDoubleTap(MotionEvent e) {
-            //TransitionManager.beginDelayedTransition(noteLayout);
-            //if (!mBubblesVisible) {
-            //    showBubbles.applyTo(noteLayout);
-            //    mBubblesVisible = true;
-            //} else {
-            //    hideText.applyTo(noteLayout);
-            //    mBubblesVisible = false;
-            //}
             mListener.onDoubleClick();
             return true;
         }
@@ -224,6 +169,10 @@ public class ImageAdapter extends PagerAdapter
             return false;
         }
     };
+
+
+
+
 
     //==============================================================================================
     //  INIT FUNCTIONS

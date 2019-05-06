@@ -53,6 +53,10 @@ public class ImageRepository {
         new InsertNoteAsyncTask(mImageDao).execute(note);
     }
 
+    public void updateNote(Note note) {
+        new UpdateNoteAsyncTask(mImageDao).execute(note);
+    }
+
     public void deleteNote(Note note) {
         new DeleteNoteAsyncTask(mImageDao).execute(note);
     }
@@ -113,6 +117,21 @@ public class ImageRepository {
         @Override
         protected Void doInBackground(Note... notes) {
             mImageDao.insertNote(notes[0]);
+            return null;
+        }
+    }
+
+    private static class UpdateNoteAsyncTask extends AsyncTask<Note, Void, Void>{
+
+        private ImageDao mImageDao;
+
+        private UpdateNoteAsyncTask(ImageDao imageDao){
+            mImageDao = imageDao;
+        }
+
+        @Override
+        protected Void doInBackground(Note... notes) {
+            mImageDao.updateNote(notes[0]);
             return null;
         }
     }

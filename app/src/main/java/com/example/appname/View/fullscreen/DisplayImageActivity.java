@@ -5,12 +5,16 @@ import androidx.appcompat.view.ActionMode;
 import androidx.appcompat.widget.Toolbar;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.constraintlayout.widget.ConstraintSet;
+import androidx.core.view.GestureDetectorCompat;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.viewpager.widget.ViewPager;
 
 import android.os.Bundle;
 import android.transition.TransitionManager;
+import android.util.Log;
+import android.view.DragEvent;
+import android.view.GestureDetector;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
@@ -23,6 +27,7 @@ import com.example.appname.Model.Image;
 import com.example.appname.Model.Note;
 import com.example.appname.R;
 import com.example.appname.View.dialogs.AddNoteDialog;
+import com.example.appname.View.dialogs.ChangeNoteTextDialog;
 import com.example.appname.ViewModel.ImageViewModel;
 
 import java.util.ArrayList;
@@ -30,11 +35,15 @@ import java.util.List;
 
 public class DisplayImageActivity extends AppCompatActivity
         implements ImageAdapter.ImageListener,
-        AddNoteDialog.AddNoteListener {
+        AddNoteDialog.AddNoteListener,
+        ChangeNoteTextDialog.ChangeNoteTextListener {
+
+    private static final String TAG = "DisplayImageActivity";
 
     private ImageViewModel mViewModel;
     private List<Image> mImages;
     private List<Note> mNotes;
+    private List<Integer> mNoteLayoutIds;
     private int mFirstPosition;
     private ViewPager mViewPager;
     private ImageAdapter mAdapter;
@@ -54,6 +63,8 @@ public class DisplayImageActivity extends AppCompatActivity
     private ConstraintSet show_all = new ConstraintSet();
     private ConstraintSet show_bubble_only = new ConstraintSet();
     private boolean isNoteVisible = false;
+    int  xDelta;
+    int yDelta;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,13 +78,13 @@ public class DisplayImageActivity extends AppCompatActivity
 
     private void initViews() {
         mNotes = new ArrayList<>();
+        mNoteLayoutIds = new ArrayList<>();
         mViewModel.getAllNotes().observe(this, new Observer<List<Note>>() {
             @Override
             public void onChanged(List<Note> notes) {
                 mNotes = notes;
             }
         });
-
         mLayout = findViewById(R.id.display_parent);
         showBars.clone(mLayout);
         hideBars.clone(this, R.layout.activity_display_image_hide);
@@ -127,32 +138,6 @@ public class DisplayImageActivity extends AppCompatActivity
 
     }
 
-    private void initNotes() {
-        //View note = getLayoutInflater().inflate(R.layout.note_view_0, null);
-        //bubble = note.findViewById(R.id.bubble);
-        //noteTexte = note.findViewById(R.id.noteText);
-        //noteLayout = note.findViewById(R.id.note_layout_0);
-        //hide_all.clone(noteLayout);
-        //show_bubble_only.clone(this, R.layout.note_view_1);
-        //show_all.clone(this, R.layout.note_view_2);
-        //bubble.setOnClickListener(new View.OnClickListener() {
-        //    @Override
-        //    public void onClick(View v) {
-        //        TransitionManager.beginDelayedTransition(noteLayout);
-        //        if (!isNoteVisible) {
-        //            show_all.applyTo(noteLayout);
-        //            isNoteVisible = true;
-        //        } else {
-        //            show_bubble_only.applyTo(noteLayout);
-        //            isNoteVisible = false;
-        //        }
-        //    }
-        //});
-        //note.setX(100);
-        //note.setY(200);
-        //mLayout.addView(note);
-    }
-
     @Override
     public void onClickImage() {
         TransitionManager.beginDelayedTransition(mLayout);
@@ -171,11 +156,11 @@ public class DisplayImageActivity extends AppCompatActivity
         for (Note note : mNotes) {
             if (note.getImageId() == mImages.get(mViewPager.getCurrentItem()).getRowId()) {
                 if (!isNoteVisible) {
-                    addNoteView(note);
+                    addNoteView(note, show_bubble_only);
                 } else {
                     removeNoteView(note);
                 }
-            }
+            } else removeNoteView(note);
         }
         isNoteVisible = !isNoteVisible;
     }
@@ -217,8 +202,8 @@ public class DisplayImageActivity extends AppCompatActivity
         }
     };
 
-    private void addNoteView(final Note note) {
-        View viewNote = getLayoutInflater().inflate(R.layout.note_view_1, null);
+    private void addNoteView(final Note note, ConstraintSet visibility) {
+        final View viewNote = getLayoutInflater().inflate(R.layout.note_view_1, null);
         ImageView bubble = viewNote.findViewById(R.id.bubble);
         TextView noteTexte = viewNote.findViewById(R.id.noteText);
         noteTexte.setText(note.getText());
@@ -236,15 +221,56 @@ public class DisplayImageActivity extends AppCompatActivity
                 }
             }
         });
+        noteTexte.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                ChangeNoteTextDialog.newInstance(note.getText(), note.getId(), DisplayImageActivity.this).show(getSupportFragmentManager(), "change note txt");
+                return true;
+            }
+        });
+        bubble.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+
+                return true;
+            }
+        });
         viewNote.setX(note.getX());
         viewNote.setY(note.getY());
+        visibility.applyTo(noteLayout);
+        mNoteLayoutIds.add(noteLayout.getId());
         note.setLayoutId(noteLayout.getId());
         mLayout.addView(viewNote);
     }
 
     private void removeNoteView(Note note) {
-        ConstraintLayout noteLayout = mLayout.findViewById(note.getLayoutId());
-        mLayout.removeView(noteLayout);
-        note.setLayoutId(0);
+        if (note.getLayoutId() != 0){
+            ConstraintLayout noteLayout = mLayout.findViewById(note.getLayoutId());
+            mLayout.removeView(noteLayout);
+            note.setLayoutId(0);
+        }
+    }
+
+
+    @Override
+    public void onChangeNoteText(String newText, long noteId) {
+        int index = 0;
+        while (mNotes.get(index).getId() != noteId) {
+            index++;
+        }
+        Note note = mNotes.get(index);
+        note.setText(newText);
+        mViewModel.updateNote(note);
+        for (Note n : mNotes) {
+            removeNoteView(n);
+            if (n.getImageId() == mImages.get(mViewPager.getCurrentItem()).getRowId()) {
+                addNoteView(n, (n.isTextVisible())? show_all : show_bubble_only);
+            }
+        }
+    }
+
+    private void setNoteVisibility(int layoutId, ConstraintSet visibility) {
+        ConstraintLayout layout = mLayout.findViewById(layoutId);
+        visibility.applyTo(layout);
     }
 }

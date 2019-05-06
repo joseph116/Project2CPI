@@ -59,6 +59,8 @@ public class ImageViewModel extends AndroidViewModel implements LoadUnsortedImag
         mRepository.insertNote(note);
     }
 
+    public void updateNote(Note note) { mRepository.updateNote(note);}
+
     public void deleteNote(Note note) {
         mRepository.deleteNote(note);
     }

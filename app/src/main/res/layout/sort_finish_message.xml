@@ -60,7 +60,7 @@
         android:layout_marginBottom="8dp"
         android:text="Sort them"
         android:padding="10dp"
-        android:background="@color/colorAccent"
+        android:background="?attr/colorAccent"
         android:textColor="@color/textOnDark"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

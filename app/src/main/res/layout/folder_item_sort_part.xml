@@ -14,7 +14,7 @@
         android:padding="5dp"
         android:scaleType="centerCrop"
         android:layout_marginEnd="8dp"
-        android:backgroundTint="@color/colorAccent"
+        android:backgroundTint="?attr/colorAccent"
         android:background="@drawable/rounded_corner_add"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

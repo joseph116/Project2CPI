@@ -29,6 +29,9 @@ public interface ImageDao {
     @Insert
     void insertNote(Note note);
 
+    @Update
+    void updateNote(Note note);
+
     @Delete
     void deleteNote(Note note);
 
