@@ -44,6 +44,8 @@ public class SettingsFragment extends PreferenceFragmentCompat {
         @Override
         public boolean onPreferenceChange(Preference p, Object newValue) {
             getActivity().setResult(resultCode);
+            getActivity().finish();
+            getActivity().startActivity(getActivity().getIntent());
             return true;
         }
     }
