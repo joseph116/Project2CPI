@@ -19,7 +19,9 @@ import com.example.appname.Model.Image;
 import com.example.appname.R;
 import com.example.appname.View.fullscreen.DisplayImageActivity;
 import com.example.appname.View.folders.ImageAdapter;
+import com.example.appname.View.main.CameraActivity;
 import com.example.appname.ViewModel.ImageViewModel;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,6 +37,7 @@ public class HomeFragment extends Fragment implements ImageAdapter.ImageListener
     private ImageViewModel mViewModel;
     private List<Image> mSortedImages;
     private TextView mNumberElements;
+    private FloatingActionButton mButtonCamera;
 
     public HomeFragment() {
         // Required empty public constructor
@@ -77,6 +80,15 @@ public class HomeFragment extends Fragment implements ImageAdapter.ImageListener
         mImageAdapter = new ImageAdapter(getContext(), this);
         mSortedRecyclerView.setAdapter(mImageAdapter);
         mSortedRecyclerView.setLayoutManager(new GridLayoutManager(getContext(), 3));
+
+        mButtonCamera = getView().findViewById(R.id.buttonCamera);
+        mButtonCamera.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent openCamera = new Intent(getActivity(), CameraActivity.class);
+                getActivity().startActivity(openCamera);
+            }
+        });
     }
 
     @Override

@@ -8,8 +8,10 @@ import androidx.constraintlayout.widget.ConstraintSet;
 import androidx.core.view.GestureDetectorCompat;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
+import androidx.preference.PreferenceManager;
 import androidx.viewpager.widget.ViewPager;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.transition.TransitionManager;
 import android.util.Log;
@@ -63,11 +65,10 @@ public class DisplayImageActivity extends AppCompatActivity
     private ConstraintSet show_all = new ConstraintSet();
     private ConstraintSet show_bubble_only = new ConstraintSet();
     private boolean isNoteVisible = false;
-    int  xDelta;
-    int yDelta;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        loadPreferences();
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_display_image);
         mImages = getIntent().getParcelableArrayListExtra("ARGS_CURRENT_IMAGES");
@@ -104,6 +105,7 @@ public class DisplayImageActivity extends AppCompatActivity
 
             @Override
             public void onPageSelected(int position) {
+                mNoteLayoutIds.clear();
                 for (Note note : mNotes) {
                     removeNoteView(note);
                 }
@@ -155,12 +157,12 @@ public class DisplayImageActivity extends AppCompatActivity
         TransitionManager.beginDelayedTransition(mLayout);
         for (Note note : mNotes) {
             if (note.getImageId() == mImages.get(mViewPager.getCurrentItem()).getRowId()) {
-                if (!isNoteVisible) {
-                    addNoteView(note, show_bubble_only);
-                } else {
-                    removeNoteView(note);
-                }
-            } else removeNoteView(note);
+            if (!isNoteVisible) {
+                addNoteView(note, show_bubble_only);
+            } else {
+                removeNoteView(note);
+            }
+        }
         }
         isNoteVisible = !isNoteVisible;
     }
@@ -244,7 +246,7 @@ public class DisplayImageActivity extends AppCompatActivity
     }
 
     private void removeNoteView(Note note) {
-        if (note.getLayoutId() != 0){
+        if (note.getLayoutId() != 0) {
             ConstraintLayout noteLayout = mLayout.findViewById(note.getLayoutId());
             mLayout.removeView(noteLayout);
             note.setLayoutId(0);
@@ -264,13 +266,30 @@ public class DisplayImageActivity extends AppCompatActivity
         for (Note n : mNotes) {
             removeNoteView(n);
             if (n.getImageId() == mImages.get(mViewPager.getCurrentItem()).getRowId()) {
-                addNoteView(n, (n.isTextVisible())? show_all : show_bubble_only);
+                addNoteView(n, (n.isTextVisible()) ? show_all : show_bubble_only);
             }
         }
     }
 
     private void setNoteVisibility(int layoutId, ConstraintSet visibility) {
         ConstraintLayout layout = mLayout.findViewById(layoutId);
-        visibility.applyTo(layout);
+        if (layout != null) {
+            visibility.applyTo(layout);
+        }
+    }
+
+    private void loadPreferences() {
+        SharedPreferences sharedPreferences =
+                PreferenceManager.getDefaultSharedPreferences(this);
+        String theme = sharedPreferences.getString("theme", "1");
+        switch (theme) {
+            case "1":
+                setTheme(R.style.Theme1);
+                break;
+            case "2":
+                setTheme(R.style.Theme2);
+            default:
+                break;
+        }
     }
 }
