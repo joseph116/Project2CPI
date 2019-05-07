@@ -38,6 +38,7 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import com.example.appname.R;
+import com.example.appname.View.dialogs.SelectImagePathDialog;
 import com.snatik.storage.Storage;
 
 import java.io.File;
@@ -52,7 +53,7 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
-public class CameraActivity extends AppCompatActivity {
+public class CameraActivity extends AppCompatActivity implements SelectImagePathDialog.OnPathSelected{
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
     // ATTRIBUTES
@@ -86,11 +87,14 @@ public class CameraActivity extends AppCompatActivity {
     private Handler mBackgroundHandler;
     private HandlerThread mBackgroundThread;
 
+    private String mImageSelectedPath;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_camera);
         mTextureView = (TextureView) findViewById(R.id.texture_view);
+        mImageSelectedPath = Environment.getExternalStorageDirectory().getPath()+File.separator+"Unsorted Pictures";
 
         assert mTextureView != null;
         mTextureView.setSurfaceTextureListener(textureListener);
@@ -103,7 +107,18 @@ public class CameraActivity extends AppCompatActivity {
             }
         });
         mCameraManager = (CameraManager) getSystemService(Context.CAMERA_SERVICE);
+        mSelectImagePath = (Button) findViewById(R.id.open_directory_dialog);
+        mImageSelectedPath = Environment.getExternalStorageDirectory().getPath()+"/Pictures/SortedPictures";
+        assert mSelectImagePath != null;
+        mSelectImagePath.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                SelectImagePathDialog dialog = new SelectImagePathDialog();
+                dialog.show(getSupportFragmentManager(), "SelectImagePathDialog");
+            }
+        });
     }
+
 
     TextureView.SurfaceTextureListener textureListener = new TextureView.SurfaceTextureListener() {
         @Override
@@ -202,7 +217,7 @@ public class CameraActivity extends AppCompatActivity {
             captureBuilder.set(CaptureRequest.JPEG_ORIENTATION, ORIENTATIONS.get(rotation));
             String timestamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
             String prepend = "IMAGE_" + timestamp + "_";
-            final File file = new File(Environment.getExternalStorageDirectory() + File.separator + "/Unsorted Pictures" + File.separator + prepend + ".jpg");
+            final File file = new File(mImageSelectedPath + File.separator + prepend + ".jpg");
             //final File file = new File(Environment.getExternalStorageDirectory()+File.separator+"DCIM/Camera"+File.separator+prepend+".jpg");
 
 
@@ -422,6 +437,11 @@ public class CameraActivity extends AppCompatActivity {
     private void showToast(String msg){
         Toast toast = Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_SHORT);
         toast.show();
+    }
+
+    @Override
+    public void sendPath(String path) {
+        mImageSelectedPath = path;
     }
 
 }
