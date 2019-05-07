@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.EditText;
 
 import androidx.annotation.NonNull;
@@ -56,6 +57,10 @@ public class AddNoteDialog extends AppCompatDialogFragment {
         builder.setNegativeButton("Cancel", null);
 
         final AlertDialog dialog = builder.create();
+
+        // show soft keyboard
+        text.requestFocus();
+        dialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
 
         return dialog;
     }

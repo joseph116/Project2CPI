@@ -9,6 +9,7 @@ import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.EditText;
 
 import androidx.appcompat.app.AppCompatDialogFragment;
@@ -21,6 +22,7 @@ import java.io.File;
 public class RenameDialog extends AppCompatDialogFragment {
 
     private final static String PATH = "path";
+
     private RenameListener mListener;
     private Storage mStorage;
 
@@ -46,15 +48,14 @@ public class RenameDialog extends AppCompatDialogFragment {
         final View view = LayoutInflater.from(getActivity())
                 .inflate(R.layout.rename_dialog, (ViewGroup) getView(), false);
 
-        // if text is empty, disable the dialog positive button
-        final EditText currentNameText = (EditText) view.findViewById(R.id.current_name);
         String path = getArguments().getString(PATH);
 
         final File file = mStorage.getFile(path);
-        currentNameText.setText(file.getName());
         final String parent = file.getParent();
 
-        final EditText newNameText = (EditText) view.findViewById(R.id.new_name);
+        final EditText newNameText = view.findViewById(R.id.new_name);
+        newNameText.setText(file.getName());
+        newNameText.selectAll();
         newNameText.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
@@ -81,7 +82,7 @@ public class RenameDialog extends AppCompatDialogFragment {
                 mListener.onRename(file.getPath(), toPath);
             }
         });
-
+        builder.setNegativeButton("Cancel", null);
         final AlertDialog dialog = builder.create();
         view.post(new Runnable() {
             @Override
@@ -90,13 +91,17 @@ public class RenameDialog extends AppCompatDialogFragment {
             }
         });
         dialog.setCancelable(false);
+
+        // show soft keyboard
+        newNameText.requestFocus();
+        dialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
+
         return dialog;
     }
 
     public interface RenameListener {
         void onRename(String fromPath, String toPath);
     }
-
 
     @Override
     public void onDetach() {

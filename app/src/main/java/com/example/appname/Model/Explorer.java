@@ -68,6 +68,18 @@ public class Explorer {
         return mRootPath;
     }
 
+    public int getTreeSteps() {
+        return mTreeSteps;
+    }
+
+    public void setCurrentPath(String currentPath) {
+        mCurrentPath = currentPath;
+    }
+
+    public void setTreeSteps(int treeSteps) {
+        mTreeSteps = treeSteps;
+    }
+
     //==============================================================================================
     //  FUNCTIONS
     //==============================================================================================

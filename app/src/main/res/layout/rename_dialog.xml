@@ -8,27 +8,6 @@
     android:paddingRight="24dp"
     android:paddingTop="16dp">
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Current name"
-        android:textColor="?attr/colorAccent"
-        android:textSize="14sp"/>
-
-    <EditText
-        android:id="@+id/current_name"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:enabled="false"/>
-
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:text="New Name"
-        android:textColor="@color/colorPrimary"
-        android:textSize="14sp"/>
-
     <EditText
         android:id="@+id/new_name"
         android:layout_width="match_parent"

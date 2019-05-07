@@ -2,15 +2,14 @@ package com.example.appname.View.folders;
 
 import android.annotation.SuppressLint;
 import android.app.Dialog;
-import android.content.ContentUris;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
-import android.net.Uri;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.view.ActionMode;
@@ -21,7 +20,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Environment;
-import android.provider.MediaStore;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -34,6 +32,7 @@ import com.example.appname.Model.FileClickListener;
 import com.example.appname.Model.Image;
 import com.example.appname.R;
 import com.example.appname.View.dialogs.ConfirmDeleteDialog;
+import com.example.appname.View.dialogs.MoveToDialog;
 import com.example.appname.View.dialogs.NewFolderDialog;
 import com.example.appname.View.dialogs.RenameDialog;
 import com.example.appname.View.dialogs.UpdateItemDialog;
@@ -56,7 +55,7 @@ public class FoldersFragment extends Fragment implements FolderAdapter.FolderLis
         NewFolderDialog.DialogListener,
         UpdateItemDialog.DialogListener,
         ConfirmDeleteDialog.ConfirmListener,
-        RenameDialog.RenameListener {
+        RenameDialog.RenameListener{
 
     //==============================================================================================
     //  ATTRIBUTES
@@ -65,20 +64,26 @@ public class FoldersFragment extends Fragment implements FolderAdapter.FolderLis
     public static final String ARGS_CURRENT_IMAGES = "ARGS_CURRENT_IMAGES";
     public static final String ARGS_IMAGE_POSITION = "ARGS_IMAGE_POSITION";
 
+    public static final String BUNDLE_CURRENT_PATH = "BUNDLE_CURRENT_PATH";
+    public static final String BUNDLE_TREE_STEPS = "BUNDLE_TREE_STEPS";
+
     private Explorer mExplorer;
     private RecyclerView mFolderRecyclerView;
     private RecyclerView mImageRecyclerView;
     private FolderAdapter mFolderAdapter;
     private ImageAdapter mImageAdapter;
+    private static FileAdapter sFileAdapter;
     private List<Image> mSelectedImages;
     private ActionMode mActionMode;
     private ImageViewModel mViewModel;
+    private int mTreeStep;
+    private String mCurrentPath;
 
     private static Dialog mDialog;
     private static String selectedPath;
     private static List<String> PathList = new ArrayList<>();
     private static List<File> FilesList = new ArrayList<>();
-    private static FileAdapter files;
+
 
 
     //==============================================================================================
@@ -118,7 +123,21 @@ public class FoldersFragment extends Fragment implements FolderAdapter.FolderLis
         ((MainActivity)getActivity()).setBackListener(this);
     }
 
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        outState.putString(BUNDLE_CURRENT_PATH, mExplorer.getCurrentPath());
+        outState.putInt(BUNDLE_TREE_STEPS, mExplorer.getTreeSteps());
+        super.onSaveInstanceState(outState);
+    }
 
+    @Override
+    public void onViewStateRestored(@Nullable Bundle savedInstanceState) {
+        super.onViewStateRestored(savedInstanceState);
+        if (savedInstanceState != null) {
+            mExplorer.setCurrentPath(savedInstanceState.getString(BUNDLE_CURRENT_PATH));
+            mExplorer.setTreeSteps(savedInstanceState.getInt(BUNDLE_TREE_STEPS));
+        }
+    }
 
     //==============================================================================================
     //  INIT FUNCTIONS
@@ -129,7 +148,7 @@ public class FoldersFragment extends Fragment implements FolderAdapter.FolderLis
         mFolderRecyclerView = getView().findViewById(R.id.folderRecyclerView);
         mFolderAdapter = new FolderAdapter(getContext(), mExplorer.getFolders(), this);
         mFolderRecyclerView.setAdapter(mFolderAdapter);
-        int spanCountFolder = getResources().getDisplayMetrics().widthPixels / (250);
+        int spanCountFolder = getResources().getDisplayMetrics().widthPixels / (275);
         int spanCountImage = getResources().getDisplayMetrics().widthPixels / (300);
         mFolderRecyclerView.setLayoutManager(new GridLayoutManager(getContext(), spanCountFolder));
         //image recycler
@@ -289,7 +308,8 @@ public class FoldersFragment extends Fragment implements FolderAdapter.FolderLis
         public boolean onActionItemClicked(ActionMode actionMode, MenuItem menuItem) {
             switch (menuItem.getItemId()) {
                 case R.id.move_option:
-                    CallDialog(getContext());
+                    //CallDialog(getContext());
+                    MoveToDialog.newInstance((ArrayList<Image>) mSelectedImages).show(getFragmentManager(), "move_to");
                     actionMode.finish();
                     break;
                 case R.id.delete_option:
@@ -352,10 +372,10 @@ public class FoldersFragment extends Fragment implements FolderAdapter.FolderLis
         };
 
         //Binds the view for the adapter ===========================================================
-        files = new FileAdapter(context , PathList , fileListener);
+        sFileAdapter = new FileAdapter(context , PathList , fileListener);
         PopRecycler.setHasFixedSize(false);
         PopRecycler.setLayoutManager(layoutManagerMini);
-        PopRecycler.setAdapter(files);
+        PopRecycler.setAdapter(sFileAdapter);
 
         //The move button action
         SelectToMoveButton.setOnClickListener(new View.OnClickListener() {
@@ -414,7 +434,7 @@ public class FoldersFragment extends Fragment implements FolderAdapter.FolderLis
     }
 
 
-    //method that shows the files inside the dialog box ============================================
+    //method that shows the sFileAdapter inside the dialog box ============================================
     public static void ShowFiles(String path, Storage storage, RecyclerView popRecycle){
         FilesList =null;
         FilesList = storage.getFiles(path);
@@ -422,7 +442,7 @@ public class FoldersFragment extends Fragment implements FolderAdapter.FolderLis
         for(int i = 0; i < FilesList.size() ; i++){
             PathList.add(FilesList.get(i).getPath());
         }
-        popRecycle.swapAdapter(files , true);
+        popRecycle.swapAdapter(sFileAdapter, true);
     }
 
 

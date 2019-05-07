@@ -42,8 +42,10 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ImageHolder>
     }
 
     public void setImageList(List<Image> imageList) {
+        int oldSize = mImageList.size();
         mImageList = imageList;
-        notifyDataSetChanged();
+        notifyItemRangeRemoved(1, oldSize);
+        notifyItemRangeInserted(1, mImageList.size());
     }
 
     public boolean isSelectionMode() {
@@ -70,8 +72,10 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ImageHolder>
     }
 
     public void updateImageList(ArrayList<Image> imageList) {
+        int oldSize = mImageList.size();
         mImageList = imageList;
-        notifyDataSetChanged();
+        notifyItemRangeRemoved(0, oldSize);
+        notifyItemRangeInserted(0, mImageList.size());
     }
 
     @NonNull

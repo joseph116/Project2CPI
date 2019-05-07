@@ -14,7 +14,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.appname.Model.Image;
 import com.example.appname.R;
@@ -114,6 +113,7 @@ public class SortFragment extends Fragment implements FolderAdapter.OnFileItemLi
         mViewPager = getView().findViewById(R.id.sortViewPager);
         mImagePagerAdapter = new ImagePagerAdapter(getContext(), mViewModel.getUnsortedImages(), this);
         mViewPager.setAdapter(mImagePagerAdapter);
+        mViewPager.setOffscreenPageLimit(5);
         mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {

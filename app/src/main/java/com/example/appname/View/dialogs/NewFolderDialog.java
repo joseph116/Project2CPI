@@ -8,6 +8,7 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.EditText;
 
 import androidx.appcompat.app.AppCompatDialogFragment;
@@ -71,6 +72,11 @@ public class NewFolderDialog extends AppCompatDialogFragment {
             }
         });
         dialog.setCancelable(false);
+
+        // show soft keyboard
+        mFolderName.requestFocus();
+        dialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
+
         return dialog;
     }
 

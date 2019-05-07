@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.EditText;
 
 import androidx.annotation.NonNull;
@@ -14,6 +15,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatDialogFragment;
 
 import com.example.appname.R;
+
 
 public class ChangeNoteTextDialog extends AppCompatDialogFragment {
 
@@ -45,6 +47,8 @@ public class ChangeNoteTextDialog extends AppCompatDialogFragment {
                 .inflate(R.layout.add_note_dialog, (ViewGroup) getView(), false);
 
         final EditText text = view.findViewById(R.id.add_note_edit_text);
+        text.setText(getArguments().getString(ARGS_CURRENT_TEXT));
+        text.selectAll();
 
         builder.setTitle("Edit note");
         builder.setView(view);
@@ -57,6 +61,10 @@ public class ChangeNoteTextDialog extends AppCompatDialogFragment {
         builder.setNegativeButton("Cancel", null);
 
         final AlertDialog dialog = builder.create();
+
+        // show soft keyboard
+        text.requestFocus();
+        dialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
 
         return dialog;
     }
