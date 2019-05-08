@@ -37,6 +37,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
+import com.example.appname.Model.Explorer;
 import com.example.appname.R;
 import com.example.appname.View.dialogs.SelectImagePathDialog;
 import com.snatik.storage.Storage;
@@ -86,6 +87,7 @@ public class CameraActivity extends AppCompatActivity implements SelectImagePath
     private Boolean isTorchOn;
     private Handler mBackgroundHandler;
     private HandlerThread mBackgroundThread;
+    private Explorer mExplorer;
 
     private String mImageSelectedPath;
 
@@ -93,9 +95,10 @@ public class CameraActivity extends AppCompatActivity implements SelectImagePath
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_camera);
-        mTextureView = (TextureView) findViewById(R.id.texture_view);
-        mImageSelectedPath = Environment.getExternalStorageDirectory().getPath()+File.separator+"Unsorted Pictures";
 
+        mImageSelectedPath = Environment.getExternalStorageDirectory().getPath()+"/Unsorted Pictures";
+
+        mTextureView = (TextureView) findViewById(R.id.texture_view);
         assert mTextureView != null;
         mTextureView.setSurfaceTextureListener(textureListener);
         mTakePictureButton = (Button) findViewById(R.id.capture_image_btn);
@@ -108,7 +111,6 @@ public class CameraActivity extends AppCompatActivity implements SelectImagePath
         });
         mCameraManager = (CameraManager) getSystemService(Context.CAMERA_SERVICE);
         mSelectImagePath = (Button) findViewById(R.id.open_directory_dialog);
-        mImageSelectedPath = Environment.getExternalStorageDirectory().getPath()+"/Pictures/SortedPictures";
         assert mSelectImagePath != null;
         mSelectImagePath.setOnClickListener(new View.OnClickListener() {
             @Override
