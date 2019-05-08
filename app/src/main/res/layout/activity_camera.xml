@@ -22,11 +22,33 @@
         android:layout_marginStart="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginBottom="32dp"
+        android:background="@color/cardview_dark_background"
         android:text="capture"
+        android:textSize="25sp"
+        android:padding="5dp"
         android:onClick="captureImage"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         tools:ignore="OnClick" />
+
+    <Button
+        android:id="@+id/open_directory_dialog"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="32dp"
+        android:background="@color/cardview_dark_background"
+        android:onClick="captureImage"
+        android:padding="5dp"
+        android:text="Select"
+        android:textSize="25sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.871"
+        app:layout_constraintStart_toStartOf="parent"
+        tools:ignore="OnClick" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>
