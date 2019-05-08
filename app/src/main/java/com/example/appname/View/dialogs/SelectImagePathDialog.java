@@ -13,6 +13,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.appname.Model.Explorer;
@@ -23,9 +24,11 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SelectImagePathDialog extends DialogFragment implements FolderAdapter.FolderListener{
+public class SelectImagePathDialog extends DialogFragment implements FolderAdapter.FolderListener,
+        NewFolderDialog.DialogListener{
 
     private static final String TAG = "SelectImagePathDialog";
+
 
 
     public interface OnPathSelected{
@@ -68,8 +71,8 @@ public class SelectImagePathDialog extends DialogFragment implements FolderAdapt
 
 
         mFolderAdapter = new FolderAdapter(getContext(), mFoldersList, mFolderListener);
-        int spanCountFolder = getResources().getDisplayMetrics().widthPixels / (250);
-        mRecyclerView.setLayoutManager(new GridLayoutManager(getContext(), spanCountFolder));
+        int spanCountFolder = getResources().getDisplayMetrics().widthPixels / (150);
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext(),LinearLayoutManager.HORIZONTAL, false));
         mRecyclerView.setHasFixedSize(false);
         mRecyclerView.setAdapter(mFolderAdapter);
 
@@ -124,7 +127,8 @@ public class SelectImagePathDialog extends DialogFragment implements FolderAdapt
     //click on the add button
     @Override
     public void onClickAdd() {
-
+        NewFolderDialog dialog = new NewFolderDialog(this);
+        dialog.show(getFragmentManager(), "new folder dialog");
     }
 
     // click back button
@@ -133,5 +137,11 @@ public class SelectImagePathDialog extends DialogFragment implements FolderAdapt
             mFolderAdapter.updateFolders(mExplorer.getFolders());
             mCurrentPath.setText("/Home"+mExplorer.getCurrentPath().substring(44));
         }
+    }
+
+    @Override
+    public void onNewFolder(String name) {
+        mExplorer.newFolder(name);
+        mFolderAdapter.addFolder(mExplorer.getCurrentPath() + File.separator + name);
     }
 }
