@@ -6,4 +6,5 @@
     <attr name="basicColor" format="color" />
     <attr name="basicColorInverse" format="color" />
     <attr name="textSize" format="dimension" />
+    <attr name="navColor" format="color" />
 </resources>
