@@ -7,6 +7,7 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
+        <item name="navColor">@color/colorAccent</item>
         <item name="backgroundColor">@drawable/ic_gradient_background</item>
         <item name="backgroundFolder">@drawable/rounded_corner_add</item>
         <item name="backgroundText">@drawable/rounded_corner_background</item>
