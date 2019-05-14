@@ -23,7 +23,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
-        android:text="Sorted images (stored in the database)"
+        android:text="Images in the database"
         android:textColor="?attr/colorPrimary"
         android:textSize="20dp"
         app:layout_constraintStart_toStartOf="parent"

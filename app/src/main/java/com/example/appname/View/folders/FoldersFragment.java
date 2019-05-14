@@ -155,6 +155,9 @@ public class FoldersFragment extends Fragment implements FolderAdapter.FolderLis
         mImageAdapter = new ImageAdapter(getContext(), mExplorer.getImages(), this);
         mImageRecyclerView.setAdapter(mImageAdapter);
         mImageRecyclerView.setLayoutManager(new GridLayoutManager(getContext(), spanCountImage));
+
+        String currentPath = mExplorer.getCurrentPath();
+        getActivity().setTitle(currentPath.substring(currentPath.lastIndexOf(File.separator) + 1));
     }
 
     //==============================================================================================
@@ -183,6 +186,8 @@ public class FoldersFragment extends Fragment implements FolderAdapter.FolderLis
         mExplorer.openFolder(file);
         mFolderAdapter.updateFolders(mExplorer.getFolders());
         mImageAdapter.updateImageList(mExplorer.getImages());
+        String currentPath = mExplorer.getCurrentPath();
+        getActivity().setTitle(currentPath.substring(currentPath.lastIndexOf(File.separator) + 1));
     }
 
     //long click on a folder
@@ -239,6 +244,8 @@ public class FoldersFragment extends Fragment implements FolderAdapter.FolderLis
         if (mExplorer.goBack()) {
             mFolderAdapter.updateFolders(mExplorer.getFolders());
             mImageAdapter.updateImageList(mExplorer.getImages());
+            String currentPath = mExplorer.getCurrentPath();
+            getActivity().setTitle(currentPath.substring(currentPath.lastIndexOf(File.separator) + 1));
         }
     }
 

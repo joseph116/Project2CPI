@@ -61,6 +61,7 @@ public class HomeFragment extends Fragment implements ImageAdapter.ImageListener
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        getActivity().setTitle("Sorted images");
         mNumberElements = getView().findViewById(R.id.number_element_database);
         mViewModel = ViewModelProviders.of(getActivity()).get(ImageViewModel.class);
         initViews();
@@ -72,7 +73,6 @@ public class HomeFragment extends Fragment implements ImageAdapter.ImageListener
                 mImageAdapter.setImageList(images);
             }
         });
-
     }
 
     private void initViews() {
@@ -89,6 +89,7 @@ public class HomeFragment extends Fragment implements ImageAdapter.ImageListener
                 getActivity().startActivity(openCamera);
             }
         });
+
     }
 
     @Override

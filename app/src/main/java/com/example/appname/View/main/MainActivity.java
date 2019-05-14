@@ -89,6 +89,9 @@ public class MainActivity extends AppCompatActivity{
                     case R.id.nav_folders:
                         mSearchView.setQueryHint("Search in folders...");
                         break;
+                    case R.id.nav_trash:
+                        mSearchView.setQueryHint("Search in trash...");
+                        break;
                 }
                 break;
         }
@@ -157,10 +160,15 @@ public class MainActivity extends AppCompatActivity{
                         getSupportFragmentManager().beginTransaction().replace(R.id.frame_container, new HomeFragment()).commit();
                         break;
                     case R.id.nav_sort:
+                        showToast("Converting sort fragment to an activity...");
                         break;
                     case R.id.nav_trash:
                         getSupportFragmentManager().beginTransaction().replace(R.id.frame_container, new TrashFragment()).commit();
                         break;
+                    case R.id.nav_tag:
+                        showToast("Working on...");
+                        break;
+
                 }
                 mDrawerLayout.closeDrawer(GravityCompat.START);
                 return true;
