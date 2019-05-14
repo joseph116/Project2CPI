@@ -49,6 +49,8 @@ public class ImageRepository {
         return mImageDao.getNotes(imageId);
     }
 
+    public LiveData<List<Tag>> getAllTags() {return mImageDao.getAllTags();}
+
     public void insertNote(Note note) {
         new InsertNoteAsyncTask(mImageDao).execute(note);
     }

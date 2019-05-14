@@ -4,21 +4,14 @@
     <color name="colorPrimary">#FEFEFE</color>
     <color name="colorPrimaryDark">#3A6388</color>
     <color name="colorAccent">#213F58</color>
-    <color name="white">#FEFEFE</color>
-    <color name="transparent">#00000000</color>
+
     <!-- Theme 2 -->
-    <color name="colorPrimary2">#eeeeee</color>
-    <color name="colorPrimaryDark2">#bcbcbc</color>
-    <color name="colorAccent2">#FFFFFF</color>
-    <!-- Theme 3 -->
-    <color name="colorPrimary3">#212121</color>
-    <color name="colorPrimaryDark3">#141313</color>
-    <color name="colorAccent3">#484848</color>
-    <!-- Old Theme -->
     <color name="colorPrimaryOld">#2962ff</color>
     <color name="colorPrimaryDarkOld">#0039cb</color>
     <color name="colorAccentOld">#768fff</color>
 
+    <color name="white">#FEFEFE</color>
+    <color name="transparent">#00000000</color>
     <color name="textOnDark">#ffffff</color>
-    <color name="textOnLight">#181717</color>
+    <color name="textOnLight">#262626</color>
 </resources>

@@ -2,9 +2,13 @@ package com.example.appname.View.main;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.ContextCompat;
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.preference.PreferenceManager;
@@ -20,9 +24,9 @@ import android.widget.Toast;
 import com.example.appname.R;
 import com.example.appname.View.folders.FoldersFragment;
 import com.example.appname.View.home.HomeFragment;
-import com.example.appname.View.sort.SortFragment;
 import com.example.appname.ViewModel.ImageViewModel;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.navigation.NavigationView;
 
 
 public class MainActivity extends AppCompatActivity{
@@ -36,10 +40,10 @@ public class MainActivity extends AppCompatActivity{
     private Toolbar mToolbar;
     private Toast mToast = null;
     private BackPressedListener mBackPressedListener;
-    private BottomNavigationView mBottomNavBar;
     private ImageViewModel mImageViewModel;
-    private Fragment mSelectedFragment;
-
+    private DrawerLayout mDrawerLayout;
+    private NavigationView mNavigationView;
+    private SearchView mSearchView;
 
     //==============================================================================================
     //  STATE FUNCTIONS
@@ -53,11 +57,14 @@ public class MainActivity extends AppCompatActivity{
             Intent askForPerms = new Intent(MainActivity.this, RequestForPermissionActivity.class);
             startActivity(askForPerms);
         }
-
+        mImageViewModel = ViewModelProviders.of(this).get(ImageViewModel.class);
         //inits
         setContentView(R.layout.activity_main);
-        initToolBar();
-        initNavBar();
+        initViews();
+        if (savedInstanceState == null) {
+            getSupportFragmentManager().beginTransaction().replace(R.id.frame_container, new HomeFragment()).commit();
+            mNavigationView.setCheckedItem(R.id.nav_home);
+        }
     }
 
     @Override
@@ -71,9 +78,18 @@ public class MainActivity extends AppCompatActivity{
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.action_settings:
-                Intent settings = new Intent(MainActivity.this, SettingsActivity.class);
-                startActivityForResult(settings, SETTINGS_ACTION);
+            case R.id.action_view:
+                //open change view dialog here
+                break;
+            case R.id.action_search:
+                switch (mNavigationView.getCheckedItem().getItemId()) {
+                    case R.id.nav_home:
+                        mSearchView.setQueryHint("Search in home...");
+                        break;
+                    case R.id.nav_folders:
+                        mSearchView.setQueryHint("Search in folders...");
+                        break;
+                }
                 break;
         }
         return super.onOptionsItemSelected(item);
@@ -95,6 +111,19 @@ public class MainActivity extends AppCompatActivity{
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater menuInflater = getMenuInflater();
         menuInflater.inflate(R.menu.app_bar_menu, menu);
+        MenuItem searchItem = menu.findItem(R.id.action_search);
+        mSearchView = (SearchView) searchItem.getActionView();
+        mSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                return false;
+            }
+        });
         return true;
     }
 
@@ -102,48 +131,46 @@ public class MainActivity extends AppCompatActivity{
     //  INIT FUNCTIONS
     //==============================================================================================
 
-
-    private void initNavBar() {
-        mBottomNavBar = findViewById(R.id.bottomNavBar);
-        getSupportFragmentManager().beginTransaction().replace(R.id.frame_container,
-                new HomeFragment()).commit();
-        mBottomNavBar.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
-            @Override
-            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-
-                switch (item.getItemId()) {
-                    case R.id.nav_home:
-                        if (!(mSelectedFragment instanceof HomeFragment)){
-                            mSelectedFragment = new HomeFragment();
-                        }
-                        break;
-                    case R.id.nav_folders:
-                        if (!(mSelectedFragment instanceof FoldersFragment)){
-                            mSelectedFragment = new FoldersFragment();
-                        }
-                        break;
-                    case R.id.nav_sort:
-                        if (!(mSelectedFragment instanceof SortFragment)){
-                            mSelectedFragment = new SortFragment();
-                        }
-                        break;
-                }
-                getSupportFragmentManager().beginTransaction().replace(R.id.frame_container,
-                        mSelectedFragment).addToBackStack("back stack").commit();
-                return true;
-            }
-        });
-    }
-
     private void loadUnsortedImages() {
-        mImageViewModel = ViewModelProviders.of(this).get(ImageViewModel.class);
         mImageViewModel.startLoading();
     }
 
-    private void initToolBar() {
+    private void initViews() {
         mToolbar = findViewById(R.id.app_bar);
         mToolbar.inflateMenu(R.menu.app_bar_menu);
         setSupportActionBar(mToolbar);
+
+        mDrawerLayout = findViewById(R.id.drawer_layout);
+        mNavigationView = findViewById(R.id.nav_view);
+        mNavigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                switch (item.getItemId()) {
+                    case R.id.nav_folders:
+                        getSupportFragmentManager().beginTransaction().replace(R.id.frame_container, new FoldersFragment()).commit();
+                        break;
+                    case R.id.nav_settings:
+                        Intent settings = new Intent(MainActivity.this, SettingsActivity.class);
+                        startActivityForResult(settings, SETTINGS_ACTION);
+                        break;
+                    case R.id.nav_home:
+                        getSupportFragmentManager().beginTransaction().replace(R.id.frame_container, new HomeFragment()).commit();
+                        break;
+                    case R.id.nav_sort:
+                        break;
+                    case R.id.nav_trash:
+                        getSupportFragmentManager().beginTransaction().replace(R.id.frame_container, new TrashFragment()).commit();
+                        break;
+                }
+                mDrawerLayout.closeDrawer(GravityCompat.START);
+                return true;
+            }
+        });
+
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, mDrawerLayout, mToolbar,
+                R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        mDrawerLayout.addDrawerListener(toggle);
+        toggle.syncState();
     }
 
     private void loadPreferences() {
@@ -178,21 +205,11 @@ public class MainActivity extends AppCompatActivity{
 
     @Override
     public void onBackPressed() {
-        int currentItemId = mBottomNavBar.getSelectedItemId();
-        switch (currentItemId) {
-            case R.id.nav_home:
-                showToast("Backed in home page!");
-                break;
-            case R.id.nav_folders:
-                mBackPressedListener.onBackPressed();
-                break;
-            case R.id.nav_sort:
-                mBackPressedListener.onBackPressed();
-                break;
-            default:
-                super.onBackPressed();
-                break;
+        if (mDrawerLayout.isDrawerOpen(GravityCompat.START)) {
+            mDrawerLayout.closeDrawer(GravityCompat.START);
+            return;
         }
+        mBackPressedListener.onBackPressed();
     }
 
     public void setBackListener(BackPressedListener listener){

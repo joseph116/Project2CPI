@@ -28,7 +28,6 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.Toast;
 
-import com.example.appname.Model.FileClickListener;
 import com.example.appname.Model.Image;
 import com.example.appname.R;
 import com.example.appname.View.dialogs.ConfirmDeleteDialog;
@@ -148,7 +147,7 @@ public class FoldersFragment extends Fragment implements FolderAdapter.FolderLis
         mFolderRecyclerView = getView().findViewById(R.id.folderRecyclerView);
         mFolderAdapter = new FolderAdapter(getContext(), mExplorer.getFolders(), this);
         mFolderRecyclerView.setAdapter(mFolderAdapter);
-        int spanCountFolder = getResources().getDisplayMetrics().widthPixels / (275);
+        int spanCountFolder = getResources().getDisplayMetrics().widthPixels / (300);
         int spanCountImage = getResources().getDisplayMetrics().widthPixels / (300);
         mFolderRecyclerView.setLayoutManager(new GridLayoutManager(getContext(), spanCountFolder));
         //image recycler

@@ -11,6 +11,7 @@ import com.example.appname.Model.Image;
 import com.example.appname.Model.ImageRepository;
 import com.example.appname.Model.LoadUnsortedImagesTask;
 import com.example.appname.Model.Note;
+import com.example.appname.Model.Tag;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -23,11 +24,13 @@ public class ImageViewModel extends AndroidViewModel implements LoadUnsortedImag
     private ImageRepository mRepository;
     private LiveData<List<Image>> mSortedImages;
     private ArrayList<Image> mUnsortedImages;
+    private ArrayList<Image> mTrashImages;
 
     public ImageViewModel(@NonNull Application application) {
         super(application);
         mRepository = new ImageRepository(application);
         mSortedImages = mRepository.getAllImages();
+        mTrashImages = new ArrayList<>();
     }
 
 
@@ -69,6 +72,8 @@ public class ImageViewModel extends AndroidViewModel implements LoadUnsortedImag
         return mRepository.getAllNotes();
     }
 
+    public LiveData<List<Tag>> getAllTags() {return mRepository.getAllTags();}
+
     //==============================================================================================
     //  UNSORTED FUNCTIONS
     //==============================================================================================
@@ -85,5 +90,18 @@ public class ImageViewModel extends AndroidViewModel implements LoadUnsortedImag
     @Override
     public void loadFinished(ArrayList<Image> images) {
         mUnsortedImages = images;
+    }
+
+    //==============================================================================================
+    //  TRASH FUNCTIONS
+    //==============================================================================================
+
+
+    public ArrayList<Image> getTrashImages() {
+        return mTrashImages;
+    }
+
+    public void moveToTrash(Image image) {
+        mTrashImages.add(image);
     }
 }

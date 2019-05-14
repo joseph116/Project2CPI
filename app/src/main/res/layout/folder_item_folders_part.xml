@@ -7,14 +7,13 @@
 
     <ImageView
         android:id="@+id/folderImageView"
-        android:layout_width="70dp"
-        android:layout_height="70dp"
+        android:layout_width="110dp"
+        android:layout_height="110dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
-        android:background="?attr/backgroundFolder"
-        android:padding="20dp"
-        android:elevation="2dp"
+        android:background="@drawable/folder_background"
+        android:padding="30dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
@@ -22,18 +21,78 @@
 
     <TextView
         android:id="@+id/textView"
-        style="@style/folder_name"
         android:layout_width="0dp"
+        android:layout_height="wrap_content"
         android:layout_marginTop="4dp"
-        android:maxHeight="55dp"
+        android:layout_marginBottom="8dp"
+        android:background="@drawable/folder_background"
+        android:fontFamily="@font/opensans"
+        android:maxHeight="50dp"
+        android:paddingStart="5dp"
+        android:paddingEnd="5dp"
+        android:paddingTop="3dp"
+        android:paddingBottom="3dp"
         android:text="TextView"
-        android:textSize="12sp"
-        android:elevation="2dp"
-        android:textColor="@color/textOnDark"
         android:textAlignment="center"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:textColor="@color/textOnDark"
+        android:textSize="18dp"
         app:layout_constraintEnd_toEndOf="@+id/folderImageView"
         app:layout_constraintStart_toStartOf="@+id/folderImageView"
         app:layout_constraintTop_toBottomOf="@id/folderImageView" />
+
+    <LinearLayout
+        android:id="@+id/folder_info_layout"
+        android:layout_width="0dp"
+        android:layout_height="20dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="4dp"
+        android:background="@drawable/note_background"
+        android:orientation="horizontal"
+        android:paddingStart="3dp"
+        android:paddingEnd="3dp"
+        app:layout_constraintBottom_toBottomOf="@+id/folderImageView"
+        app:layout_constraintEnd_toEndOf="@+id/folderImageView"
+        app:layout_constraintStart_toStartOf="@+id/folderImageView">
+
+        <ImageView
+            android:id="@+id/imageView5"
+            android:layout_width="16dp"
+            android:layout_height="16dp"
+            android:layout_weight="1"
+            android:layout_gravity="center"
+            android:tint="@color/textOnDark"
+            app:srcCompat="@drawable/ic_folder" />
+
+        <TextView
+            android:id="@+id/number_folders"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_gravity="center"
+            android:text="xx"
+            android:textColor="@color/textOnDark"
+            android:textSize="10sp" />
+
+        <ImageView
+            android:id="@+id/imageView6"
+            android:layout_width="16dp"
+            android:layout_height="16dp"
+            android:layout_marginStart="8dp"
+            android:layout_weight="1"
+            android:layout_gravity="center"
+            android:tint="@color/textOnDark"
+            app:srcCompat="@drawable/ic_image" />
+
+        <TextView
+            android:id="@+id/number_images"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_gravity="center"
+            android:text="xx"
+            android:textColor="@color/textOnDark"
+            android:textSize="10sp" />
+    </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

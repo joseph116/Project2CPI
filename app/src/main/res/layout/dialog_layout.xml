@@ -7,7 +7,6 @@
     android:layout_height="450dip"
     android:layout_gravity="center"
     android:elevation="8dp"
-    android:background="?attr/backgroundColor"
     >
 
     <Button

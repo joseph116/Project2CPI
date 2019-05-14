@@ -1,4 +1,4 @@
-package com.example.appname.Model;
+package com.example.appname.View.folders;
 
 import android.view.View;
 

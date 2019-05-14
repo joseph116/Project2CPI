@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -67,8 +68,10 @@ public class FolderAdapter extends RecyclerView.Adapter<FolderAdapter.ViewHolder
                 }
 
             });
+            viewHolder.mInfoLayout.setVisibility(View.INVISIBLE);
 
         } else {
+            viewHolder.mInfoLayout.setVisibility(View.VISIBLE);
             final File file = mFolders.get(i-1);
 
             if (file.isDirectory()) {
@@ -150,6 +153,7 @@ public class FolderAdapter extends RecyclerView.Adapter<FolderAdapter.ViewHolder
 
         TextView mFileName;
         ImageView mImage;
+        LinearLayout mInfoLayout;
         ConstraintLayout mLayout;
 
         public ViewHolder(@NonNull View itemView) {
@@ -157,6 +161,7 @@ public class FolderAdapter extends RecyclerView.Adapter<FolderAdapter.ViewHolder
             mFileName = itemView.findViewById(R.id.textView);
             mImage = itemView.findViewById(R.id.folderImageView);
             mLayout = itemView.findViewById(R.id.folder_item_parent);
+            mInfoLayout = itemView.findViewById(R.id.folder_info_layout);
         }
     }
 
