@@ -9,7 +9,6 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.ContextCompat;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
-import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.preference.PreferenceManager;
 
@@ -24,8 +23,8 @@ import android.widget.Toast;
 import com.example.appname.R;
 import com.example.appname.View.folders.FoldersFragment;
 import com.example.appname.View.home.HomeFragment;
+import com.example.appname.View.sort.SortActivity;
 import com.example.appname.ViewModel.ImageViewModel;
-import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
 
 
@@ -36,6 +35,7 @@ public class MainActivity extends AppCompatActivity{
     //==============================================================================================
 
     public static final int  SETTINGS_ACTION = 1;
+    public static final String EXTRA_UNSORTED_LIST = "EXTRA_UNSORTED_LIST";
 
     private Toolbar mToolbar;
     private Toast mToast = null;
@@ -82,17 +82,7 @@ public class MainActivity extends AppCompatActivity{
                 //open change view dialog here
                 break;
             case R.id.action_search:
-                switch (mNavigationView.getCheckedItem().getItemId()) {
-                    case R.id.nav_home:
-                        mSearchView.setQueryHint("Search in home...");
-                        break;
-                    case R.id.nav_folders:
-                        mSearchView.setQueryHint("Search in folders...");
-                        break;
-                    case R.id.nav_trash:
-                        mSearchView.setQueryHint("Search in trash...");
-                        break;
-                }
+
                 break;
         }
         return super.onOptionsItemSelected(item);
@@ -127,6 +117,7 @@ public class MainActivity extends AppCompatActivity{
                 return false;
             }
         });
+        mSearchView.setQueryHint("Search in home...");
         return true;
     }
 
@@ -151,6 +142,7 @@ public class MainActivity extends AppCompatActivity{
                 switch (item.getItemId()) {
                     case R.id.nav_folders:
                         getSupportFragmentManager().beginTransaction().replace(R.id.frame_container, new FoldersFragment()).commit();
+                        mSearchView.setQueryHint("Search in folders...");
                         break;
                     case R.id.nav_settings:
                         Intent settings = new Intent(MainActivity.this, SettingsActivity.class);
@@ -158,12 +150,16 @@ public class MainActivity extends AppCompatActivity{
                         break;
                     case R.id.nav_home:
                         getSupportFragmentManager().beginTransaction().replace(R.id.frame_container, new HomeFragment()).commit();
+                        mSearchView.setQueryHint("Search in home...");
                         break;
                     case R.id.nav_sort:
-                        showToast("Converting sort fragment to an activity...");
+                        Intent intent = new Intent(MainActivity.this, SortActivity.class);
+                        intent.putParcelableArrayListExtra(EXTRA_UNSORTED_LIST, mImageViewModel.getUnsortedImages());
+                        startActivity(intent);
                         break;
                     case R.id.nav_trash:
                         getSupportFragmentManager().beginTransaction().replace(R.id.frame_container, new TrashFragment()).commit();
+                        mSearchView.setQueryHint("Search in trash...");
                         break;
                     case R.id.nav_tag:
                         showToast("Working on...");

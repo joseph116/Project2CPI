@@ -19,6 +19,8 @@
         <activity android:name=".View.main.SettingsActivity"
             android:parentActivityName=".View.main.MainActivity"></activity>
         <activity android:name=".View.main.CameraActivity"></activity>
+        <activity android:name=".View.sort.SortActivity"
+            android:parentActivityName=".View.main.MainActivity"></activity>
         <activity
             android:name=".View.fullscreen.DisplayImageActivity"
             android:parentActivityName=".View.main.MainActivity"/>

@@ -69,7 +69,7 @@ public class ImagePagerAdapter extends PagerAdapter {
         imageView.setScaleType(ImageView.ScaleType.FIT_CENTER);
         Glide
                 .with(mContext)
-                .load(mImages.get(position).getUri())
+                .load(mImages.get(position).getPath())
                 .into(imageView);
         container.addView(imageView, 0);
         return imageView;
