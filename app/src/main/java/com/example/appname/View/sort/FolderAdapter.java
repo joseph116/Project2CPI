@@ -27,7 +27,6 @@ public class FolderAdapter extends RecyclerView.Adapter<FolderAdapter.ViewHolder
     //  ATTRIBUTES
     //==============================================================================================
 
-    private FragmentActivity mFragmentActivity;
     private ImageViewModel mViewModel;
     private List<File> mFolders;
     private OnFileItemListener mListener;
@@ -60,63 +59,43 @@ public class FolderAdapter extends RecyclerView.Adapter<FolderAdapter.ViewHolder
     @Override
     public void onBindViewHolder(@NonNull ViewHolder viewHolder, final int i) {
 
-        if (getItemViewType(i) == 1) {
-            viewHolder.getInsertButton().setImageResource(R.drawable.ic_plus);
-            viewHolder.getTextView().setText("Add Folder");
+        final File file = mFolders.get(i);
+
+        viewHolder.getTextView().setText(mFolders.get(i).getName());
+
+        viewHolder.getTextView().setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mListener.onClick(file);
+            }
+
+        });
+        viewHolder.getTextView().setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                mListener.onLongClick(file);
+                return false;
+            }
+        });
+
+        if (!mHideInsert) {
+            viewHolder.mInsertButton.setVisibility(View.VISIBLE);
             viewHolder.getInsertButton().setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    //add button click
-                    mListener.onClickAdd();
+                    mListener.onInsert(file);
                 }
-
             });
-
         } else {
-            final File file = mFolders.get(i - 1);
-
-            viewHolder.getTextView().setText(mFolders.get(i - 1).getName());
-
-            viewHolder.getTextView().setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    mListener.onClick(file);
-                }
-
-            });
-            viewHolder.getTextView().setOnLongClickListener(new View.OnLongClickListener() {
-                @Override
-                public boolean onLongClick(View v) {
-                    mListener.onLongClick(file);
-                    return false;
-                }
-            });
-
-            if (!mHideInsert) {
-                viewHolder.mInsertButton.setVisibility(View.VISIBLE);
-                viewHolder.getInsertButton().setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        mListener.onInsert(file);
-                    }
-                });
-            } else {
-                viewHolder.mInsertButton.setVisibility(View.INVISIBLE);
-            }
-
-
+            viewHolder.mInsertButton.setVisibility(View.INVISIBLE);
         }
+
+
     }
 
     @Override
     public int getItemCount() {
-        return mFolders != null ? mFolders.size() + 1 : 1;
-    }
-
-    @Override
-    public int getItemViewType(int position) {
-        if (position == 0) return 1;
-        else return 2;
+        return mFolders != null ? mFolders.size() : 0;
     }
 
     //==============================================================================================
@@ -126,14 +105,14 @@ public class FolderAdapter extends RecyclerView.Adapter<FolderAdapter.ViewHolder
     public void updateFolders(List<File> folders) {
         int oldSize = mFolders.size();
         mFolders = folders;
-        notifyItemRangeRemoved(1, oldSize);
-        notifyItemRangeInserted(1, mFolders.size());
+        notifyItemRangeRemoved(0, oldSize);
+        notifyItemRangeInserted(0, mFolders.size());
     }
 
     public void addFolder(String path) {
         File folder = new File(path);
         mFolders.add(0, folder);
-        notifyItemInserted(1);
+        notifyItemInserted(0);
     }
 
     public void hideInsertButton(boolean hide) {
@@ -176,8 +155,6 @@ public class FolderAdapter extends RecyclerView.Adapter<FolderAdapter.ViewHolder
         void onClick(File file);
 
         void onLongClick(File file);
-
-        void onClickAdd();
 
         void onInsert(File file);
     }

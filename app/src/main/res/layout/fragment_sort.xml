@@ -48,8 +48,8 @@
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:layout_marginBottom="8dp"
-        android:tint="?android:attr/textColorPrimary"
         android:background="@android:color/transparent"
+        android:tint="?android:attr/textColorPrimary"
         app:layout_constraintBottom_toTopOf="@+id/sortRecyclerView"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/sortViewPager"
@@ -93,6 +93,19 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@+id/sortBackButton" />
 
+    <ImageButton
+        android:id="@+id/newFolderButtonSort"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:background="@android:color/transparent"
+        app:layout_constraintBottom_toBottomOf="@+id/sortBackToRoot"
+        app:layout_constraintEnd_toStartOf="@+id/sortBackToRoot"
+        app:layout_constraintTop_toTopOf="@+id/sortBackToRoot"
+        app:layout_constraintVertical_bias="1.0"
+        app:srcCompat="@drawable/ic_create_new_folder" />
+
     <View
         android:id="@+id/divider4"
         android:layout_width="match_parent"
@@ -130,6 +143,6 @@
         android:theme="?attr/actionBarTheme"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"/>
+        app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

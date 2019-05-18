@@ -129,6 +129,16 @@ public class SortActivity extends AppCompatActivity implements FolderAdapter.OnF
             }
         });
 
+        //New folder button
+        ImageButton newFolderButton = findViewById(R.id.newFolderButtonSort);
+        newFolderButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                NewFolderDialog dialog = new NewFolderDialog(SortActivity.this);
+                dialog.show(getSupportFragmentManager(), "new folder dialog");
+            }
+        });
+
         mToolbar = findViewById(R.id.toolbar_sort);
         setSupportActionBar(mToolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -174,12 +184,6 @@ public class SortActivity extends AppCompatActivity implements FolderAdapter.OnF
     @Override
     public void onLongClick(File file) {
 
-    }
-
-    @Override
-    public void onClickAdd() {
-        NewFolderDialog dialog = new NewFolderDialog(this);
-        dialog.show(getSupportFragmentManager(), "new folder dialog");
     }
 
     @Override

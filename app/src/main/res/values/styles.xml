@@ -7,6 +7,7 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
+        <item name="colorOnPrimary">@color/colorPrimaryDark</item>
         <item name="android:windowBackground">@drawable/ic_gradient_background</item>
         <item name="buttonStyle">@drawable/button_style</item>
         <item name="fontFamily">@font/opensans</item>
@@ -19,6 +20,7 @@
         <item name="colorPrimary">@color/colorPrimaryOld</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDarkOld</item>
         <item name="colorAccent">@color/colorAccentOld</item>
+        <item name="colorOnPrimary">@color/white</item>
         <item name="android:windowBackground">@color/textOnDark</item>
         <item name="buttonStyle">@drawable/button_style</item>
         <item name="fontFamily">@font/opensans</item>

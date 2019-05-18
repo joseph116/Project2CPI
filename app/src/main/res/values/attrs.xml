@@ -1,9 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <attr name="backgroundFolder" format="color"/>
-    <attr name="backgroundText" format="color"/>
-    <attr name="basicColor" format="color" />
-    <attr name="basicColorInverse" format="color" />
-    <attr name="textSize" format="dimension" />
-    <attr name="navColor" format="color" />
+    <attr name="colorOnPrimary" format="color"/>
+    <attr name="textSize" format="dimension"/>
 </resources>
