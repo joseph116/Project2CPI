@@ -43,6 +43,15 @@ public interface ImageDao {
 
     // TAGS
 
+    @Insert
+    void insertTag(Tag tag);
+
+    @Delete
+    void deleteTag(Tag tag);
+
+    @Update
+    void updateTag(Tag tag);
+
     @Query("SELECT * FROM tag_table")
     LiveData<List<Tag>> getAllTags();
 }

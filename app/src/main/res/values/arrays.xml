@@ -2,7 +2,16 @@
 <resources>
 
     <string-array name="custom_colors">
-        <item>#000000</item>
+        <item>#D50000</item>
+        <item>#C51162</item>
+        <item>#AA00FF</item>
+        <item>#6200EA</item>
+        <item>#00B8D4</item>
+        <item>#00BFA5</item>
+        <item>#00C853</item>
+        <item>#AEEA00</item>
+        <item>#3E2723</item>
+        <item>#EEFF41</item>
     </string-array>
 
     <string-array name="theme_list">

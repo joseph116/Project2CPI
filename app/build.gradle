@@ -50,4 +50,8 @@ dependencies {
     implementation 'androidx.cardview:cardview:1.0.0'
     //Preferences
     implementation 'androidx.preference:preference:1.0.0'
+    //Animation
+    implementation 'com.android.support:support-compat:28.0.0'
+    implementation 'com.daimajia.easing:library:2.0@aar'
+    implementation 'com.daimajia.androidanimations:library:2.3@aar'
 }

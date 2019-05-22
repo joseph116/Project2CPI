@@ -1,5 +1,6 @@
 package com.example.appname.View.folders;
 
+import android.animation.Animator;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,6 +14,8 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.daimajia.androidanimations.library.Techniques;
+import com.daimajia.androidanimations.library.YoYo;
 import com.example.appname.R;
 
 import java.io.File;
@@ -53,7 +56,7 @@ public class FolderAdapter extends RecyclerView.Adapter<FolderAdapter.ViewHolder
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ViewHolder viewHolder, final int i) {
+    public void onBindViewHolder(@NonNull final ViewHolder viewHolder, final int i) {
 
         if (getItemViewType(i) == 1) {
             Glide.with(mContext)

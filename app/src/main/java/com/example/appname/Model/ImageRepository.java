@@ -63,6 +63,12 @@ public class ImageRepository {
         new DeleteNoteAsyncTask(mImageDao).execute(note);
     }
 
+    public void insertTag(Tag tag) {new InsertTagAsyncTask(mImageDao).execute(tag);}
+
+    public void deleteTag(Tag tag) {new DeleteTagAsyncTask(mImageDao).execute(tag);}
+
+    public void update(Tag tag) {new UpdateTagAsyncTask(mImageDao).execute(tag);}
+
     private static class AddImageAsyncTask extends AsyncTask<Image, Void, Void>{
 
         private ImageDao mImageDao;
@@ -149,6 +155,51 @@ public class ImageRepository {
         @Override
         protected Void doInBackground(Note... notes) {
             mImageDao.deleteNote(notes[0]);
+            return null;
+        }
+    }
+
+    private static class InsertTagAsyncTask extends AsyncTask<Tag, Void, Void>{
+
+        private ImageDao mImageDao;
+
+        private InsertTagAsyncTask(ImageDao imageDao){
+            mImageDao = imageDao;
+        }
+
+        @Override
+        protected Void doInBackground(Tag... tags) {
+            mImageDao.insertTag(tags[0]);
+            return null;
+        }
+    }
+
+    private static class DeleteTagAsyncTask extends AsyncTask<Tag, Void, Void>{
+
+        private ImageDao mImageDao;
+
+        private DeleteTagAsyncTask(ImageDao imageDao){
+            mImageDao = imageDao;
+        }
+
+        @Override
+        protected Void doInBackground(Tag... tags) {
+            mImageDao.deleteTag(tags[0]);
+            return null;
+        }
+    }
+
+    private static class UpdateTagAsyncTask extends AsyncTask<Tag, Void, Void>{
+
+        private ImageDao mImageDao;
+
+        private UpdateTagAsyncTask(ImageDao imageDao){
+            mImageDao = imageDao;
+        }
+
+        @Override
+        protected Void doInBackground(Tag... tags) {
+            mImageDao.updateTag(tags[0]);
             return null;
         }
     }

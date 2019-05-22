@@ -25,6 +25,7 @@ import com.example.appname.Model.Note;
 import com.example.appname.R;
 import com.example.appname.View.dialogs.AddNoteDialog;
 import com.example.appname.View.dialogs.ChangeNoteTextDialog;
+import com.example.appname.View.dialogs.NewTagDialog;
 import com.example.appname.ViewModel.ImageViewModel;
 
 import java.util.ArrayList;
@@ -33,7 +34,8 @@ import java.util.List;
 public class DisplayImageActivity extends AppCompatActivity
         implements ImageAdapter.ImageListener,
         AddNoteDialog.AddNoteListener,
-        ChangeNoteTextDialog.ChangeNoteTextListener {
+        ChangeNoteTextDialog.ChangeNoteTextListener,
+        NewTagDialog.AddTagListener {
 
     private static final String TAG = "DisplayImageActivity";
 
@@ -124,6 +126,9 @@ public class DisplayImageActivity extends AppCompatActivity
                         break;
                     case R.id.delete_display_option:
                         break;
+                    case R.id.add_tag_display_option:
+                        NewTagDialog dialog = new NewTagDialog(DisplayImageActivity.this);
+                        dialog.show(getSupportFragmentManager(), "new tag");
                 }
                 return true;
             }
@@ -292,5 +297,10 @@ public class DisplayImageActivity extends AppCompatActivity
             default:
                 break;
         }
+    }
+
+    @Override
+    public void onNewTag(String title) {
+
     }
 }

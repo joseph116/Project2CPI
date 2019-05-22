@@ -11,6 +11,8 @@ public class Tag {
 
     private String title;
 
+    private int color;
+
     public Tag(String title) {
         this.title = title;
     }
@@ -29,5 +31,13 @@ public class Tag {
 
     public void setTitle(String title) {
         this.title = title;
+    }
+
+    public int getColor() {
+        return color;
+    }
+
+    public void setColor(int color) {
+        this.color = color;
     }
 }
