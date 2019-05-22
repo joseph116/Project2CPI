@@ -13,8 +13,9 @@ public class Tag {
 
     private int color;
 
-    public Tag(String title) {
+    public Tag(String title, int color) {
         this.title = title;
+        this.color = color;
     }
 
     public int getId() {

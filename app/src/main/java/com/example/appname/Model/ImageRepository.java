@@ -29,7 +29,7 @@ public class ImageRepository {
         new AddImageAsyncTask(mImageDao).execute(image);
     }
 
-    public void update(Image image){
+    public void updateTag(Image image){
         new UpdateImageAsyncTask(mImageDao).execute(image);
     }
 
@@ -67,7 +67,7 @@ public class ImageRepository {
 
     public void deleteTag(Tag tag) {new DeleteTagAsyncTask(mImageDao).execute(tag);}
 
-    public void update(Tag tag) {new UpdateTagAsyncTask(mImageDao).execute(tag);}
+    public void updateTag(Tag tag) {new UpdateTagAsyncTask(mImageDao).execute(tag);}
 
     private static class AddImageAsyncTask extends AsyncTask<Image, Void, Void>{
 

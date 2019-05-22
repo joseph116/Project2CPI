@@ -1,7 +1,6 @@
 package com.example.appname.ViewModel;
 
 import android.app.Application;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
@@ -14,8 +13,6 @@ import com.example.appname.Model.Note;
 import com.example.appname.Model.Tag;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 
 public class ImageViewModel extends AndroidViewModel implements LoadUnsortedImagesTask.OnLoadCompleteListener {
@@ -25,12 +22,14 @@ public class ImageViewModel extends AndroidViewModel implements LoadUnsortedImag
     private LiveData<List<Image>> mSortedImages;
     private ArrayList<Image> mUnsortedImages;
     private ArrayList<Image> mTrashImages;
+    private LiveData<List<Tag>> mTags;
 
     public ImageViewModel(@NonNull Application application) {
         super(application);
         mRepository = new ImageRepository(application);
         mSortedImages = mRepository.getAllImages();
         mTrashImages = new ArrayList<>();
+        mTags = mRepository.getAllTags();
     }
 
 
@@ -43,7 +42,7 @@ public class ImageViewModel extends AndroidViewModel implements LoadUnsortedImag
     }
 
     public void update(Image image){
-        mRepository.update(image);
+        mRepository.updateTag(image);
     }
 
     public void remove(Image image){
@@ -70,6 +69,18 @@ public class ImageViewModel extends AndroidViewModel implements LoadUnsortedImag
 
     public LiveData<List<Note>> getAllNotes() {
         return mRepository.getAllNotes();
+    }
+
+    public void insertTag(Tag tag) {
+        mRepository.insertTag(tag);
+    }
+
+    public void deleteTag(Tag tag) {
+        mRepository.deleteTag(tag);
+    }
+
+    public void updateTag(Tag tag) {
+        mRepository.updateTag(tag);
     }
 
     public LiveData<List<Tag>> getAllTags() {return mRepository.getAllTags();}

@@ -8,6 +8,8 @@ import androidx.constraintlayout.widget.ConstraintSet;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.preference.PreferenceManager;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager.widget.ViewPager;
 
 import android.content.SharedPreferences;
@@ -17,11 +19,14 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.appname.Model.Image;
 import com.example.appname.Model.Note;
+import com.example.appname.Model.Tag;
 import com.example.appname.R;
 import com.example.appname.View.dialogs.AddNoteDialog;
 import com.example.appname.View.dialogs.ChangeNoteTextDialog;
@@ -35,14 +40,15 @@ public class DisplayImageActivity extends AppCompatActivity
         implements ImageAdapter.ImageListener,
         AddNoteDialog.AddNoteListener,
         ChangeNoteTextDialog.ChangeNoteTextListener,
-        NewTagDialog.AddTagListener {
+        NewTagDialog.AddTagListener,
+        TagRecyclerAdapter.TagClickListener {
 
     private static final String TAG = "DisplayImageActivity";
 
     private ImageViewModel mViewModel;
     private List<Image> mImages;
     private List<Note> mNotes;
-    private List<View> mNoteViews;
+    private List<Integer> mNoteLayoutIds;
     private int mFirstPosition;
     private ViewPager mViewPager;
     private ImageAdapter mAdapter;
@@ -50,15 +56,20 @@ public class DisplayImageActivity extends AppCompatActivity
     private Toolbar mBottomBar;
     private ActionMode mActionMode;
     private ConstraintLayout mLayout;
-    private ConstraintSet showBars = new ConstraintSet();
-    private ConstraintSet hideBars = new ConstraintSet();
-    private boolean mBarsVisible = true;
+    private RecyclerView mAllTagRecycler;
+    private TagRecyclerAdapter mAllTagsAdapter;
 
-    //for notes
+    private boolean isNoteVisible = false;
+    private boolean mBarsVisible = true;
+    private boolean isTagsVisible = false;
+
+    //Constraint sets
     private ConstraintSet show_text = new ConstraintSet();
     private ConstraintSet hide_text = new ConstraintSet();
-    private boolean isNoteVisible = false;
-    private ConstraintLayout mNoteLayout;
+    private ConstraintSet hide_bubble = new ConstraintSet();
+    private ConstraintSet showBars = new ConstraintSet();
+    private ConstraintSet hideBars = new ConstraintSet();
+    private ConstraintSet showTags = new ConstraintSet();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,11 +80,13 @@ public class DisplayImageActivity extends AppCompatActivity
         mFirstPosition = getIntent().getIntExtra("ARGS_IMAGE_POSITION", 0);
         mViewModel = ViewModelProviders.of(this).get(ImageViewModel.class);
         initViews();
+        initNotes();
+        initTags();
     }
 
     private void initViews() {
         mNotes = new ArrayList<>();
-        mNoteViews = new ArrayList<>();
+        mNoteLayoutIds = new ArrayList<>();
         mViewModel.getAllNotes().observe(this, new Observer<List<Note>>() {
             @Override
             public void onChanged(List<Note> notes) {
@@ -81,11 +94,14 @@ public class DisplayImageActivity extends AppCompatActivity
             }
         });
         mLayout = findViewById(R.id.display_parent);
+
+        //init constraint sets
         showBars.clone(mLayout);
         hideBars.clone(this, R.layout.activity_display_image_hide);
-        mNoteLayout = mLayout.findViewById(R.id.note_layout);
+        hide_bubble.clone(DisplayImageActivity.this, R.layout.note_view_0);
         hide_text.clone(DisplayImageActivity.this, R.layout.note_view_1);
         show_text.clone(DisplayImageActivity.this, R.layout.note_view_2);
+        showTags.clone(DisplayImageActivity.this, R.layout.activity_display_image_show_tags);
 
         mViewPager = findViewById(R.id.display_image_view_pager);
         mAdapter = new ImageAdapter(this, mImages, this);
@@ -98,14 +114,8 @@ public class DisplayImageActivity extends AppCompatActivity
 
             @Override
             public void onPageSelected(int position) {
-                for (Note note : mNotes) {
-                    //mNoteViews.clear();
-                    removeNoteView(note);
-                    //if (note.getImageId() == mImages.get(mViewPager.getCurrentItem()).getRowId()) {
-                    //    addNoteView(note, hide_text);
-                    //}
-                }
-                isNoteVisible = false;
+                removeAllNotes();
+                initNotes();
             }
 
             @Override
@@ -127,8 +137,14 @@ public class DisplayImageActivity extends AppCompatActivity
                     case R.id.delete_display_option:
                         break;
                     case R.id.add_tag_display_option:
-                        NewTagDialog dialog = new NewTagDialog(DisplayImageActivity.this);
-                        dialog.show(getSupportFragmentManager(), "new tag");
+                        TransitionManager.beginDelayedTransition(mLayout);
+                        if (!isTagsVisible) {
+                            showTags.applyTo(mLayout);
+                        } else {
+                            showBars.applyTo(mLayout);
+                        }
+                        isTagsVisible = !isTagsVisible;
+                        break;
                 }
                 return true;
             }
@@ -139,12 +155,44 @@ public class DisplayImageActivity extends AppCompatActivity
 
     }
 
+    private void initNotes() {
+        for (Note note : mNotes) {
+            if (note.getImageId() == mImages.get(mViewPager.getCurrentItem()).getRowId()) {
+                addNoteView(note, (isNoteVisible)? hide_text : hide_bubble);
+            }
+        }
+    }
+
+    private void initTags() {
+        mAllTagRecycler = findViewById(R.id.allTagsRecycler);
+        GridLayoutManager gridLayoutManager = new GridLayoutManager(this, 1);
+        gridLayoutManager.setOrientation(RecyclerView.HORIZONTAL);
+        mAllTagRecycler.setLayoutManager(gridLayoutManager);
+        mAllTagsAdapter = new TagRecyclerAdapter(DisplayImageActivity.this, DisplayImageActivity.this);
+        mAllTagRecycler.setAdapter(mAllTagsAdapter);
+        mViewModel.getAllTags().observe(this, new Observer<List<Tag>>() {
+            @Override
+            public void onChanged(List<Tag> tags) {
+                mAllTagsAdapter.setTags(tags);
+            }
+        });
+        ImageButton newTagButton = findViewById(R.id.newTagButton);
+        newTagButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                NewTagDialog dialog = new NewTagDialog(DisplayImageActivity.this);
+                dialog.show(getSupportFragmentManager(), "new tag");
+            }
+        });
+    }
+
     @Override
     public void onClickImage() {
         TransitionManager.beginDelayedTransition(mLayout);
         if (mBarsVisible) {
             hideBars.applyTo(mLayout);
             mBarsVisible = false;
+            isTagsVisible = false;
         } else {
             showBars.applyTo(mLayout);
             mBarsVisible = true;
@@ -154,14 +202,12 @@ public class DisplayImageActivity extends AppCompatActivity
     @Override
     public void onDoubleClick() {
         TransitionManager.beginDelayedTransition(mLayout);
-        for (Note note : mNotes) {
-            if (note.getImageId() == mImages.get(mViewPager.getCurrentItem()).getRowId()) {
-            if (!isNoteVisible) {
-                addNoteView(note, hide_text);
+        for (int id : mNoteLayoutIds) {
+            if (isNoteVisible) {
+                setNoteVisibility(id, hide_bubble);
             } else {
-                removeNoteView(note);
+                setNoteVisibility(id, hide_text);
             }
-        }
         }
         isNoteVisible = !isNoteVisible;
     }
@@ -210,6 +256,7 @@ public class DisplayImageActivity extends AppCompatActivity
         TextView noteTexte = viewNote.findViewById(R.id.noteText);
         noteTexte.setText(note.getText());
         final ConstraintLayout noteLayout = viewNote.findViewById(R.id.note_layout);
+
         bubble.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -237,11 +284,15 @@ public class DisplayImageActivity extends AppCompatActivity
                 return true;
             }
         });
+
         viewNote.setX(note.getX());
         viewNote.setY(note.getY());
         visibility.applyTo(noteLayout);
-        //mNoteViews.add(viewNote);
-        note.setLayoutId(noteLayout.getId());
+
+        viewNote.setId(mNoteLayoutIds.size());
+        mNoteLayoutIds.add(viewNote.getId());
+        note.setLayoutId(viewNote.getId());
+
         mLayout.addView(viewNote);
     }
 
@@ -253,11 +304,19 @@ public class DisplayImageActivity extends AppCompatActivity
         }
     }
 
-    private void removeNoteViews() {
-        for (View view : mNoteViews) {
-            mLayout.removeView(view);
-            mNoteViews.remove(view);
+    private void removeNoteView(int id) {
+        ConstraintLayout layout = mLayout.findViewById(id);
+        if (layout != null) {
+            mLayout.removeView(layout);
         }
+    }
+
+    private void removeAllNotes() {
+        for (int id : mNoteLayoutIds) {
+            ConstraintLayout layout = mLayout.findViewById(id);
+            mLayout.removeView(layout);
+        }
+        mNoteLayoutIds.clear();
     }
 
     @Override
@@ -300,7 +359,13 @@ public class DisplayImageActivity extends AppCompatActivity
     }
 
     @Override
-    public void onNewTag(String title) {
+    public void onNewTag(String title, int color) {
+        Tag tag = new Tag(title, color);
+        mViewModel.insertTag(tag);
+    }
+
+    @Override
+    public void onClickTag(int color, int position) {
 
     }
 }

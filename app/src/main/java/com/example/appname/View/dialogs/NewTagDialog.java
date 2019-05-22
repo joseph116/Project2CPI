@@ -83,15 +83,7 @@ public class NewTagDialog extends AppCompatDialogFragment {
         mAdapter = new ColorRecyclerAdapter(colors, new ColorRecyclerAdapter.ColorClickListener() {
             @Override
             public void onClickColor(int color, int position) {
-                int r = (color >> 16) & 0xff;
-                int g = (color >>  8) & 0xff;
-                int b = (color      ) & 0xff;
-                double luminance = ( 0.299 * r + 0.587 * g + 0.114 * b)/255;
-                if (luminance > 0.5) {
-                    mPreviewTag.setTextColor(ContextCompat.getColor(getContext(), R.color.black));
-                } else {
-                    mPreviewTag.setTextColor(ContextCompat.getColor(getContext(), R.color.white));
-                }
+                mPreviewTag.setTextColor(autoTextColor(color));
                 mPreviewTag.setBackgroundTintList(ColorStateList.valueOf(color));
             }
         });
@@ -106,9 +98,10 @@ public class NewTagDialog extends AppCompatDialogFragment {
         builder.setPositiveButton("Done", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                String title = text.getText().toString();
+                String title = mPreviewTag.getText().toString();
+                int color = mPreviewTag.getBackgroundTintList().getDefaultColor();
                 if ((title.length() > 0) && !title.contains("§")) {
-                    mListener.onNewTag(text.getText().toString());
+                    mListener.onNewTag(text.getText().toString(), color);
                 }
             }
         });
@@ -129,8 +122,20 @@ public class NewTagDialog extends AppCompatDialogFragment {
         mToast.show();
     }
 
+    private int autoTextColor(int color) {
+        int r = (color >> 16) & 0xff;
+        int g = (color >>  8) & 0xff;
+        int b = (color      ) & 0xff;
+        double luminance = ( 0.299 * r + 0.587 * g + 0.114 * b)/255;
+        if (luminance > 0.5) {
+            return ContextCompat.getColor(getContext(), R.color.black);
+        } else {
+            return ContextCompat.getColor(getContext(), R.color.white);
+        }
+    }
+
     public interface AddTagListener {
 
-        void onNewTag(String title);
+        void onNewTag(String title, int color);
     }
 }
