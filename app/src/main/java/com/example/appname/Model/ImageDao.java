@@ -52,6 +52,6 @@ public interface ImageDao {
     @Update
     void updateTag(Tag tag);
 
-    @Query("SELECT * FROM tag_table ORDER BY title DESC")
+    @Query("SELECT * FROM tag_table ORDER BY title")
     LiveData<List<Tag>> getAllTags();
 }

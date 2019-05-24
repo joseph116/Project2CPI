@@ -32,6 +32,7 @@ public class Image implements Parcelable, Comparable<Image> {
     private int orientation;
     private long dateTaken;
     private String path;
+    private String tags;
 
     //==============================================================================================
     //  CONSTRUCTORS
@@ -49,6 +50,7 @@ public class Image implements Parcelable, Comparable<Image> {
         this.mimeType = mimeType;
         this.orientation = orientation;
         this.dateTaken = dateTaken;
+        this.tags = "";
     }
 
     private Image(Parcel in) {
@@ -59,6 +61,7 @@ public class Image implements Parcelable, Comparable<Image> {
         dateTaken = in.readLong();
         dateModified = in.readLong();
         orientation = in.readInt();
+        tags = in.readString();
     }
 
     //==============================================================================================
@@ -121,6 +124,14 @@ public class Image implements Parcelable, Comparable<Image> {
         this.path = path;
     }
 
+    public String getTags() {
+        return tags;
+    }
+
+    public void setTags(String tags) {
+        this.tags = tags;
+    }
+
     //==============================================================================================
     //  FOR PARCELABLE
     //==============================================================================================
@@ -152,6 +163,7 @@ public class Image implements Parcelable, Comparable<Image> {
         parcel.writeLong(dateTaken);
         parcel.writeLong(dateModified);
         parcel.writeInt(orientation);
+        parcel.writeString(tags);
     }
 
     @Override

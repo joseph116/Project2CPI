@@ -76,7 +76,7 @@ public class ImageAdapter extends PagerAdapter
     public Object instantiateItem(@NonNull ViewGroup container, final int position) {
         String path = mImages.get(position).getPath();
         mContext.setTitle(path.substring(path.lastIndexOf(File.separator) + 1));
-        ImageView imageView = new ImageView(mContext);
+        final ImageView imageView = new ImageView(mContext);
         imageView.setScaleType(ImageView.ScaleType.FIT_CENTER);
         Glide
                 .with(mContext)

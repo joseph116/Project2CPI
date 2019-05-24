@@ -34,6 +34,7 @@ import com.example.appname.View.dialogs.NewTagDialog;
 import com.example.appname.ViewModel.ImageViewModel;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class DisplayImageActivity extends AppCompatActivity
@@ -48,6 +49,7 @@ public class DisplayImageActivity extends AppCompatActivity
     private ImageViewModel mViewModel;
     private List<Image> mImages;
     private List<Note> mNotes;
+    private List<Tag> mTags;
     private List<Integer> mNoteLayoutIds;
     private int mFirstPosition;
     private ViewPager mViewPager;
@@ -58,6 +60,9 @@ public class DisplayImageActivity extends AppCompatActivity
     private ConstraintLayout mLayout;
     private RecyclerView mAllTagRecycler;
     private TagRecyclerAdapter mAllTagsAdapter;
+    private ImageButton mNewTagButton;
+    private RecyclerView mImageTagsRecycler;
+    private TagRecyclerAdapter mImageTagsAdapter;
 
     private boolean isNoteVisible = false;
     private boolean mBarsVisible = true;
@@ -80,17 +85,20 @@ public class DisplayImageActivity extends AppCompatActivity
         mFirstPosition = getIntent().getIntExtra("ARGS_IMAGE_POSITION", 0);
         mViewModel = ViewModelProviders.of(this).get(ImageViewModel.class);
         initViews();
-        initNotes();
+        //initNotes();
         initTags();
     }
 
     private void initViews() {
         mNotes = new ArrayList<>();
         mNoteLayoutIds = new ArrayList<>();
+        mTags = new ArrayList<>();
         mViewModel.getAllNotes().observe(this, new Observer<List<Note>>() {
             @Override
             public void onChanged(List<Note> notes) {
                 mNotes = notes;
+                removeAllNotes();
+                initNotes();
             }
         });
         mLayout = findViewById(R.id.display_parent);
@@ -116,6 +124,8 @@ public class DisplayImageActivity extends AppCompatActivity
             public void onPageSelected(int position) {
                 removeAllNotes();
                 initNotes();
+                Image image = mImages.get(position);
+                mImageTagsAdapter.setTags(getImageTags(image));
             }
 
             @Override
@@ -139,9 +149,13 @@ public class DisplayImageActivity extends AppCompatActivity
                     case R.id.add_tag_display_option:
                         TransitionManager.beginDelayedTransition(mLayout);
                         if (!isTagsVisible) {
-                            showTags.applyTo(mLayout);
+                            //showTags.applyTo(mLayout);
+                            mAllTagRecycler.setVisibility(View.VISIBLE);
+                            mNewTagButton.setVisibility(View.VISIBLE);
                         } else {
-                            showBars.applyTo(mLayout);
+                            //showBars.applyTo(mLayout);
+                            mAllTagRecycler.setVisibility(View.GONE);
+                            mNewTagButton.setVisibility(View.GONE);
                         }
                         isTagsVisible = !isTagsVisible;
                         break;
@@ -164,6 +178,7 @@ public class DisplayImageActivity extends AppCompatActivity
     }
 
     private void initTags() {
+        //all tags
         mAllTagRecycler = findViewById(R.id.allTagsRecycler);
         GridLayoutManager gridLayoutManager = new GridLayoutManager(this, 1);
         gridLayoutManager.setOrientation(RecyclerView.HORIZONTAL);
@@ -173,17 +188,27 @@ public class DisplayImageActivity extends AppCompatActivity
         mViewModel.getAllTags().observe(this, new Observer<List<Tag>>() {
             @Override
             public void onChanged(List<Tag> tags) {
+                Image image = mImages.get(mViewPager.getCurrentItem());
                 mAllTagsAdapter.setTags(tags);
+                mTags = tags;
+                mImageTagsAdapter.setTags(getImageTags(image));
             }
         });
-        ImageButton newTagButton = findViewById(R.id.newTagButton);
-        newTagButton.setOnClickListener(new View.OnClickListener() {
+        mNewTagButton = findViewById(R.id.newTagButton);
+        mNewTagButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 NewTagDialog dialog = new NewTagDialog(DisplayImageActivity.this);
                 dialog.show(getSupportFragmentManager(), "new tag");
             }
         });
+        //image tags
+        mImageTagsRecycler = findViewById(R.id.currentTagsRecycler);
+        GridLayoutManager grid = new GridLayoutManager(this, 1);
+        grid.setOrientation(RecyclerView.HORIZONTAL);
+        mImageTagsRecycler.setLayoutManager(grid);
+        mImageTagsAdapter = new TagRecyclerAdapter(DisplayImageActivity.this, imageTagsOnClickListener);
+        mImageTagsRecycler.setAdapter(mImageTagsAdapter);
     }
 
     @Override
@@ -223,7 +248,7 @@ public class DisplayImageActivity extends AppCompatActivity
         Note note = new Note(mImages.get(position).getRowId(), text, x, y);
         mViewModel.insertNote(note);
         //show notes
-        addNoteView(note, show_text);
+        addNoteView(note, (isNoteVisible)? show_text : hide_bubble);
     }
 
 
@@ -328,12 +353,8 @@ public class DisplayImageActivity extends AppCompatActivity
         Note note = mNotes.get(index);
         note.setText(newText);
         mViewModel.updateNote(note);
-        for (Note n : mNotes) {
-            removeNoteView(n);
-            if (n.getImageId() == mImages.get(mViewPager.getCurrentItem()).getRowId()) {
-                addNoteView(n, (n.isTextVisible()) ? show_text : hide_text);
-            }
-        }
+        removeNoteView(note.getLayoutId());
+        addNoteView(note, show_text);
     }
 
     private void setNoteVisibility(int layoutId, ConstraintSet visibility) {
@@ -365,7 +386,57 @@ public class DisplayImageActivity extends AppCompatActivity
     }
 
     @Override
-    public void onClickTag(int color, int position) {
+    public void onClickTag(Tag tag) {
+        Image image = mImages.get(mViewPager.getCurrentItem());
+        String tags = image.getTags();
+        if (!tags.contains(Integer.toString(tag.getId()))) {
+            tags = (tags.equals(""))? Integer.toString(tag.getId()) : tags + "§" + tag.getId();
+            image.setTags(tags);
+            mImageTagsAdapter.addTag(tag);
+        }
+        mViewModel.update(image);
+    }
 
+    private TagRecyclerAdapter.TagClickListener imageTagsOnClickListener = new TagRecyclerAdapter.TagClickListener() {
+        @Override
+        public void onClickTag(Tag tag) {
+            if (mAllTagRecycler.getVisibility() == View.VISIBLE) {
+                mImageTagsAdapter.removeTag(tag);
+                Image image = mImages.get(mViewPager.getCurrentItem());
+                ArrayList<String> tagList = new ArrayList<>(Arrays.asList(image.getTags().split("§")));
+                if (tagList.isEmpty() && !image.getTags().equals("")){
+                    tagList.add(image.getTags());
+                }
+                String tagId = Integer.toString(tag.getId());
+                tagList.remove(tagId);
+                String tags = "";
+                if (!tagList.isEmpty()) {
+                    tags = tagList.get(0);
+                }
+                for (int i = 1; i < tagList.size(); i++){
+                    tags = tags + "§" + tagList.get(i);
+                }
+                image.setTags(tags);
+                mViewModel.update(image);
+            }
+        }
+    };
+
+    private ArrayList<Tag> getImageTags(Image image) {
+        String[] tagIds = image.getTags().split("§");
+        ArrayList<Tag> tags = new ArrayList<>();
+        if (!mTags.isEmpty()) {
+            for (String s : tagIds) {
+                int i = 0;
+                while (!s.equals(Integer.toString(mTags.get(i).getId())) && (i < mTags.size())) {
+                    i++;
+                    if (i == mTags.size()) break;
+                }
+                if (i < mTags.size()) {
+                    tags.add(mTags.get(i));
+                }
+            }
+        }
+        return tags;
     }
 }

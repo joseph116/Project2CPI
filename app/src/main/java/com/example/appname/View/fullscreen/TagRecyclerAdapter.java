@@ -30,6 +30,17 @@ public class TagRecyclerAdapter extends RecyclerView.Adapter<TagRecyclerAdapter.
         notifyDataSetChanged();
     }
 
+    public void addTag(Tag tag) {
+        mTags.add(tag);
+        notifyItemInserted(getItemCount());
+    }
+
+    public void removeTag(Tag tag) {
+        int position = mTags.indexOf(tag);
+        mTags.remove(tag);
+        notifyItemRemoved(position);
+    }
+
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -43,6 +54,14 @@ public class TagRecyclerAdapter extends RecyclerView.Adapter<TagRecyclerAdapter.
         holder.getTag().setText(mTags.get(position).getTitle());
         holder.getTag().setBackgroundTintList(ColorStateList.valueOf(mTags.get(position).getColor()));
         holder.getTag().setTextColor(autoTextColor(mTags.get(position).getColor()));
+        if (mListener != null) {
+            holder.getTag().setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    mListener.onClickTag(mTags.get(position));
+                }
+            });
+        }
     }
 
     @Override
@@ -83,7 +102,7 @@ public class TagRecyclerAdapter extends RecyclerView.Adapter<TagRecyclerAdapter.
 
     public interface TagClickListener{
 
-        void onClickTag(int color, int position);
+        void onClickTag(Tag tag);
 
     }
 }
