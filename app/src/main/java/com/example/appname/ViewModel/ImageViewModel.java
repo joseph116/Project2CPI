@@ -53,6 +53,10 @@ public class ImageViewModel extends AndroidViewModel implements LoadUnsortedImag
         return mSortedImages;
     }
 
+    public LiveData<List<Image>> getImagesByPath(String path) {
+        return mRepository.getImagesByPath(path);
+    }
+
     public LiveData<List<Note>> getNotes(long imageId) {
         return mRepository.getNotes(imageId);
     }

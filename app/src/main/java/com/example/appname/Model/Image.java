@@ -9,6 +9,7 @@ import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 import androidx.room.TypeConverter;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -32,6 +33,7 @@ public class Image implements Parcelable, Comparable<Image> {
     private int orientation;
     private long dateTaken;
     private String path;
+    private String parent;
     private String tags;
 
     //==============================================================================================
@@ -46,6 +48,7 @@ public class Image implements Parcelable, Comparable<Image> {
         this.rowId = rowId;
         this.uri = uri;
         this.path = path;
+        this.parent = path.substring(0, path.lastIndexOf(File.separator));
         this.dateModified = dateModified;
         this.mimeType = mimeType;
         this.orientation = orientation;
@@ -57,6 +60,7 @@ public class Image implements Parcelable, Comparable<Image> {
         rowId = in.readLong();
         //uri = Uri.parse(in.readString());
         path = in.readString();
+        parent = in.readString();
         mimeType = in.readString();
         dateTaken = in.readLong();
         dateModified = in.readLong();
@@ -122,6 +126,7 @@ public class Image implements Parcelable, Comparable<Image> {
 
     public void setPath(String path) {
         this.path = path;
+        this.parent = path.substring(0, path.lastIndexOf(File.separator));
     }
 
     public String getTags() {
@@ -130,6 +135,14 @@ public class Image implements Parcelable, Comparable<Image> {
 
     public void setTags(String tags) {
         this.tags = tags;
+    }
+
+    public String getParent() {
+        return parent;
+    }
+
+    public void setParent(String parent) {
+        this.parent = parent;
     }
 
     //==============================================================================================
@@ -159,6 +172,7 @@ public class Image implements Parcelable, Comparable<Image> {
         parcel.writeLong(rowId);
         //parcel.writeString(uri.toString());
         parcel.writeString(path);
+        parcel.writeString(parent);
         parcel.writeString(mimeType);
         parcel.writeLong(dateTaken);
         parcel.writeLong(dateModified);

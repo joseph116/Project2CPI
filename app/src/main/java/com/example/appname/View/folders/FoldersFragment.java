@@ -14,12 +14,14 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.view.ActionMode;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Environment;
+import android.os.Parcelable;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -152,9 +154,16 @@ public class FoldersFragment extends Fragment implements FolderAdapter.FolderLis
         mFolderRecyclerView.setLayoutManager(new GridLayoutManager(getContext(), spanCountFolder));
         //image recycler
         mImageRecyclerView = getView().findViewById(R.id.imageRecyclerView);
-        mImageAdapter = new ImageAdapter(getContext(), mExplorer.getImages(), this);
+        mImageAdapter = new ImageAdapter(getContext(),this);
         mImageRecyclerView.setAdapter(mImageAdapter);
         mImageRecyclerView.setLayoutManager(new GridLayoutManager(getContext(), spanCountImage));
+
+        mViewModel.getImagesByPath(mExplorer.getCurrentPath()).observe(getActivity(), new Observer<List<Image>>() {
+            @Override
+            public void onChanged(List<Image> images) {
+                mImageAdapter.setImageList(images);
+            }
+        });
 
         String currentPath = mExplorer.getCurrentPath();
         getActivity().setTitle(currentPath.substring(currentPath.lastIndexOf(File.separator) + 1));
@@ -176,6 +185,8 @@ public class FoldersFragment extends Fragment implements FolderAdapter.FolderLis
         }
     }
 
+
+
     //==============================================================================================
     //  LISTENERS FUNCTIONS
     //==============================================================================================
@@ -185,7 +196,13 @@ public class FoldersFragment extends Fragment implements FolderAdapter.FolderLis
     public void onClick(File file) {
         mExplorer.openFolder(file);
         mFolderAdapter.updateFolders(mExplorer.getFolders());
-        mImageAdapter.updateImageList(mExplorer.getImages());
+        //mImageAdapter.updateImageList(mExplorer.getImages());
+        mViewModel.getImagesByPath(mExplorer.getCurrentPath()).observe(getActivity(), new Observer<List<Image>>() {
+            @Override
+            public void onChanged(List<Image> images) {
+                mImageAdapter.updateImageList((ArrayList<Image>) images);
+            }
+        });
         String currentPath = mExplorer.getCurrentPath();
         getActivity().setTitle(currentPath.substring(currentPath.lastIndexOf(File.separator) + 1));
     }
@@ -206,7 +223,7 @@ public class FoldersFragment extends Fragment implements FolderAdapter.FolderLis
     @Override
     public void onClickImage(int position) {
         Intent intent = new Intent(getActivity(), DisplayImageActivity.class);
-        intent.putParcelableArrayListExtra(ARGS_CURRENT_IMAGES, mExplorer.getImages());
+        intent.putParcelableArrayListExtra(ARGS_CURRENT_IMAGES, (ArrayList<? extends Parcelable>) mImageAdapter.getImageList());
         intent.putExtra(ARGS_IMAGE_POSITION, position);
         startActivity(intent);
     }

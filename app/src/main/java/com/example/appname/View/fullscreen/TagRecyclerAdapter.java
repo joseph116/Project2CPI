@@ -39,6 +39,7 @@ public class TagRecyclerAdapter extends RecyclerView.Adapter<TagRecyclerAdapter.
         int position = mTags.indexOf(tag);
         mTags.remove(tag);
         notifyItemRemoved(position);
+        notifyItemRangeChanged(position, mTags.size());
     }
 
     @NonNull

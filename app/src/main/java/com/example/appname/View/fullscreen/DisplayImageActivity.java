@@ -85,7 +85,6 @@ public class DisplayImageActivity extends AppCompatActivity
         mFirstPosition = getIntent().getIntExtra("ARGS_IMAGE_POSITION", 0);
         mViewModel = ViewModelProviders.of(this).get(ImageViewModel.class);
         initViews();
-        //initNotes();
         initTags();
     }
 

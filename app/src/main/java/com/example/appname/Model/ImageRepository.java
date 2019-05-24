@@ -19,8 +19,8 @@ public class ImageRepository {
     private ImageDao mImageDao;
     private LiveData<List<Image>> mAllImages;
 
-    public ImageRepository(Application applicationt) {
-        ImageDataBase imageDataBase = ImageDataBase.getInstance(applicationt);
+    public ImageRepository(Application application) {
+        ImageDataBase imageDataBase = ImageDataBase.getInstance(application);
         mImageDao = imageDataBase.imageDao();
         mAllImages = mImageDao.getAllImages();
     }
@@ -39,6 +39,10 @@ public class ImageRepository {
 
     public LiveData<List<Image>> getAllImages(){
         return mAllImages;
+    }
+
+    public LiveData<List<Image>> getImagesByPath(String path) {
+        return mImageDao.getImagesByPath(path);
     }
 
     public LiveData<List<Note>> getAllNotes() {

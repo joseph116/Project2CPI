@@ -24,6 +24,9 @@ public interface ImageDao {
     @Query("SELECT * FROM image_table ORDER BY dateModified DESC")
     LiveData<List<Image>> getAllImages();
 
+    @Query("SELECT * FROM image_table WHERE parent LIKE :path")
+    LiveData<List<Image>> getImagesByPath(String path);
+
     // NOTES
 
     @Insert
