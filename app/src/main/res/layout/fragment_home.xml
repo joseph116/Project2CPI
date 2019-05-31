@@ -13,6 +13,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:text="(xx)"
+        android:textColor="?attr/colorPrimary"
         android:textSize="20dp"
         app:layout_constraintBaseline_toBaselineOf="@+id/title"
         app:layout_constraintStart_toEndOf="@+id/title" />

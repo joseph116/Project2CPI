@@ -149,14 +149,12 @@ public class FoldersFragment extends Fragment implements FolderAdapter.FolderLis
         mFolderRecyclerView = getView().findViewById(R.id.folderRecyclerView);
         mFolderAdapter = new FolderAdapter(getContext(), mExplorer.getFolders(), this);
         mFolderRecyclerView.setAdapter(mFolderAdapter);
-        int spanCountFolder = getResources().getDisplayMetrics().widthPixels / (300);
-        int spanCountImage = getResources().getDisplayMetrics().widthPixels / (300);
-        mFolderRecyclerView.setLayoutManager(new GridLayoutManager(getContext(), spanCountFolder));
+        mFolderRecyclerView.setLayoutManager(new GridLayoutManager(getContext(), 3));
         //image recycler
         mImageRecyclerView = getView().findViewById(R.id.imageRecyclerView);
         mImageAdapter = new ImageAdapter(getContext(),this);
         mImageRecyclerView.setAdapter(mImageAdapter);
-        mImageRecyclerView.setLayoutManager(new GridLayoutManager(getContext(), spanCountImage));
+        mImageRecyclerView.setLayoutManager(new GridLayoutManager(getContext(), 3));
 
         mViewModel.getImagesByPath(mExplorer.getCurrentPath()).observe(getActivity(), new Observer<List<Image>>() {
             @Override

@@ -69,6 +69,7 @@ public class MoveToDialog extends AppCompatDialogFragment implements MoveToAdapt
         builder.setPositiveButton("Select", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
+
             }
         });
         builder.setNegativeButton("Cancel", null);

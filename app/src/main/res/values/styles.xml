@@ -8,9 +8,13 @@
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
         <item name="colorOnPrimary">@color/colorPrimaryDark</item>
-        <item name="android:windowBackground">@drawable/ic_gradient_background</item>
+        <item name="android:windowBackground">@color/darkBg</item>
         <item name="buttonStyle">@drawable/button_style</item>
         <item name="fontFamily">@font/opensans</item>
+    </style>
+    <!-- Toolbar icon  -->
+    <style name="ToolbarColoredBackArrow">
+        <item name="android:textColorSecondary">@color/colorPrimary</item>
     </style>
 
     <style name="Theme2" parent="Theme.AppCompat.Light.NoActionBar">
