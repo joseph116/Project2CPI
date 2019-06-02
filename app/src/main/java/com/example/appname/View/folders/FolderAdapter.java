@@ -12,12 +12,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
-
-import com.bumptech.glide.Glide;
-import com.daimajia.androidanimations.library.Techniques;
-import com.daimajia.androidanimations.library.YoYo;
 import com.example.appname.R;
-
 import java.io.File;
 import java.util.List;
 
@@ -59,9 +54,7 @@ public class FolderAdapter extends RecyclerView.Adapter<FolderAdapter.ViewHolder
     public void onBindViewHolder(@NonNull final ViewHolder viewHolder, final int i) {
 
         if (getItemViewType(i) == 1) {
-            Glide.with(mContext)
-                    .load(R.drawable.ic_plus)
-                    .into(viewHolder.mImage);
+            viewHolder.mImage.setImageResource(R.drawable.ic_plus);
             viewHolder.mFileName.setText("Add folder");
             viewHolder.mLayout.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -78,10 +71,7 @@ public class FolderAdapter extends RecyclerView.Adapter<FolderAdapter.ViewHolder
             final File file = mFolders.get(i-1);
 
             if (file.isDirectory()) {
-                Glide.with(mContext)
-                        .load(R.drawable.ic_folder_open)
-                        .override(300, 300)
-                        .into(viewHolder.mImage);
+                viewHolder.mImage.setImageResource(R.drawable.ic_folder_open);
             }
 
             viewHolder.mFileName.setText(mFolders.get(i-1).getName());

@@ -21,40 +21,48 @@
         app:layout_constraintTop_toTopOf="parent"
         tools:ignore="MissingConstraints" />
 
+    <View
+        android:id="@+id/divider6"
+        android:layout_width="match_parent"
+        android:layout_height="10dp"
+        android:background="?attr/colorAccent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/texture_view" />
+
     <Button
         android:id="@+id/capture_image_btn"
-        android:layout_width="80dp"
-        android:layout_height="80dp"
+        android:layout_width="70dp"
+        android:layout_height="70dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginBottom="8dp"
         android:background="@drawable/cam_button"
+        android:elevation="3dp"
         android:onClick="captureImage"
         android:padding="5dp"
         android:textSize="25sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/texture_view"
+        app:layout_constraintTop_toBottomOf="@+id/divider6"
         tools:ignore="OnClick" />
 
     <Button
         android:id="@+id/open_directory_dialog"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
         android:layout_marginStart="8dp"
         android:layout_marginEnd="8dp"
-        android:layout_marginBottom="32dp"
-        android:background="@color/cardview_dark_background"
-        android:onClick="captureImage"
+        android:background="@drawable/cam_button"
+        android:foreground="@drawable/ic_select_icon"
         android:padding="5dp"
-        android:text="Select"
         android:textSize="25sp"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toBottomOf="@+id/capture_image_btn"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.871"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/capture_image_btn"
+        app:layout_constraintTop_toTopOf="@+id/capture_image_btn"
         tools:ignore="OnClick" />
 
 

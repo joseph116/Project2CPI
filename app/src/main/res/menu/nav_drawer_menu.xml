@@ -3,7 +3,7 @@
     xmlns:tool="http://schemas.android.com/tools"
     tool:showIn="navigation_view">
 
-    <group android:checkableBehavior="single">
+    <group android:checkableBehavior="single" >
 
         <item
             android:id="@+id/nav_home"
@@ -31,7 +31,9 @@
 
     </group>
 
-    <item android:title="">
+    <item
+        android:title="Others"
+        android:visible="true">
 
         <menu>
 
@@ -39,13 +41,13 @@
                 android:id="@+id/nav_sort"
                 android:icon="@drawable/ic_sort"
                 android:iconTint="?attr/colorPrimary"
-                android:title="Sort my images"/>
+                android:title="Sort my images" />
 
             <item
                 android:id="@+id/nav_settings"
                 android:icon="@drawable/ic_settings"
                 android:iconTint="?attr/colorPrimary"
-                android:title="Settings"/>
+                android:title="Settings" />
 
         </menu>
 

@@ -17,7 +17,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="?attr/colorAccent"
-            app:titleTextColor="@color/textOnDark"
+            app:titleTextColor="@color/white"
             android:minHeight="?attr/actionBarSize"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -40,13 +40,15 @@
 
     <com.google.android.material.navigation.NavigationView
         android:id="@+id/nav_view"
-        app:itemTextColor="@color/textOnLight"
-        app:itemIconTint="@color/textOnLight"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_gravity="start"
+        android:fitsSystemWindows="false"
         app:headerLayout="@layout/nav_header"
-        app:menu="@menu/nav_drawer_menu"/>
+        app:itemIconTint="@color/drawer"
+        app:itemTextColor="@color/drawer"
+        app:itemBackground="@drawable/drawer_selected"
+        app:menu="@menu/nav_drawer_menu" />
 
 </androidx.drawerlayout.widget.DrawerLayout>
 

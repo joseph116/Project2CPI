@@ -2,8 +2,10 @@ package com.example.appname.View.main;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
+import androidx.preference.PreferenceManager;
 
 import android.Manifest;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
@@ -18,6 +20,7 @@ public class RequestForPermissionActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        loadPreferences();
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_request_for_permission);
         mAllowButton = findViewById(R.id.allow_button);
@@ -63,5 +66,29 @@ public class RequestForPermissionActivity extends AppCompatActivity {
 
     private boolean hasPermission(String perm) {
         return (PackageManager.PERMISSION_GRANTED == ContextCompat.checkSelfPermission(this, perm));
+    }
+
+    private void loadPreferences() {
+        SharedPreferences sharedPreferences =
+                PreferenceManager.getDefaultSharedPreferences(this);
+        String theme = sharedPreferences.getString("theme", "1");
+        switch (theme) {
+            case "1":
+                setTheme(R.style.Theme1);
+                break;
+            case "2":
+                setTheme(R.style.Theme2);
+                break;
+            case "3":
+                setTheme(R.style.Theme3);
+                break;
+            case "4":
+                setTheme(R.style.Theme4);
+                break;
+            case "5":
+                setTheme(R.style.Theme5);
+            default:
+                break;
+        }
     }
 }
