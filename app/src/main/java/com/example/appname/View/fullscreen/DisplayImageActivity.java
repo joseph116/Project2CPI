@@ -19,6 +19,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -79,6 +80,9 @@ public class DisplayImageActivity extends AppCompatActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         loadPreferences();
+
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+                WindowManager.LayoutParams.FLAG_FULLSCREEN);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_display_image);
         mImages = getIntent().getParcelableArrayListExtra("ARGS_CURRENT_IMAGES");
@@ -111,7 +115,7 @@ public class DisplayImageActivity extends AppCompatActivity
         showTags.clone(DisplayImageActivity.this, R.layout.activity_display_image_show_tags);
 
         mViewPager = findViewById(R.id.display_image_view_pager);
-        mAdapter = new ImageAdapter(this, mImages, this);
+        mAdapter = new ImageAdapter(this, mImages, this );
         mViewPager.setAdapter(mAdapter);
         mViewPager.setCurrentItem(mFirstPosition);
         mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {

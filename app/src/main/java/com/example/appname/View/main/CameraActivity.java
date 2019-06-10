@@ -36,6 +36,7 @@ import android.util.SparseIntArray;
 import android.view.Surface;
 import android.view.TextureView;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.Toast;
 
@@ -96,6 +97,10 @@ public class CameraActivity extends AppCompatActivity implements SelectImagePath
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         loadPreferences();
+
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+                WindowManager.LayoutParams.FLAG_FULLSCREEN);
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_camera);
 
