@@ -8,9 +8,11 @@
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/settings_toolbar"
+        app:titleTextColor="@color/white"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
+        android:background="?attr/colorAccent"
         android:minHeight="?attr/actionBarSize"
         app:layout_constraintBottom_toTopOf="@+id/frame_layout_settings"
         app:layout_constraintEnd_toEndOf="parent"

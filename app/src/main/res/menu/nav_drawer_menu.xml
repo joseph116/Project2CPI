@@ -3,43 +3,51 @@
     xmlns:tool="http://schemas.android.com/tools"
     tool:showIn="navigation_view">
 
-    <group android:checkableBehavior="single">
+    <group android:checkableBehavior="single" >
 
         <item
             android:id="@+id/nav_home"
             android:icon="@drawable/ic_home"
+            android:iconTint="?attr/colorPrimary"
             android:title="Sorted images" />
 
         <item
             android:id="@+id/nav_folders"
             android:icon="@drawable/ic_folder"
+            android:iconTint="?attr/colorPrimary"
             android:title="Folders"/>
 
         <item
             android:id="@+id/nav_tag"
             android:icon="@drawable/ic_label"
+            android:iconTint="?attr/colorPrimary"
             android:title="Tags"/>
 
         <item
             android:id="@+id/nav_trash"
             android:icon="@drawable/ic_delete"
+            android:iconTint="?attr/colorPrimary"
             android:title="Trash"/>
 
     </group>
 
-    <item android:title="More">
+    <item
+        android:title="Others"
+        android:visible="true">
 
         <menu>
 
             <item
                 android:id="@+id/nav_sort"
                 android:icon="@drawable/ic_sort"
-                android:title="Sort my images"/>
+                android:iconTint="?attr/colorPrimary"
+                android:title="Sort my images" />
 
             <item
                 android:id="@+id/nav_settings"
                 android:icon="@drawable/ic_settings"
-                android:title="Settings"/>
+                android:iconTint="?attr/colorPrimary"
+                android:title="Settings" />
 
         </menu>
 

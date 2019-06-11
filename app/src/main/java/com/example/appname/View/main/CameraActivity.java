@@ -3,10 +3,12 @@ package com.example.appname.View.main;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
+import androidx.preference.PreferenceManager;
 
 import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.ImageFormat;
 import android.graphics.Matrix;
@@ -34,6 +36,7 @@ import android.util.SparseIntArray;
 import android.view.Surface;
 import android.view.TextureView;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.Toast;
 
@@ -93,6 +96,11 @@ public class CameraActivity extends AppCompatActivity implements SelectImagePath
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        loadPreferences();
+
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+                WindowManager.LayoutParams.FLAG_FULLSCREEN);
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_camera);
 
@@ -444,6 +452,30 @@ public class CameraActivity extends AppCompatActivity implements SelectImagePath
     @Override
     public void sendPath(String path) {
         mImageSelectedPath = path;
+    }
+
+    private void loadPreferences() {
+        SharedPreferences sharedPreferences =
+                PreferenceManager.getDefaultSharedPreferences(this);
+        String theme = sharedPreferences.getString("theme", "1");
+        switch (theme) {
+            case "1":
+                setTheme(R.style.Theme1);
+                break;
+            case "2":
+                setTheme(R.style.Theme2);
+                break;
+            case "3":
+                setTheme(R.style.Theme3);
+                break;
+            case "4":
+                setTheme(R.style.Theme4);
+                break;
+            case "5":
+                setTheme(R.style.Theme5);
+            default:
+                break;
+        }
     }
 
 }

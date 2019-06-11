@@ -12,6 +12,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:text="Current path"
+        android:textColor="?attr/colorPrimary"
         android:textSize="18sp"
         app:layout_constraintBottom_toBottomOf="@+id/moveToBack"
         app:layout_constraintStart_toEndOf="@+id/moveToBack"
@@ -19,12 +20,12 @@
 
     <ImageView
         android:id="@+id/moveToAddFolder"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginEnd="16dp"
+        app:layout_constraintBottom_toBottomOf="@+id/moveToBack"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/moveToBack"
         app:srcCompat="@drawable/ic_create_new_folder" />
 
     <ImageView

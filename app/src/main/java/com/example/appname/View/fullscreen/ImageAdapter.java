@@ -1,22 +1,18 @@
 package com.example.appname.View.fullscreen;
 
-import android.transition.TransitionManager;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.constraintlayout.widget.ConstraintSet;
-import androidx.core.view.GestureDetectorCompat;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.viewpager.widget.PagerAdapter;
-
 import com.bumptech.glide.Glide;
 import com.example.appname.Model.Image;
 import com.example.appname.Model.Note;
@@ -46,7 +42,7 @@ public class ImageAdapter extends PagerAdapter
     private ConstraintSet showBubbles = new ConstraintSet();
 
     public ImageAdapter(AppCompatActivity context, List<Image> images, ImageListener listener) {
-        mContext = context;
+        this.mContext = context;
         mImages = images;
         mListener = listener;
         mGestureDetector = new GestureDetector(mContext, this);
@@ -55,6 +51,7 @@ public class ImageAdapter extends PagerAdapter
         mNotes = new ArrayList<>();
         mViewModel = ViewModelProviders.of(mContext).get(ImageViewModel.class);
     }
+
 
     public void setImages(List<Image> images) {
         mImages = images;
@@ -82,12 +79,17 @@ public class ImageAdapter extends PagerAdapter
                 .with(mContext)
                 .load(mImages.get(position).getPath())
                 .into(imageView);
+
+
         mViewModel.getNotes(mImages.get(position).getRowId()).observe(mContext, new Observer<List<Note>>() {
             @Override
             public void onChanged(List<Note> notes) {
                 mNotes = notes;
             }
         });
+
+
+
         imageView.setOnTouchListener(this);
         container.addView(imageView, 0);
         return imageView;

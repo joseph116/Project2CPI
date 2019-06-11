@@ -1,29 +1,92 @@
 <resources>
 
+
     <style name="Theme1" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Customize your theme here. -->
-        <item name="windowActionModeOverlay">true</item>
-        <item name="android:windowFullscreen">true</item>
-        <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="colorAccent">@color/colorAccent</item>
-        <item name="colorOnPrimary">@color/colorPrimaryDark</item>
-        <item name="android:windowBackground">@drawable/ic_gradient_background</item>
+        <item name="colorPrimary">#2c8c99</item>
+        <item name="colorPrimaryDark">#326771</item>
+        <item name="colorAccent">#2DB1A1</item>
+        <item name="android:windowBackground">@color/white</item>
+        <item name="BackiColor">#FEFFFE</item>
+        <item name="itemStyle">#2DB1A1</item>
+        <item name="selectionColor" >#909EFFED</item>
+        <item name="textColorOnColor" >#333333</item>
         <item name="buttonStyle">@drawable/button_style</item>
+        <item name="android:textColorSecondary">@color/white</item>
+        <item name="iconColor">@color/white</item>
         <item name="fontFamily">@font/opensans</item>
     </style>
 
     <style name="Theme2" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Customize your theme here. -->
-        <item name="windowActionModeOverlay">true</item>
-        <item name="android:windowFullscreen">true</item>
-        <item name="colorPrimary">@color/colorPrimaryOld</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDarkOld</item>
-        <item name="colorAccent">@color/colorAccentOld</item>
-        <item name="colorOnPrimary">@color/white</item>
-        <item name="android:windowBackground">@color/textOnDark</item>
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+        <item name="android:windowBackground">@color/colorBackground</item>
+        <item name="BackiColor">@color/colorBackground</item>
+        <item name="itemStyle">@color/white</item>
+        <item name="selectionColor" >@color/colorPrimary</item>
+        <item name="textColorOnColor" >@color/white</item>
         <item name="buttonStyle">@drawable/button_style</item>
+        <item name="android:textColorSecondary">@color/white</item>
+        <item name="iconColor">@color/colorPrimary</item>
         <item name="fontFamily">@font/opensans</item>
+    </style>
+
+    <style name="Theme3" parent="Theme.AppCompat.Light.NoActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">#735290</item>
+        <item name="colorPrimaryDark">#363457</item>
+        <item name="colorAccent">#9460BD</item>
+        <item name="android:windowBackground">@color/backdropvioletta</item>
+        <item name="BackiColor">@color/backdropvioletta</item>
+        <item name="itemStyle">@color/white</item>
+        <item name="selectionColor" >#735290</item>
+        <item name="textColorOnColor" >@color/white</item>
+        <item name="buttonStyle">@drawable/button_style</item>
+        <item name="android:textColorSecondary">@color/white</item>
+        <item name="iconColor">#735290</item>
+        <item name="fontFamily">@font/opensans</item>
+    </style>
+
+
+    <style name="Theme4" parent="Theme.AppCompat.Light.NoActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">#06AFDF</item>
+        <item name="colorPrimaryDark">#038BB4</item>
+        <item name="colorAccent">#20c7fb</item>
+        <item name="android:windowBackground">@color/backdropblue</item>
+        <item name="BackiColor">@color/backdropblue</item>
+        <item name="itemStyle">@color/white</item>
+        <item name="selectionColor" >#06AFDF</item>
+        <item name="textColorOnColor" >@color/white</item>
+        <item name="buttonStyle">@drawable/button_style</item>
+        <item name="android:textColorSecondary">@color/white</item>
+        <item name="iconColor">#06AFDF</item>
+        <item name="fontFamily">@font/opensans</item>
+    </style>
+
+
+    <style name="Theme5" parent="Theme.AppCompat.Light.NoActionBar">
+        <!-- Customize your theme here. -->
+        <!-- tariq do your light theme bro here just follow the schema -->
+        <item name="colorPrimary">#2c8c99</item>
+        <item name="colorPrimaryDark">#326771</item>
+        <item name="colorAccent">#2DB1A1</item>
+        <item name="android:windowBackground">@color/white</item>
+        <item name="BackiColor">#FEFFFE</item>
+        <item name="itemStyle">#2DB1A1</item>
+        <item name="selectionColor" >#909EFFED</item>
+        <item name="textColorOnColor" >#333333</item>
+        <item name="buttonStyle">@drawable/button_style</item>
+        <item name="android:textColorSecondary">@color/white</item>
+        <item name="iconColor">@color/white</item>
+        <item name="fontFamily">@font/opensans</item>
+    </style>
+
+    <!--launcher theme don't mess with it-->
+    <style name="Theme1.Launcher">
+        <item name="android:windowBackground">@drawable/launch_screen</item>
     </style>
 
 

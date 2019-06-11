@@ -2,4 +2,9 @@
 <resources>
     <attr name="colorOnPrimary" format="color"/>
     <attr name="textSize" format="dimension"/>
+    <attr name="itemStyle" format="color"/>
+    <attr name="textColorOnColor" format="color"/>
+    <attr name="BackiColor" format="color"/>
+    <attr name="selectionColor" format="color"/>
+    <attr name="iconColor" format="color"/>
 </resources>

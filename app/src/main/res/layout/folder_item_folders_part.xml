@@ -7,13 +7,12 @@
 
     <ImageView
         android:id="@+id/folderImageView"
-        android:layout_width="110dp"
-        android:layout_height="110dp"
-        android:layout_marginStart="8dp"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:layout_marginStart="4dp"
         android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        android:background="@drawable/folder_background"
-        android:padding="30dp"
+        android:layout_marginEnd="4dp"
+        android:paddingBottom="20dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
@@ -25,7 +24,6 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="4dp"
         android:layout_marginBottom="8dp"
-        android:background="@drawable/folder_background"
         android:fontFamily="@font/opensans"
         android:maxHeight="50dp"
         android:paddingStart="5dp"
@@ -34,33 +32,33 @@
         android:paddingBottom="3dp"
         android:text="TextView"
         android:textAlignment="center"
-        android:textColor="@color/textOnDark"
-        android:textSize="18dp"
+        android:textColor="?attr/textColorOnColor"
+        android:textSize="16sp"
         app:layout_constraintEnd_toEndOf="@+id/folderImageView"
         app:layout_constraintStart_toStartOf="@+id/folderImageView"
         app:layout_constraintTop_toBottomOf="@id/folderImageView" />
 
     <LinearLayout
         android:id="@+id/folder_info_layout"
-        android:layout_width="0dp"
+        android:layout_width="match_parent"
         android:layout_height="20dp"
         android:layout_marginStart="8dp"
         android:layout_marginEnd="8dp"
-        android:layout_marginBottom="4dp"
         android:background="@drawable/note_background"
         android:orientation="horizontal"
         android:paddingStart="3dp"
         android:paddingEnd="3dp"
         app:layout_constraintBottom_toBottomOf="@+id/folderImageView"
         app:layout_constraintEnd_toEndOf="@+id/folderImageView"
+        app:layout_constraintHorizontal_bias="0.518"
         app:layout_constraintStart_toStartOf="@+id/folderImageView">
 
         <ImageView
             android:id="@+id/imageView5"
             android:layout_width="16dp"
             android:layout_height="16dp"
-            android:layout_weight="1"
             android:layout_gravity="center"
+            android:layout_weight="1"
             android:tint="@color/textOnDark"
             app:srcCompat="@drawable/ic_folder" />
 
@@ -68,8 +66,8 @@
             android:id="@+id/number_folders"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
             android:layout_gravity="center"
+            android:layout_weight="1"
             android:text="xx"
             android:textColor="@color/textOnDark"
             android:textSize="10sp" />
@@ -78,9 +76,9 @@
             android:id="@+id/imageView6"
             android:layout_width="16dp"
             android:layout_height="16dp"
+            android:layout_gravity="center"
             android:layout_marginStart="8dp"
             android:layout_weight="1"
-            android:layout_gravity="center"
             android:tint="@color/textOnDark"
             app:srcCompat="@drawable/ic_image" />
 
@@ -88,8 +86,8 @@
             android:id="@+id/number_images"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
             android:layout_gravity="center"
+            android:layout_weight="1"
             android:text="xx"
             android:textColor="@color/textOnDark"
             android:textSize="10sp" />

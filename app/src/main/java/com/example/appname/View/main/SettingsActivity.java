@@ -36,6 +36,15 @@ public class SettingsActivity extends AppCompatActivity {
                 break;
             case "2":
                 setTheme(R.style.Theme2);
+                break;
+            case "3":
+                setTheme(R.style.Theme3);
+                break;
+            case "4":
+                setTheme(R.style.Theme4);
+                break;
+            case "5":
+                setTheme(R.style.Theme5);
             default:
                 break;
         }

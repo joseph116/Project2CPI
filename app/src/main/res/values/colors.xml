@@ -1,18 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- Theme 1 -->
-    <color name="colorPrimary">#FEFEFE</color>
-    <color name="colorPrimaryDark">#3A6388</color>
-    <color name="colorAccent">#213F58</color>
+    <color name="colorPrimary">#A4303D</color>
+    <color name="colorPrimaryDark">#7E1D27</color>
+    <color name="colorAccent">#B82736</color>
+    <color name="colorBackground">#12100E</color>
 
-    <!-- Theme 2 -->
-    <color name="colorPrimaryOld">#2962ff</color>
-    <color name="colorPrimaryDarkOld">#0039cb</color>
-    <color name="colorAccentOld">#768fff</color>
-
-    <color name="white">#FFFFFF</color>
-    <color name="black">#000000</color>
+    <color name="white">#fefefe</color>
+    <color name="black">#fefefe</color>
     <color name="transparent">#00000000</color>
-    <color name="textOnDark">#ffffff</color>
-    <color name="textOnLight">#262626</color>
+    <color name="textOnDark">#FEFFFE</color>
+    <color name="textOnLight">#EAEAEA</color>
+    <color name="backdropvioletta">#1E1C29</color>
+    <color name="backdropblue">#10181D</color>
 </resources>
