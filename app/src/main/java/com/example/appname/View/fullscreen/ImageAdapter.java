@@ -4,6 +4,7 @@ import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
@@ -34,12 +35,6 @@ public class ImageAdapter extends PagerAdapter
 
     private ConstraintLayout mLayout;
     private ImageViewModel mViewModel;
-    private List<Note> mNotes;
-
-    private ConstraintLayout mNoteLayout;
-    private ConstraintSet showText = new ConstraintSet();
-    private ConstraintSet hideText = new ConstraintSet();
-    private ConstraintSet showBubbles = new ConstraintSet();
 
     public ImageAdapter(AppCompatActivity context, List<Image> images, ImageListener listener) {
         this.mContext = context;
@@ -48,7 +43,6 @@ public class ImageAdapter extends PagerAdapter
         mGestureDetector = new GestureDetector(mContext, this);
 
         mLayout = context.findViewById(R.id.display_parent);
-        mNotes = new ArrayList<>();
         mViewModel = ViewModelProviders.of(mContext).get(ImageViewModel.class);
     }
 
@@ -70,7 +64,7 @@ public class ImageAdapter extends PagerAdapter
 
     @NonNull
     @Override
-    public Object instantiateItem(@NonNull ViewGroup container, final int position) {
+    public Object instantiateItem(@NonNull final ViewGroup container, final int position) {
         String path = mImages.get(position).getPath();
         mContext.setTitle(path.substring(path.lastIndexOf(File.separator) + 1));
         final ImageView imageView = new ImageView(mContext);
@@ -80,18 +74,22 @@ public class ImageAdapter extends PagerAdapter
                 .load(mImages.get(position).getPath())
                 .into(imageView);
 
+        imageView.setOnTouchListener(this);
+        container.addView(imageView, 0);
 
-        mViewModel.getNotes(mImages.get(position).getRowId()).observe(mContext, new Observer<List<Note>>() {
-            @Override
-            public void onChanged(List<Note> notes) {
-                mNotes = notes;
+        mImages.get(position).setImageView(imageView);
+
+        container.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            public void onGlobalLayout() {
+                container.getViewTreeObserver().removeGlobalOnLayoutListener(this);
+
+                int[] locations = new int[2];
+                imageView.getLocationOnScreen(locations);
+                int x = locations[0];
+                int y = locations[1];
             }
         });
 
-
-
-        imageView.setOnTouchListener(this);
-        container.addView(imageView, 0);
         return imageView;
 
     }
