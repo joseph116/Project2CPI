@@ -3,6 +3,7 @@ package com.example.appname.Model;
 import android.net.Uri;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.widget.ImageView;
 
 import androidx.room.Entity;
 import androidx.room.Ignore;
@@ -35,6 +36,9 @@ public class Image implements Parcelable, Comparable<Image> {
     private String path;
     private String parent;
     private String tags;
+
+    @Ignore
+    private ImageView mImageView;
 
     //==============================================================================================
     //  CONSTRUCTORS
@@ -143,6 +147,14 @@ public class Image implements Parcelable, Comparable<Image> {
 
     public void setParent(String parent) {
         this.parent = parent;
+    }
+
+    public ImageView getImageView() {
+        return mImageView;
+    }
+
+    public void setImageView(ImageView imageView) {
+        mImageView = imageView;
     }
 
     //==============================================================================================

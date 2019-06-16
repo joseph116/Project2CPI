@@ -13,7 +13,11 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager.widget.ViewPager;
 
 import android.content.SharedPreferences;
+import android.database.Cursor;
+import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.transition.TransitionManager;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -24,6 +28,7 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.appname.Model.Image;
 import com.example.appname.Model.Note;
@@ -34,6 +39,7 @@ import com.example.appname.View.dialogs.ChangeNoteTextDialog;
 import com.example.appname.View.dialogs.NewTagDialog;
 import com.example.appname.ViewModel.ImageViewModel;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -64,6 +70,7 @@ public class DisplayImageActivity extends AppCompatActivity
     private ImageButton mNewTagButton;
     private RecyclerView mImageTagsRecycler;
     private TagRecyclerAdapter mImageTagsAdapter;
+    private Toast mToast;
 
     private boolean isNoteVisible = false;
     private boolean mBarsVisible = true;
@@ -129,6 +136,9 @@ public class DisplayImageActivity extends AppCompatActivity
                 initNotes();
                 Image image = mImages.get(position);
                 mImageTagsAdapter.setTags(getImageTags(image));
+                float[] floats = new float[9];
+                mImages.get(position).getImageView().getImageMatrix().getValues(floats);
+                showToast(Float.toString(mImages.get(position).getImageView().getPaddingEnd()));
             }
 
             @Override
@@ -442,4 +452,11 @@ public class DisplayImageActivity extends AppCompatActivity
         }
         return tags;
     }
+
+    private void showToast(String message) {
+        if (mToast != null) mToast.cancel();
+        mToast = Toast.makeText(this, message, Toast.LENGTH_SHORT);
+        mToast.show();
+    }
+
 }
