@@ -14,6 +14,8 @@ import androidx.viewpager.widget.ViewPager;
 
 import android.content.SharedPreferences;
 import android.database.Cursor;
+import android.graphics.Rect;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -136,9 +138,13 @@ public class DisplayImageActivity extends AppCompatActivity
                 initNotes();
                 Image image = mImages.get(position);
                 mImageTagsAdapter.setTags(getImageTags(image));
-                float[] floats = new float[9];
-                mImages.get(position).getImageView().getImageMatrix().getValues(floats);
-                showToast(Float.toString(mImages.get(position).getImageView().getPaddingEnd()));
+
+                //test
+                //View view = mViewPager.findViewWithTag(mImages.get(position).getImageViewId());
+                //ImageView v = (view instanceof ImageView) ? (ImageView) view : null;
+                //if (v != null) {
+                //    Drawable drawable = v.getDrawable();
+                //}
             }
 
             @Override

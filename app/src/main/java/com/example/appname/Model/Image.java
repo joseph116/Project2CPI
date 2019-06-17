@@ -38,7 +38,7 @@ public class Image implements Parcelable, Comparable<Image> {
     private String tags;
 
     @Ignore
-    private ImageView mImageView;
+    private int mImageViewId;
 
     //==============================================================================================
     //  CONSTRUCTORS
@@ -149,12 +149,12 @@ public class Image implements Parcelable, Comparable<Image> {
         this.parent = parent;
     }
 
-    public ImageView getImageView() {
-        return mImageView;
+    public int getImageViewId() {
+        return mImageViewId;
     }
 
-    public void setImageView(ImageView imageView) {
-        mImageView = imageView;
+    public void setImageViewId(int imageViewId) {
+        mImageViewId = imageViewId;
     }
 
     //==============================================================================================

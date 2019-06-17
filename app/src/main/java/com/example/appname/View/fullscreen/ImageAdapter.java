@@ -1,5 +1,6 @@
 package com.example.appname.View.fullscreen;
 
+import android.graphics.Bitmap;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
@@ -32,6 +33,7 @@ public class ImageAdapter extends PagerAdapter
     private List<Image> mImages;
     private ImageListener mListener;
     private GestureDetector mGestureDetector;
+    private View mCurrentView;
 
     private ConstraintLayout mLayout;
     private ImageViewModel mViewModel;
@@ -50,6 +52,10 @@ public class ImageAdapter extends PagerAdapter
     public void setImages(List<Image> images) {
         mImages = images;
         notifyDataSetChanged();
+    }
+
+    public View getCurrentView() {
+        return mCurrentView;
     }
 
     @Override
@@ -74,21 +80,13 @@ public class ImageAdapter extends PagerAdapter
                 .load(mImages.get(position).getPath())
                 .into(imageView);
 
+
         imageView.setOnTouchListener(this);
         container.addView(imageView, 0);
 
-        mImages.get(position).setImageView(imageView);
-
-        container.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-            public void onGlobalLayout() {
-                container.getViewTreeObserver().removeGlobalOnLayoutListener(this);
-
-                int[] locations = new int[2];
-                imageView.getLocationOnScreen(locations);
-                int x = locations[0];
-                int y = locations[1];
-            }
-        });
+        //fix notes
+        //imageView.setTag(position);
+        //mImages.get(position).setImageViewId(position);
 
         return imageView;
 
@@ -99,6 +97,11 @@ public class ImageAdapter extends PagerAdapter
         container.removeView((View) object);
     }
 
+    @Override
+    public void setPrimaryItem(@NonNull ViewGroup container, int position, @NonNull Object object) {
+        mCurrentView = (ImageView) object;
+        super.setPrimaryItem(container, position, object);
+    }
 
     public void removeImage(Image image) {
         mImages.remove(image);
