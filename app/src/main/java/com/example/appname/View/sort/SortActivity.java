@@ -16,12 +16,15 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.appname.Model.Image;
+import com.example.appname.Model.LoadUnsortedImagesTask;
 import com.example.appname.R;
 import com.example.appname.View.dialogs.NewFolderDialog;
 import com.example.appname.Model.Explorer;
+import com.example.appname.View.main.MainActivity;
 import com.example.appname.ViewModel.ImageViewModel;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 
 import static com.example.appname.View.main.MainActivity.EXTRA_UNSORTED_LIST;
@@ -29,7 +32,8 @@ import static com.example.appname.View.main.MainActivity.EXTRA_UNSORTED_LIST;
 
 public class SortActivity extends AppCompatActivity implements FolderAdapter.OnFileItemListener,
         NewFolderDialog.DialogListener,
-        ImagePagerAdapter.PagerViewListener {
+        ImagePagerAdapter.PagerViewListener,
+        LoadUnsortedImagesTask.OnLoadCompleteListener {
 
     //==============================================================================================
     //  ATTRIBUTES
@@ -61,6 +65,7 @@ public class SortActivity extends AppCompatActivity implements FolderAdapter.OnF
             mUnsortedList = getIntent().getParcelableArrayListExtra(EXTRA_UNSORTED_LIST);
         }
         mViewModel = ViewModelProviders.of(this).get(ImageViewModel.class);
+        mViewModel.startLoading(this);
         mExplorer = new Explorer(this);
         initViews();
     }
@@ -80,7 +85,7 @@ public class SortActivity extends AppCompatActivity implements FolderAdapter.OnF
 
         //Pager View
         mViewPager = findViewById(R.id.sortViewPager);
-        mImagePagerAdapter = new ImagePagerAdapter(this, mUnsortedList, this);
+        mImagePagerAdapter = new ImagePagerAdapter(this,this);
         mViewPager.setAdapter(mImagePagerAdapter);
         mViewPager.setOffscreenPageLimit(5);
         mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
@@ -142,7 +147,11 @@ public class SortActivity extends AppCompatActivity implements FolderAdapter.OnF
         mToolbar = findViewById(R.id.toolbar_sort);
         setSupportActionBar(mToolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setTitle(mViewPager.getCurrentItem() + "/" + mUnsortedList.size());
+        if (mUnsortedList != null) {
+            getSupportActionBar().setTitle(mViewPager.getCurrentItem() + "/" + mUnsortedList.size());
+        } else {
+            getSupportActionBar().setTitle("Loading...");
+        }
     }
 
     private void loadPreferences() {
@@ -250,5 +259,13 @@ public class SortActivity extends AppCompatActivity implements FolderAdapter.OnF
     @Override
     public void onClickImage(Image image) {
 
+    }
+
+    @Override
+    public void loadFinished(ArrayList<Image> images) {
+        mUnsortedList = images;
+        mImagePagerAdapter.setImages(mUnsortedList);
+        mViewPager.setAdapter(mImagePagerAdapter);
+        getSupportActionBar().setTitle(mViewPager.getCurrentItem() + "/" + mUnsortedList.size());
     }
 }

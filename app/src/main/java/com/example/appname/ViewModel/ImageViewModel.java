@@ -98,8 +98,8 @@ public class ImageViewModel extends AndroidViewModel implements LoadUnsortedImag
     }
 
 
-    public void startLoading() {
-        new LoadUnsortedImagesTask(getApplication(), this).execute();
+    public void startLoading(LoadUnsortedImagesTask.OnLoadCompleteListener listener) {
+        new LoadUnsortedImagesTask(getApplication(), listener).execute();
     }
 
     @Override
