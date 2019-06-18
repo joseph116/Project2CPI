@@ -20,6 +20,7 @@ import com.example.appname.R;
 import com.example.appname.View.fullscreen.DisplayImageActivity;
 import com.example.appname.View.folders.ImageAdapter;
 import com.example.appname.View.main.CameraActivity;
+import com.example.appname.View.main.MainActivity;
 import com.example.appname.ViewModel.ImageViewModel;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
@@ -27,7 +28,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class HomeFragment extends Fragment implements ImageAdapter.ImageListener {
+public class HomeFragment extends Fragment implements ImageAdapter.ImageListener,
+        MainActivity.BackPressedListener {
 
     public static final String ARGS_CURRENT_IMAGES = "ARGS_CURRENT_IMAGES";
     public static final String ARGS_IMAGE_POSITION = "ARGS_IMAGE_POSITION";
@@ -73,6 +75,7 @@ public class HomeFragment extends Fragment implements ImageAdapter.ImageListener
                 mImageAdapter.setImageList(images);
             }
         });
+        ((MainActivity)getActivity()).setBackListener(this);
     }
 
     private void initViews() {
@@ -108,5 +111,10 @@ public class HomeFragment extends Fragment implements ImageAdapter.ImageListener
     @Override
     public void onChecked(Image image, boolean isChecked) {
 
+    }
+
+    @Override
+    public void onBackPressed() {
+        getActivity().finish();
     }
 }

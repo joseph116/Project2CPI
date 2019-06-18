@@ -151,7 +151,7 @@ public class MainActivity extends AppCompatActivity{
     //==============================================================================================
 
     private void loadUnsortedImages() {
-        mImageViewModel.startLoading();
+        //mImageViewModel.startLoading();
     }
 
     private void initViews() {
@@ -236,45 +236,6 @@ public class MainActivity extends AppCompatActivity{
         if (mToast != null) mToast.cancel();
         mToast = Toast.makeText(this, message, Toast.LENGTH_SHORT);
         mToast.show();
-    }
-
-    public void scanImages() {
-        Uri contentUri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
-        Cursor cursor = getContentResolver().query(
-                contentUri, IMAGE_PROJECTION,
-                null, null,
-                MediaStore.Images.Media.DEFAULT_SORT_ORDER);
-
-        //if there is no image
-        if (cursor == null) return;
-
-        //else get the images
-        try {
-            final int idColNum = cursor.getColumnIndexOrThrow(MediaStore.Images.ImageColumns._ID);
-            final int pathColNum = cursor.getColumnIndexOrThrow(MediaStore.Images.ImageColumns.DATA);
-            final int dateTakenColNum = cursor.getColumnIndexOrThrow(MediaStore.Images.ImageColumns.DATE_TAKEN);
-            final int dateModifiedColNum = cursor.getColumnIndexOrThrow(MediaStore.Images.ImageColumns.DATE_MODIFIED);
-            final int mimeTypeColNum = cursor.getColumnIndex(MediaStore.Images.ImageColumns.MIME_TYPE);
-            final int orientationColNum = cursor.getColumnIndexOrThrow(MediaStore.Images.ImageColumns.ORIENTATION);
-
-            while (cursor.moveToNext()) {
-                String path = cursor.getString(pathColNum);
-                if (path.substring(0, path.lastIndexOf(File.separator)).equals(mExplorer.getRootPath())) {
-                    long id = cursor.getLong(idColNum);
-                    long dateTaken = cursor.getLong(dateTakenColNum);
-                    String mimeType = cursor.getString(mimeTypeColNum);
-                    long dateModified = cursor.getLong(dateModifiedColNum);
-                    int orientation = cursor.getInt(orientationColNum);
-
-                    Image image = new Image(id, Uri.withAppendedPath(contentUri, Long.toString(id)),
-                            path,mimeType, dateTaken, dateModified, orientation);
-
-                    mImageViewModel.add(image);
-                }
-            }
-        } finally {
-            cursor.close();
-        }
     }
 
     private class scanImagesAsyncTask extends AsyncTask<String, Void, Void> {

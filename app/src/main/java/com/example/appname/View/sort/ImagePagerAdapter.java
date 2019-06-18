@@ -29,6 +29,11 @@ public class ImagePagerAdapter extends PagerAdapter {
         mListener = listener;
     }
 
+    public ImagePagerAdapter(Context context, PagerViewListener listener) {
+        mContext = context;
+        mListener = listener;
+    }
+
     public void setImages(List<Image> images) {
         mImages = images;
         notifyDataSetChanged();
