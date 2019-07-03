@@ -3,7 +3,6 @@
 
     <style name="Theme1" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Customize your theme here. -->
-        <item name="windowActionModeOverlay">true</item>
         <item name="colorPrimary">#2c8c99</item>
         <item name="colorPrimaryDark">#326771</item>
         <item name="colorAccent">#2DB1A1</item>
@@ -20,7 +19,6 @@
 
     <style name="Theme2" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Customize your theme here. -->
-        <item name="windowActionModeOverlay">true</item>
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
@@ -37,7 +35,6 @@
 
     <style name="Theme3" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Customize your theme here. -->
-        <item name="windowActionModeOverlay">true</item>
         <item name="colorPrimary">#735290</item>
         <item name="colorPrimaryDark">#363457</item>
         <item name="colorAccent">#9460BD</item>
@@ -55,7 +52,6 @@
 
     <style name="Theme4" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Customize your theme here. -->
-        <item name="windowActionModeOverlay">true</item>
         <item name="colorPrimary">#06AFDF</item>
         <item name="colorPrimaryDark">#038BB4</item>
         <item name="colorAccent">#20c7fb</item>
@@ -73,19 +69,17 @@
 
     <style name="Theme5" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Customize your theme here. -->
-        <!-- tariq do your light theme bro here just follow the schema -->
-        <item name="windowActionModeOverlay">true</item>
-        <item name="colorPrimary">#2c8c99</item>
-        <item name="colorPrimaryDark">#326771</item>
-        <item name="colorAccent">#2DB1A1</item>
-        <item name="android:windowBackground">@color/white</item>
-        <item name="BackiColor">#FEFFFE</item>
-        <item name="itemStyle">#2DB1A1</item>
-        <item name="selectionColor" >#909EFFED</item>
-        <item name="textColorOnColor" >#333333</item>
+        <item name="colorPrimary">#444</item>
+        <item name="colorPrimaryDark">@color/blacki</item>
+        <item name="colorAccent">#555</item>
+        <item name="android:windowBackground">@color/blacki</item>
+        <item name="BackiColor">@color/blacki</item>
+        <item name="itemStyle">@color/white</item>
+        <item name="selectionColor" >#222</item>
+        <item name="textColorOnColor" >@color/white</item>
         <item name="buttonStyle">@drawable/button_style</item>
         <item name="android:textColorSecondary">@color/white</item>
-        <item name="iconColor">@color/white</item>
+        <item name="iconColor">#222</item>
         <item name="fontFamily">@font/opensans</item>
     </style>
 
