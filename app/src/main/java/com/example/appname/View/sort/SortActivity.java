@@ -4,12 +4,16 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.preference.PreferenceManager;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager.widget.ViewPager;
 
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.TextView;
@@ -25,6 +29,7 @@ import com.example.appname.ViewModel.ImageViewModel;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import static com.example.appname.View.main.MainActivity.EXTRA_UNSORTED_LIST;
@@ -145,6 +150,7 @@ public class SortActivity extends AppCompatActivity implements FolderAdapter.OnF
         });
 
         mToolbar = findViewById(R.id.toolbar_sort);
+        mToolbar.inflateMenu(R.menu.sort_menu);
         setSupportActionBar(mToolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         if (mUnsortedList != null) {
@@ -176,6 +182,34 @@ public class SortActivity extends AppCompatActivity implements FolderAdapter.OnF
             default:
                 break;
         }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater menuInflater = getMenuInflater();
+        menuInflater.inflate(R.menu.sort_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_sort_delete:
+                if (!mUnsortedList.isEmpty()) {
+                    int position = mViewPager.getCurrentItem();
+                    Image image = mUnsortedList.get(position);
+                    image.setInTrash(true);
+                    mViewModel.add(image);
+                    mUnsortedList.remove(position);
+                    mImagePagerAdapter.removeImage(image);
+                    mFolderAdapter.notifyDataSetChanged();
+                    mViewPager.setCurrentItem(position);
+
+                    getSupportActionBar().setTitle(mViewPager.getCurrentItem() + "/" + mUnsortedList.size());
+                }
+                break;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     //==============================================================================================
@@ -213,11 +247,14 @@ public class SortActivity extends AppCompatActivity implements FolderAdapter.OnF
             String newPath = file.getPath() + oldPath.substring(oldPath.lastIndexOf(File.separator));
             if (mExplorer.move(oldPath, newPath)) {
                 image.setPath(newPath);
+                image.setOldPath(oldPath);
                 mViewModel.add(image);
                 mUnsortedList.remove(image);
                 mImagePagerAdapter.removeImage(image);
                 mFolderAdapter.notifyDataSetChanged();
+                mViewPager.setCurrentItem(position);
                 getSupportActionBar().setTitle(mViewPager.getCurrentItem() + "/" + mUnsortedList.size());
+
             } else {
                 showToast("Can't move the image");
             }
@@ -262,10 +299,27 @@ public class SortActivity extends AppCompatActivity implements FolderAdapter.OnF
     }
 
     @Override
-    public void loadFinished(ArrayList<Image> images) {
-        mUnsortedList = images;
-        mImagePagerAdapter.setImages(mUnsortedList);
-        mViewPager.setAdapter(mImagePagerAdapter);
-        getSupportActionBar().setTitle(mViewPager.getCurrentItem() + "/" + mUnsortedList.size());
+    public void loadFinished(final ArrayList<Image> loadedImages) {
+        mViewModel.getTrashImages().observe(this, new Observer<List<Image>>() {
+            @Override
+            public void onChanged(List<Image> images) {
+                Iterator<Image> iterator = images.iterator();
+                while (iterator.hasNext()) {
+                    Image image = iterator.next();
+                    for (Image i : images) {
+                        if (i.getRowId() == image.getRowId()) {
+                            loadedImages.remove(image);
+                        }
+                    }
+                    iterator.remove();
+                }
+                mUnsortedList = loadedImages;
+                mImagePagerAdapter.setImages(mUnsortedList);
+                mViewPager.setAdapter(mImagePagerAdapter);
+                getSupportActionBar().setTitle(mViewPager.getCurrentItem() + "/" + mUnsortedList.size());
+
+            }
+        });
+
     }
 }

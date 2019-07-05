@@ -22,11 +22,15 @@ public interface ImageDao {
     @Delete
     void remove(Image image);
 
-    @Query("SELECT * FROM image_table ORDER BY dateModified DESC")
+    @Query("SELECT * FROM image_table WHERE inTrash = 0 ORDER BY dateModified DESC")
     LiveData<List<Image>> getAllImages();
+
+    @Query("SELECT * FROM image_table WHERE inTrash = 1 ORDER BY dateModified DESC")
+    LiveData<List<Image>> getAllImagesInTrash();
 
     @Query("SELECT * FROM image_table WHERE parent LIKE :path")
     LiveData<List<Image>> getImagesByPath(String path);
+
 
     // NOTES
 

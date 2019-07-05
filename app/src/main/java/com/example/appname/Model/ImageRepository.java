@@ -41,6 +41,10 @@ public class ImageRepository {
         return mAllImages;
     }
 
+    public LiveData<List<Image>> getAllImagesInTrash(){
+        return mImageDao.getAllImagesInTrash();
+    }
+
     public LiveData<List<Image>> getImagesByPath(String path) {
         return mImageDao.getImagesByPath(path);
     }

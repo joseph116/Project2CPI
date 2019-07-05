@@ -7,9 +7,9 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.view.ActionMode;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
@@ -19,25 +19,32 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
+import com.example.appname.Model.Explorer;
 import com.example.appname.Model.Image;
 import com.example.appname.R;
-import com.example.appname.View.dialogs.ConfirmDeleteDialog;
-import com.example.appname.View.dialogs.MoveToDialog;
+import com.example.appname.View.dialogs.ConfirmDeleteAll;
+import com.example.appname.View.dialogs.ConfirmRestore;
 import com.example.appname.View.folders.ImageAdapter;
 import com.example.appname.ViewModel.ImageViewModel;
 
 import java.util.ArrayList;
-import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
 
-public class TrashFragment extends Fragment implements ImageAdapter.ImageListener {
+public class TrashFragment extends Fragment implements ImageAdapter.ImageListener
+        , MainActivity.BackPressedListener,
+        ConfirmDeleteAll.ConfirmListener,
+        ConfirmRestore.ConfirmListener {
 
     private RecyclerView mRecyclerView;
     private ImageAdapter mAdapter;
     private ImageViewModel mViewModel;
     private Button mDeleteAllButton;
     private Button mRestoreAllButton;
+    private ArrayList<Image> mTrashImages;
     private ArrayList<Image> mSelectedImages;
     private ActionMode mActionMode;
+    private Explorer mExplorer;
 
     public TrashFragment() {
         // Required empty public constructor
@@ -56,12 +63,24 @@ public class TrashFragment extends Fragment implements ImageAdapter.ImageListene
         super.onActivityCreated(savedInstanceState);
         mViewModel = ViewModelProviders.of(getActivity()).get(ImageViewModel.class);
         initViews();
-        getActivity().setTitle("Trash (" + mViewModel.getTrashImages().size() + ")");
+        ((MainActivity) getActivity()).setBackListener(this);
     }
 
     private void initViews() {
+        mExplorer = new Explorer(getContext());
+
+        mTrashImages = new ArrayList<>();
+        mViewModel.getTrashImages().observe(getActivity(), new Observer<List<Image>>() {
+            @Override
+            public void onChanged(List<Image> images) {
+                mTrashImages = (images != null)? (ArrayList<Image>) images : new ArrayList<Image>();
+                mAdapter.setImageList(mTrashImages);
+                getActivity().setTitle("Trash (" + mTrashImages.size() + ")");
+            }
+        });
+
         mRecyclerView = getView().findViewById(R.id.trash_recycler);
-        mAdapter = new ImageAdapter(getActivity(), mViewModel.getTrashImages(), this);
+        mAdapter = new ImageAdapter(getActivity(), this);
         mRecyclerView.setAdapter(mAdapter);
         int spanCountImage = getResources().getDisplayMetrics().widthPixels / (300);
         mRecyclerView.setLayoutManager(new GridLayoutManager(getActivity(), spanCountImage));
@@ -70,22 +89,16 @@ public class TrashFragment extends Fragment implements ImageAdapter.ImageListene
         mDeleteAllButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (mActionMode != null) {
-
-                } else {
-
-                }
+                ConfirmDeleteAll dialog = new ConfirmDeleteAll(TrashFragment.this);
+                dialog.show(getFragmentManager(), "confirm delete all");
             }
         });
         mRestoreAllButton = getView().findViewById(R.id.restore_all_button);
         mRestoreAllButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (mActionMode != null) {
-
-                } else {
-
-                }
+                ConfirmRestore dialog = new ConfirmRestore(TrashFragment.this);
+                dialog.show(getFragmentManager(),"confirm restore");
             }
         });
 
@@ -103,7 +116,6 @@ public class TrashFragment extends Fragment implements ImageAdapter.ImageListene
             mAdapter.setSelectionMode(false);
             mActionMode.finish();
         } else {
-            mSelectedImages.clear();
             mAdapter.setSelectionMode(true);
             mActionMode = ((AppCompatActivity) getActivity()).startSupportActionMode(mCallback);
         }
@@ -113,7 +125,7 @@ public class TrashFragment extends Fragment implements ImageAdapter.ImageListene
     @Override
     public void onChecked(Image image, boolean isChecked) {
         if (isChecked) {
-            if (!mSelectedImages.contains(image)){
+            if (!mSelectedImages.contains(image)) {
                 mSelectedImages.add(image);
             }
         } else {
@@ -160,4 +172,55 @@ public class TrashFragment extends Fragment implements ImageAdapter.ImageListene
             mRestoreAllButton.setText("Restore all");
         }
     };
+
+    @Override
+    public void onBackPressed() {
+
+    }
+
+    @Override
+    public void onConfirmDeleteAll() {
+        if (mActionMode == null) {
+            ArrayList<Image> trashImages = new ArrayList<>(mTrashImages);
+            for (Image image : trashImages) {
+                mExplorer.deleteImage(image);
+                mViewModel.remove(image);
+                mAdapter.removeImage(image);
+            }
+            mTrashImages.clear();
+        } else {
+            ArrayList<Image> selectedImages = new ArrayList<>(mSelectedImages);
+            for (Image image : selectedImages) {
+                mExplorer.deleteImage(image);
+                mViewModel.remove(image);
+                mAdapter.removeImage(image);
+            }
+            mActionMode.finish();
+            mSelectedImages.clear();
+        }
+    }
+
+    @Override
+    public void onConfirmRestore() {
+        if (mActionMode == null) {
+            ArrayList<Image> trashImages = new ArrayList<>(mTrashImages);
+            for (Image image : trashImages) {
+                mExplorer.move(image.getPath(), image.getOldPath());
+                image.setInTrash(false);
+                mViewModel.remove(image);
+                mAdapter.removeImage(image);
+            }
+            mTrashImages.clear();
+        } else {
+            ArrayList<Image> selectedImages = new ArrayList<>(mSelectedImages);
+            for (Image image : selectedImages) {
+                mExplorer.move(image.getPath(), image.getOldPath());
+                image.setInTrash(false);
+                mViewModel.remove(image);
+                mAdapter.removeImage(image);
+            }
+            mActionMode.finish();
+            mSelectedImages.clear();
+        }
+    }
 }

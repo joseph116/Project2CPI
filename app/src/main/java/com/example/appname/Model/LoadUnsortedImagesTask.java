@@ -1,5 +1,7 @@
 package com.example.appname.Model;
 
+import android.app.Activity;
+import android.app.Application;
 import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
@@ -7,16 +9,25 @@ import android.os.AsyncTask;
 import android.os.Environment;
 import android.provider.MediaStore;
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProviders;
+
+import com.example.appname.ViewModel.ImageViewModel;
+
 import java.io.File;
 import java.util.ArrayList;
+import java.util.List;
 
 public class LoadUnsortedImagesTask extends AsyncTask<Void, Void, ArrayList<Image>> {
 
 
     private Context mContext;
     private OnLoadCompleteListener mLoadFinish;
+    private ImageViewModel mViewModel;
+    private ArrayList<Image> mTrashImages;
     private static final String[] IMAGE_PROJECTION =
-            new String[] {
+            new String[]{
                     MediaStore.Images.ImageColumns._ID,
                     MediaStore.Images.ImageColumns.DATA,
                     MediaStore.Images.ImageColumns.DATE_TAKEN,
@@ -60,7 +71,8 @@ public class LoadUnsortedImagesTask extends AsyncTask<Void, Void, ArrayList<Imag
                     int orientation = cursor.getInt(orientationColNum);
 
                     images.add(new Image(id, Uri.withAppendedPath(contentUri, Long.toString(id)),
-                            path,mimeType, dateTaken, dateModified, orientation));
+                            path, mimeType, dateTaken, dateModified, orientation));
+
                 }
             }
         } finally {

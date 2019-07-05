@@ -8,7 +8,9 @@ import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.ContextCompat;
 import androidx.core.view.GravityCompat;
+import androidx.core.view.MenuItemCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.preference.PreferenceManager;
 
@@ -16,13 +18,16 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
+import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.appname.Model.Explorer;
@@ -36,6 +41,7 @@ import com.google.android.material.navigation.NavigationView;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.List;
 
 
 public class MainActivity extends AppCompatActivity{
@@ -55,6 +61,7 @@ public class MainActivity extends AppCompatActivity{
     private NavigationView mNavigationView;
     private SearchView mSearchView;
     private Explorer mExplorer;
+    private TextView mTrashBadge;
 
     private static final String[] IMAGE_PROJECTION =
             new String[] {
@@ -146,6 +153,7 @@ public class MainActivity extends AppCompatActivity{
         return true;
     }
 
+
     //==============================================================================================
     //  INIT FUNCTIONS
     //==============================================================================================
@@ -202,6 +210,7 @@ public class MainActivity extends AppCompatActivity{
                 R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         mDrawerLayout.addDrawerListener(toggle);
         toggle.syncState();
+
     }
 
     private void loadPreferences() {

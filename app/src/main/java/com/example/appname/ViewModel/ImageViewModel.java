@@ -21,14 +21,12 @@ public class ImageViewModel extends AndroidViewModel implements LoadUnsortedImag
     private ImageRepository mRepository;
     private LiveData<List<Image>> mSortedImages;
     private ArrayList<Image> mUnsortedImages;
-    private ArrayList<Image> mTrashImages;
     private LiveData<List<Tag>> mTags;
 
     public ImageViewModel(@NonNull Application application) {
         super(application);
         mRepository = new ImageRepository(application);
         mSortedImages = mRepository.getAllImages();
-        mTrashImages = new ArrayList<>();
         mTags = mRepository.getAllTags();
     }
 
@@ -112,11 +110,8 @@ public class ImageViewModel extends AndroidViewModel implements LoadUnsortedImag
     //==============================================================================================
 
 
-    public ArrayList<Image> getTrashImages() {
-        return mTrashImages;
+    public LiveData<List<Image>> getTrashImages() {
+        return mRepository.getAllImagesInTrash();
     }
 
-    public void moveToTrash(Image image) {
-        mTrashImages.add(image);
-    }
 }

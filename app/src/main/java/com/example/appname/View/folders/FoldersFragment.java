@@ -233,7 +233,6 @@ public class FoldersFragment extends Fragment implements FolderAdapter.FolderLis
             mImageAdapter.setSelectionMode(false);
             mActionMode.finish();
         } else {
-            mSelectedImages.clear();
             mImageAdapter.setSelectionMode(true);
             mActionMode = ((AppCompatActivity) getActivity()).startSupportActionMode(mCallback);
         }
