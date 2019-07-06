@@ -36,6 +36,7 @@ import com.example.appname.R;
 import com.example.appname.View.folders.FoldersFragment;
 import com.example.appname.View.home.HomeFragment;
 import com.example.appname.View.sort.SortActivity;
+import com.example.appname.View.tags.TagFragment;
 import com.example.appname.ViewModel.ImageViewModel;
 import com.google.android.material.navigation.NavigationView;
 
@@ -197,7 +198,7 @@ public class MainActivity extends AppCompatActivity{
                         mSearchView.setQueryHint("Search in trash...");
                         break;
                     case R.id.nav_tag:
-                        showToast("Working on...");
+                        getSupportFragmentManager().beginTransaction().replace(R.id.frame_container, new TagFragment()).commit();
                         break;
 
                 }

@@ -6,7 +6,7 @@ android {
         applicationId "com.nemesis.smartsort"
         minSdkVersion 21
         targetSdkVersion 28
-        versionCode  3
+        versionCode 3
         versionName "1.11"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -21,9 +21,6 @@ android {
 dependencies {
     def lifecycle_version = "2.0.0"
     def room_version = "2.1.0-alpha07"
-
-
-
 
 
     implementation fileTree(dir: 'libs', include: ['*.jar'])

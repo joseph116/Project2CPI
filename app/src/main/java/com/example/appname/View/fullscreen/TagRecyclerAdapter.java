@@ -11,7 +11,7 @@ import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 import com.example.appname.Model.Tag;
 import com.example.appname.R;
-import java.util.ArrayList;
+
 import java.util.List;
 
 public class TagRecyclerAdapter extends RecyclerView.Adapter<TagRecyclerAdapter.ViewHolder> {
@@ -84,7 +84,7 @@ public class TagRecyclerAdapter extends RecyclerView.Adapter<TagRecyclerAdapter.
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
-            mTag = itemView.findViewById(R.id.tagTitle);
+            mTag = itemView.findViewById(R.id.tagTitleInTags);
         }
 
     }

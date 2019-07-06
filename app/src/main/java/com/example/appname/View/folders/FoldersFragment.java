@@ -137,8 +137,19 @@ public class FoldersFragment extends Fragment implements FolderAdapter.FolderLis
         if (savedInstanceState != null) {
             mExplorer.setCurrentPath(savedInstanceState.getString(BUNDLE_CURRENT_PATH));
             mExplorer.setTreeSteps(savedInstanceState.getInt(BUNDLE_TREE_STEPS));
+            mFolderAdapter.updateFolders(mExplorer.getFolders());
+            mViewModel.getImagesByPath(mExplorer.getCurrentPath()).observe(getActivity(), new Observer<List<Image>>() {
+                @Override
+                public void onChanged(List<Image> images) {
+                    mImageAdapter.updateImageList((ArrayList<Image>) images);
+                }
+            });
+            String currentPath = mExplorer.getCurrentPath();
+            getActivity().setTitle(currentPath.substring(currentPath.lastIndexOf(File.separator) + 1));
         }
     }
+
+
 
     //==============================================================================================
     //  INIT FUNCTIONS

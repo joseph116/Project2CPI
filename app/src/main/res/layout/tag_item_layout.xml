@@ -6,7 +6,7 @@
     >
 
     <TextView
-        android:id="@+id/tagTitle"
+        android:id="@+id/tagTitleInTags"
         android:layout_width="wrap_content"
         android:layout_height="25dp"
         android:layout_marginStart="4dp"
