@@ -8,24 +8,40 @@ import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.ContextCompat;
 import androidx.core.view.GravityCompat;
+import androidx.core.view.MenuItemCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.preference.PreferenceManager;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.database.Cursor;
+import android.graphics.Typeface;
+import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.provider.MediaStore;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.widget.TextView;
 import android.widget.Toast;
+
+import com.example.appname.Model.Explorer;
+import com.example.appname.Model.Image;
 import com.example.appname.R;
 import com.example.appname.View.folders.FoldersFragment;
 import com.example.appname.View.home.HomeFragment;
 import com.example.appname.View.sort.SortActivity;
 import com.example.appname.ViewModel.ImageViewModel;
 import com.google.android.material.navigation.NavigationView;
+
+import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
 
 public class MainActivity extends AppCompatActivity{
@@ -44,6 +60,18 @@ public class MainActivity extends AppCompatActivity{
     private DrawerLayout mDrawerLayout;
     private NavigationView mNavigationView;
     private SearchView mSearchView;
+    private Explorer mExplorer;
+    private TextView mTrashBadge;
+
+    private static final String[] IMAGE_PROJECTION =
+            new String[] {
+                    MediaStore.Images.ImageColumns._ID,
+                    MediaStore.Images.ImageColumns.DATA,
+                    MediaStore.Images.ImageColumns.DATE_TAKEN,
+                    MediaStore.Images.ImageColumns.DATE_MODIFIED,
+                    MediaStore.Images.ImageColumns.MIME_TYPE,
+                    MediaStore.Images.ImageColumns.ORIENTATION,
+            };
 
     //==============================================================================================
     //  STATE FUNCTIONS
@@ -80,6 +108,10 @@ public class MainActivity extends AppCompatActivity{
         switch (item.getItemId()) {
             case R.id.action_view:
                 //open change view dialog here
+                break;
+            case R.id.action_scan:
+                //call explorer scan function
+                new scanImagesAsyncTask().execute(mExplorer.getRootPath());
                 break;
             case R.id.action_search:
 
@@ -121,18 +153,21 @@ public class MainActivity extends AppCompatActivity{
         return true;
     }
 
+
     //==============================================================================================
     //  INIT FUNCTIONS
     //==============================================================================================
 
     private void loadUnsortedImages() {
-        mImageViewModel.startLoading();
+        //mImageViewModel.startLoading();
     }
 
     private void initViews() {
         mToolbar = findViewById(R.id.app_bar);
         mToolbar.inflateMenu(R.menu.app_bar_menu);
         setSupportActionBar(mToolbar);
+
+        mExplorer = new Explorer(this);
 
         mDrawerLayout = findViewById(R.id.drawer_layout);
         mNavigationView = findViewById(R.id.nav_view);
@@ -175,6 +210,7 @@ public class MainActivity extends AppCompatActivity{
                 R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         mDrawerLayout.addDrawerListener(toggle);
         toggle.syncState();
+
     }
 
     private void loadPreferences() {
@@ -211,11 +247,60 @@ public class MainActivity extends AppCompatActivity{
         mToast.show();
     }
 
+    private class scanImagesAsyncTask extends AsyncTask<String, Void, Void> {
+
+        @Override
+        protected Void doInBackground(String... strings) {
+            Uri contentUri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
+            Cursor cursor = getContentResolver().query(
+                    contentUri, IMAGE_PROJECTION,
+                    null, null,
+                    MediaStore.Images.Media.DEFAULT_SORT_ORDER);
+
+            //if there is no image
+            if (cursor == null) return null;
+
+            //else get the images
+            try {
+                final int idColNum = cursor.getColumnIndexOrThrow(MediaStore.Images.ImageColumns._ID);
+                final int pathColNum = cursor.getColumnIndexOrThrow(MediaStore.Images.ImageColumns.DATA);
+                final int dateTakenColNum = cursor.getColumnIndexOrThrow(MediaStore.Images.ImageColumns.DATE_TAKEN);
+                final int dateModifiedColNum = cursor.getColumnIndexOrThrow(MediaStore.Images.ImageColumns.DATE_MODIFIED);
+                final int mimeTypeColNum = cursor.getColumnIndex(MediaStore.Images.ImageColumns.MIME_TYPE);
+                final int orientationColNum = cursor.getColumnIndexOrThrow(MediaStore.Images.ImageColumns.ORIENTATION);
+
+                while (cursor.moveToNext()) {
+                    String path = cursor.getString(pathColNum);
+                    //path.substring(0, path.lastIndexOf(File.separator)).equals(strings[0])
+                    if (path.contains(strings[0])) {
+                        long id = cursor.getLong(idColNum);
+                        long dateTaken = cursor.getLong(dateTakenColNum);
+                        String mimeType = cursor.getString(mimeTypeColNum);
+                        long dateModified = cursor.getLong(dateModifiedColNum);
+                        int orientation = cursor.getInt(orientationColNum);
+
+                        Image image = new Image(id, Uri.withAppendedPath(contentUri, Long.toString(id)),
+                                path,mimeType, dateTaken, dateModified, orientation);
+
+                        mImageViewModel.add(image);
+                    }
+                }
+            } finally {
+                cursor.close();
+                return null;
+            }
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+            showToast("scan finished");
+        }
+    }
+
     //==============================================================================================
     //  LISTENERS FUNCTIONS
     //==============================================================================================
-
-
     @Override
     public void onBackPressed() {
         if (mDrawerLayout.isDrawerOpen(GravityCompat.START)) {

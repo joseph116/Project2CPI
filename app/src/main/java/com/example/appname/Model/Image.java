@@ -3,7 +3,9 @@ package com.example.appname.Model;
 import android.net.Uri;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.widget.ImageView;
 
+import androidx.annotation.Nullable;
 import androidx.room.Entity;
 import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
@@ -33,8 +35,13 @@ public class Image implements Parcelable, Comparable<Image> {
     private int orientation;
     private long dateTaken;
     private String path;
+    private String oldPath;
     private String parent;
     private String tags;
+    private boolean inTrash;
+
+    @Ignore
+    private int mImageViewId;
 
     //==============================================================================================
     //  CONSTRUCTORS
@@ -54,12 +61,14 @@ public class Image implements Parcelable, Comparable<Image> {
         this.orientation = orientation;
         this.dateTaken = dateTaken;
         this.tags = "";
+        this.inTrash = false;
     }
 
     private Image(Parcel in) {
         rowId = in.readLong();
         //uri = Uri.parse(in.readString());
         path = in.readString();
+        oldPath = in.readString();
         parent = in.readString();
         mimeType = in.readString();
         dateTaken = in.readLong();
@@ -145,6 +154,30 @@ public class Image implements Parcelable, Comparable<Image> {
         this.parent = parent;
     }
 
+    public int getImageViewId() {
+        return mImageViewId;
+    }
+
+    public void setImageViewId(int imageViewId) {
+        mImageViewId = imageViewId;
+    }
+
+    public String getOldPath() {
+        return oldPath;
+    }
+
+    public void setOldPath(String oldPath) {
+        this.oldPath = oldPath;
+    }
+
+    public boolean isInTrash() {
+        return inTrash;
+    }
+
+    public void setInTrash(boolean inTrash) {
+        this.inTrash = inTrash;
+    }
+
     //==============================================================================================
     //  FOR PARCELABLE
     //==============================================================================================
@@ -172,6 +205,7 @@ public class Image implements Parcelable, Comparable<Image> {
         parcel.writeLong(rowId);
         //parcel.writeString(uri.toString());
         parcel.writeString(path);
+        parcel.writeString(oldPath);
         parcel.writeString(parent);
         parcel.writeString(mimeType);
         parcel.writeLong(dateTaken);
@@ -191,6 +225,16 @@ public class Image implements Parcelable, Comparable<Image> {
                 + ", orientation=" + orientation
                 + ", dateTaken=" + dateTaken
                 + '}';
+    }
+
+    @Override
+    public boolean equals(@Nullable Object obj) {
+        if (obj instanceof Image) {
+            if (this.rowId == ((Image) obj).rowId) {
+                return true;
+            }
+        }
+        return false;
     }
 
     //==============================================================================================
