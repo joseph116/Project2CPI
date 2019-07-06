@@ -137,7 +137,7 @@ public class TrashFragment extends Fragment implements ImageAdapter.ImageListene
     private ActionMode.Callback mCallback = new ActionMode.Callback() {
         @Override
         public boolean onCreateActionMode(ActionMode actionMode, Menu menu) {
-            actionMode.getMenuInflater().inflate(R.menu.menu_multiple_image_selection, menu);
+            actionMode.getMenuInflater().inflate(R.menu.menu_selection_trash, menu);
             actionMode.setTitle(mSelectedImages.size() + "/" + mAdapter.getItemCount() + " selected");
             mDeleteAllButton.setText("Delete selection");
             mRestoreAllButton.setText("Restore selection");
