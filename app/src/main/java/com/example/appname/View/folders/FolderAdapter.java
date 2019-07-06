@@ -64,10 +64,8 @@ public class FolderAdapter extends RecyclerView.Adapter<FolderAdapter.ViewHolder
                 }
 
             });
-            viewHolder.mInfoLayout.setVisibility(View.INVISIBLE);
 
         } else {
-            viewHolder.mInfoLayout.setVisibility(View.VISIBLE);
             final File file = mFolders.get(i-1);
 
             if (file.isDirectory()) {
@@ -154,7 +152,6 @@ public class FolderAdapter extends RecyclerView.Adapter<FolderAdapter.ViewHolder
             mFileName = itemView.findViewById(R.id.textView);
             mImage = itemView.findViewById(R.id.folderImageView);
             mLayout = itemView.findViewById(R.id.folder_item_parent);
-            mInfoLayout = itemView.findViewById(R.id.folder_info_layout);
         }
     }
 
