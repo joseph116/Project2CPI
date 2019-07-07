@@ -7,6 +7,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
@@ -19,7 +21,7 @@ import com.example.appname.R;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ImageHolder>{
+public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ImageHolder> implements Filterable {
 
     private static final String TAG = "ImageAdapter";
 
@@ -29,6 +31,11 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ImageHolder>
     private boolean mSelectionMode = false;
     private boolean mAllChecked = false;
     private int mFirstItemSelected;
+
+
+    private List<Image> mAlterImages;
+    private List<String> mSelectedTags = new ArrayList<>();
+    private List<Image> FiltredImages = new ArrayList<>();
 
     public ImageAdapter(Context context, ImageListener listener) {
         mContext = context;
@@ -44,6 +51,7 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ImageHolder>
     public void setImageList(List<Image> imageList) {
         int oldSize = mImageList.size();
         mImageList = imageList;
+        mAlterImages = new ArrayList<>(imageList);
         notifyItemRangeRemoved(0, oldSize);
         notifyItemRangeInserted(0, mImageList.size());
     }
@@ -144,6 +152,60 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ImageHolder>
     public void removeImage(Image image) {
         notifyItemRemoved(mImageList.indexOf(image));
         mImageList.remove(image);
+    }
+
+    @Override
+    public Filter getFilter() {
+        return exempleFilter;
+    }
+
+    private Filter exempleFilter = new Filter() {
+        @Override
+        protected FilterResults performFiltering(CharSequence constraint) {
+            ArrayList<Image> FilteredList = new ArrayList<>();
+            if (constraint == null || constraint.length() == 0){
+                FilteredList.addAll(mAlterImages);
+            }else{
+                String Filterpattern = constraint.toString().toLowerCase().trim();
+                for (Image Url : mAlterImages){
+                    if (Url.getPath().toLowerCase().contains(Filterpattern)) FilteredList.add(Url);
+                }
+            }
+            FilterResults results = new FilterResults();
+            results.values = FilteredList;
+            return results;
+        }
+
+        @Override
+        protected void publishResults(CharSequence constraint, FilterResults results) {
+            FiltredImages.clear();
+            FiltredImages.addAll((List)results.values);
+            updateImageList((ArrayList<Image>) FiltredImages);
+            notifyDataSetChanged();
+        }
+    };
+
+    public void filter(List<String> list){
+        mSelectedTags = list;
+
+        ArrayList<Image> FilteredList = new ArrayList<>();
+        for (Image Url : mAlterImages){
+            int all = 0;
+            for (int i=0;i<mSelectedTags.size();i++)
+                if (Url.getTags().contains(mSelectedTags.get(i)))
+                    all++;
+            if (all==mSelectedTags.size())
+                if (!FilteredList.contains(Url))
+                    FilteredList.add(Url);
+        }
+        FiltredImages.clear();
+        FiltredImages.addAll(FilteredList);
+        updateImageList((ArrayList<Image>) FiltredImages);
+        notifyDataSetChanged();
+    }
+
+    public List<Image> getFiltredImages(){
+        return FiltredImages;
     }
 
 

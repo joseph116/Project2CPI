@@ -8,6 +8,11 @@
         android:icon="@drawable/ic_view"
         app:showAsAction="never"/>
 
+    <item android:id="@+id/action_searchimg"
+        android:title="Search "
+        android:icon="@drawable/ic_view"
+        app:showAsAction="never"/>
+
     <item android:id="@+id/action_scan"
         android:title="Scan images"
         android:icon="@drawable/ic_view"

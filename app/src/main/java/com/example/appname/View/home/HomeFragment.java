@@ -10,6 +10,7 @@ import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.provider.MediaStore;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -33,6 +34,7 @@ public class HomeFragment extends Fragment implements ImageAdapter.ImageListener
 
     public static final String ARGS_CURRENT_IMAGES = "ARGS_CURRENT_IMAGES";
     public static final String ARGS_IMAGE_POSITION = "ARGS_IMAGE_POSITION";
+    int TAKE_PHOTO_CODE = 0;
 
     private RecyclerView mSortedRecyclerView;
     private ImageAdapter mImageAdapter;
@@ -88,11 +90,12 @@ public class HomeFragment extends Fragment implements ImageAdapter.ImageListener
         mButtonCamera.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent openCamera = new Intent(getActivity(), CameraActivity.class);
-                getActivity().startActivity(openCamera);
+                Intent cameraIntent = new Intent(MediaStore.INTENT_ACTION_STILL_IMAGE_CAMERA);
+                startActivityForResult(cameraIntent, TAKE_PHOTO_CODE);
+                /*Intent openCamera = new Intent(getActivity(), CameraActivity.class);
+                getActivity().startActivity(openCamera);*/
             }
         });
-
     }
 
     @Override

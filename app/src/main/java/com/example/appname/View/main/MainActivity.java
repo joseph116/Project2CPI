@@ -110,6 +110,9 @@ public class MainActivity extends AppCompatActivity{
             case R.id.action_view:
                 //open change view dialog here
                 break;
+            case R.id.action_searchimg:
+                startActivity(new Intent(MainActivity.this, SearchActivity.class));
+                break;
             case R.id.action_scan:
                 //call explorer scan function
                 new scanImagesAsyncTask().execute(mExplorer.getRootPath());
